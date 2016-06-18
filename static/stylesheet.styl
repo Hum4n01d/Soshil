@@ -43,6 +43,7 @@ body
         height 100vh
 
     .modal
+        width 90%
         padding 10px
         background-color white
         z-index 1000
@@ -70,7 +71,7 @@ body
     BUTTONS
     ***************/
     button
-        margin 0
+        margin 1px 0
         padding 10px
         border-radius 5px
         color white
@@ -82,6 +83,9 @@ body
         
         &.danger
             background-color orangered
+            
+        a
+            color white
     
     /***************
     GENERAL
@@ -111,6 +115,11 @@ body
         .error
             background-color orangered
         
+    .link
+        margin 10px 0
+        
+    .x-margins
+        margin 0 5px
         
     /***************
     FORMS
@@ -122,6 +131,18 @@ body
             border none
             padding 0
             margin 5px 0
+            
+            input
+                padding 5px
+                border-radius 5px
+                border 1px solid #ddd
+               
+                
+    #login-form
+        display none
+        
+        fieldset
+            padding 0
     
     /***************
     FOOTER

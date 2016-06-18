@@ -3,7 +3,7 @@
 //Copyright year
 document.getElementById('year').innerHTML = new Date().getFullYear()
 
-$('.modal_button').click(function() {
+$('.modal-trigger').click(function() {
     $('#blanket').fadeIn();
     $(this).siblings('.modal').fadeIn();
 });
