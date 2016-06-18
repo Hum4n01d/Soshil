@@ -1,0 +1,132 @@
+@import 'https://fonts.googleapis.com/css?family=Libre+Franklin';
+
+body
+    font-family 'Libre Franklin', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif
+    margin 0 10px
+    
+    *
+        box-sizing border-box
+    
+    /***************
+    NAV
+    ***************/
+    nav
+        display flex
+        flex-direction column
+
+        a
+            width 100%
+            padding 10px 0
+            border-bottom 1px solid #ddd
+    
+    /***************
+    TEXT
+    ***************/
+    a
+        text-decoration none
+        color #999
+        
+        &:hover
+            color black
+    
+    /***************
+    MODAL
+    ***************/
+    #blanket
+        display none
+        position absolute
+        top 0
+        left 0
+        z-index 999
+        background-color rgba(0, 0, 0, .75)
+        width 100vw
+        height 100vh
+
+    .modal
+        padding 10px
+        background-color white
+        z-index 1000
+        margin 10px
+        border-radius 10px
+        position absolute
+        top 100px
+        left 0
+        
+        fieldset
+            display flex
+            flex-direction column
+            
+            padding 10px
+            input,
+            button
+                width 100%
+                
+    img[src="/static/github-logo.svg"]
+        margin-bottom -3px
+        margin-left 5px
+        width 20px
+            
+    /***************
+    BUTTONS
+    ***************/
+    button
+        margin 0
+        padding 10px
+        border-radius 5px
+        color white
+        background-color dodgerblue
+        border none
+
+        &:hover
+            cursor pointer
+        
+        &.danger
+            background-color orangered
+    
+    /***************
+    GENERAL
+    ***************/
+    #body
+        padding 10px 0
+    h1,
+    h2,
+    h3
+        margin-top 0
+        margin-bottom 10px
+        
+    .flashes
+        display none
+        padding 0
+        
+        li
+            border-radius 10px
+            list-style none
+            margin-left none
+            padding 10px
+            text-align center
+        
+        .success
+            background-color lightblue
+            
+        .error
+            background-color orangered
+        
+        
+    /***************
+    FORMS
+    ***************/
+    form
+        margin 10px 0
+        
+        fieldset
+            border none
+            padding 0
+            margin 5px 0
+    
+    /***************
+    FOOTER
+    ***************/
+    footer
+        padding 10px
+        border-top 1px solid #ddd
+        text-align center

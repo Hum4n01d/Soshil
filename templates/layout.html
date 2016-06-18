@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Soshil</title>
+        <link rel="stylesheet" type="text/css" href="/static/normalize.min.css">
+        <link rel="stylesheet" type="text/css" href="/static/stylesheet.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <header>
+            <nav>
+                <a href="{{ url_for('index') }}">Home</a>
+                {% if user.username %}
+                <a href="{{ url_for('logout')}} ">Logout</a>
+                {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+                {% endif %}
+            </nav>
+        </header>
+        <section id="body">
+            {% block body %}
+            {% endblock %}
+            <div id="blanket"></div>
+        </section>
+        <footer>
+            <a href="{{ url_for('index') }}">&copy;<span id="year"></span> Soshil</a>
+        </footer>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="/static/main.js"></script>
+    </body>
+</html>
