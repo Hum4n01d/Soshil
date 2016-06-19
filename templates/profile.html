@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{% if user %}
+    <h1>{{ user.username }}</h1>
+    {% if user.show_email %}
+
+    {% endif %}
+{% else %}
+<h1>User not found</h1>
+{% endif %}
+{% endblock %}

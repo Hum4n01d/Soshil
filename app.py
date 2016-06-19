@@ -34,6 +34,7 @@ def before_request():
     '''Connect to the database before each request'''
     g.db = models.DATABASE
     g.db.connect()
+    g.user = current_user
 
 @app.after_request
 def after_request(response):
@@ -54,16 +55,19 @@ def register():
         )
         login_user(models.User.get(models.User.email == form.email.data))
         return redirect(url_for('index'))
-    return render_template('register.html', form=form, user=current_user)
+    return render_template('register.html', form=form, user=g.user)
 
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     form = forms.LoginForm()
+    next_url = request.args.get('next')
+    
     if form.validate_on_submit():
         try:
-            user = models.User.get(models.User.email == form.email.data)
+            user = models.User.get(models.User.username == form.username.data)
+            
         except models.DoesNotExist:
-            flash('Your email or password is incorrect', 'error')
+            flash('Your username or password is incorrect', 'error')
         else:
             if user.github_user:
                 flash('Please sign in through Github', 'error')
@@ -71,12 +75,14 @@ def login():
                 if check_password_hash(user.password, form.password.data):
                     login_user(user)
                     flash('You are now logged in {}'.format(user.username), 'success')
-                    return redirect(url_for('index'))
+                    
+                    if next_url:
+                        return redirect(next_url)
 
                 else:
                     flash('Your email or password is incorrect', 'error')
                 
-    return render_template('login.html', form=form, user=current_user)
+    return render_template('login.html', form=form, user=g.user)
 
 @app.route('/login/github')
 def login_github():
@@ -131,8 +137,27 @@ def logout():
 
 @app.route('/')
 def index():
-    user = current_user
-    return render_template('index.html', user=user)
+    return render_template('index.html', user=g.user)
+
+@app.route('/new_post', methods=('GET', 'POST'))
+@login_required
+def post():
+    form = forms.PostForm()
+    if form.validate_on_submit():
+        models.Post.create(user=g.user, content=form.content.data.strip())
+        flash('Message successfully posted!', 'success')
+        return redirect(url_for('index'))
+    
+    return render_template('post.html', form=form, user=g.user)
+
+@app.route('/users/<username>')
+def users(username):
+    try:
+        user = models.User.get(models.User.low_username == username.lower())
+    except models.DoesNotExist:
+        user = None
+        
+    return render_template('profile.html', user=user)
 
 if __name__ == '__main__':
     models.initialize()
