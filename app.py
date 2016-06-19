@@ -142,13 +142,14 @@ def index():
 @app.route('/new_post', methods=('GET', 'POST'))
 @login_required
 def post():
-    form = forms.PostForm()
-    if form.validate_on_submit():
-        models.Post.create(user=g.user, content=form.content.data.strip())
-        flash('Message successfully posted!', 'success')
-        return redirect(url_for('index'))
-    
-    return render_template('post.html', form=form, user=g.user)
+    return 'Coming soon!'
+#    form = forms.PostForm()
+#    if form.validate_on_submit():
+#        models.Post.create(user=g.user, content=form.content.data.strip())
+#        flash('Message successfully posted!', 'success')
+#        return redirect(url_for('index'))
+#    
+#    return render_template('post.html', form=form, user=g.user)
 
 @app.route('/users/<username>')
 def users(username):
