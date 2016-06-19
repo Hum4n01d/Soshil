@@ -1,12 +1,24 @@
-{% extends 'layout.html' %}
+{% extends 'stream.html' %}
 
 {% block body %}
-{% if user %}
-    <h1>{{ user.username }}</h1>
-    {% if user.show_email %}
-
-    {% endif %}
-{% else %}
-<h1>User not found</h1>
-{% endif %}
+<div class="user_stream">
+    <div class="user_header">
+        <h1>{{ user.username }}</h1>
+        <button>Follow</button>
+    </div>
+    <div class="user_stats">
+        <div>
+            <h3>Posts: {{ user.posts.count() }}</h3>
+        </div>
+        <div>
+            <h3>Followers: 0</h3>
+        </div>
+        <div>
+            <h3>Following: 0</h3>
+        </div>
+    </div>
+    <div class="user_posts">
+        {{ super() }}
+    </div>
+</div>
 {% endblock %}

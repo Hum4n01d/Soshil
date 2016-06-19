@@ -147,6 +147,7 @@ def index():
 
 @app.route('/stream')
 @app.route('/stream/<username>')
+@login_required
 def stream(username=None):
     template = 'stream.html'
     
@@ -159,7 +160,7 @@ def stream(username=None):
         user = current_user
         
     if username:
-        template = 'user_stream.html'
+        template = 'profile.html'
         
     return render_template(template, user=user, stream=stream)
 

@@ -2,7 +2,7 @@
 
 {% block body %}
 {% if user.is_authenticated %}
-    <h1>My Stream</h1>
+    <h1>Posts:</h1>
     {% if stream %}
         {% for post in stream %}
             <article class="post">
