@@ -4,6 +4,11 @@ import requests
 from flask import Flask, g, render_template, flash, redirect, url_for, request
 from flask_bcrypt import check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_sslify import SSLify
+
+app = Flask(__name__)
+sslify = SSLify(app)
+app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
 
 import forms
 import models
@@ -11,9 +16,6 @@ import models
 DEBUG = True
 PORT = 8000
 HOST = '0.0.0.0'
-
-app = Flask(__name__)
-app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -134,5 +136,4 @@ def index():
 
 if __name__ == '__main__':
     models.initialize()
-
     app.run(debug=DEBUG, host=HOST, port=PORT)
