@@ -49,4 +49,5 @@ class LoginForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
     
 class PostForm(Form):
+    title = StringField('Post title', validators=[DataRequired()])
     content = TextAreaField("What's on your mind?", validators=[DataRequired()])

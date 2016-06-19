@@ -50,6 +50,7 @@ class User(UserMixin, Model):
                 raise ValueError('User already exists')
 
 class Post(Model):
+    title = CharField()
     timestamp = DateTimeField(default=datetime.now)
     user = ForeignKeyField(
         rel_model=User,
@@ -63,5 +64,5 @@ class Post(Model):
     
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User], safe=True)
+    DATABASE.create_tables([User, Post], safe=True)
     DATABASE.close()

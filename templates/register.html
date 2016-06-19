@@ -6,7 +6,7 @@
 <button><a href="{{ url_for('login_github')}}">Sign up with GitHub<img src="/static/github-logo.svg" alt="Github's logo"></a></button>
 <span class="x-margins">or</span>
 <button class="modal-trigger">Sign up with your email</button>
-<div class="modal" id="login-form">
+<div class="modal" id="signup-form">
     <form method='POST' action=''>
         {{ form.hidden_tag() }}
         {% for field in form %}

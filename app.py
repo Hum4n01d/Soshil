@@ -55,6 +55,7 @@ def register():
         )
         login_user(models.User.get(models.User.email == form.email.data))
         return redirect(url_for('index'))
+    
     return render_template('register.html', form=form, user=g.user)
 
 @app.route('/login', methods=('GET', 'POST'))
@@ -64,7 +65,7 @@ def login():
     
     if form.validate_on_submit():
         try:
-            user = models.User.get(models.User.username == form.username.data)
+            user = models.User.get(models.User.low_username == form.username.data.lower())
             
         except models.DoesNotExist:
             flash('Your username or password is incorrect', 'error')
@@ -78,6 +79,9 @@ def login():
                     
                     if next_url:
                         return redirect(next_url)
+                    
+                    else:
+                        return redirect(url_for('index'))
 
                 else:
                     flash('Your email or password is incorrect', 'error')
@@ -137,28 +141,38 @@ def logout():
 
 @app.route('/')
 def index():
-    return render_template('index.html', user=g.user)
+    stream = models.Post.select().limit(100)
+    
+    return render_template('stream.html', user=g.user, stream=stream)
+
+@app.route('/stream')
+@app.route('/stream/<username>')
+def stream(username=None):
+    template = 'stream.html'
+    
+    if username and username != current_user.username:
+        user = models.User.select().where(models.User.username ** username)
+        stream = user.posts.limit(100)
+        
+    else:
+        stream = current_user.get_stream().limit(100)
+        user = current_user
+        
+    if username:
+        template = 'user_stream.html'
+        
+    return render_template(template, user=user, stream=stream)
 
 @app.route('/new_post', methods=('GET', 'POST'))
 @login_required
 def post():
-    return 'Coming soon!'
-#    form = forms.PostForm()
-#    if form.validate_on_submit():
-#        models.Post.create(user=g.user, content=form.content.data.strip())
-#        flash('Message successfully posted!', 'success')
-#        return redirect(url_for('index'))
-#    
-#    return render_template('post.html', form=form, user=g.user)
-
-@app.route('/users/<username>')
-def users(username):
-    try:
-        user = models.User.get(models.User.low_username == username.lower())
-    except models.DoesNotExist:
-        user = None
-        
-    return render_template('profile.html', user=user)
+    form = forms.PostForm()
+    if form.validate_on_submit():
+        models.Post.create(user=g.user._get_current_object(), title=form.title.data, content=form.content.data.strip())
+        flash('Message successfully posted!', 'success')
+        return redirect(url_for('index'))
+    
+    return render_template('post.html', form=form, user=g.user)
 
 if __name__ == '__main__':
     models.initialize()
