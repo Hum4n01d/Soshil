@@ -1,7 +1,7 @@
 'use strict';
 
 //Copyright year
-document.getElementById('year').innerHTML = new Date().getFullYear()
+document.getElementById('year').innerHTML = new Date().getFullYear();
 
 //Modal
 $('.modal-trigger').click(function() {
@@ -29,16 +29,20 @@ $('#login-form form').validate({
         password: 'Please enter your password'
     }
 });
+$.validator.addMethod('regex', function(value, element, regexpr) {          
+    return regexpr.test(value);
+}, 'Please enter a valid email.');
+
 $('#signup-form form').validate({
     rules: {
         username: 'required',
         email: {
             required: true,
-            email: true
+            regex: /^[\w.]+@[\w.]+.[\w]$/
         },
         password: {
             required: true,
-            minLength: 6
+            minlength: 6
         },
         password2: {
             required: true,
@@ -49,11 +53,11 @@ $('#signup-form form').validate({
         username: 'Please enter your username',
         email: {
             required: 'Please enter your email address',
-            email: 'Please enter a valid email address'
+            regex: 'Please enter a valid email address'
         },
         password: {
             required: 'Please enter your password',
-            minLength: 'Password must be at least 6 characters'
+            minlength: 'Password must be at least 6 characters'
         },
         password2: {
             required: 'Please confirm your password',
@@ -61,10 +65,16 @@ $('#signup-form form').validate({
         }
     }
 });
+var valid = false;
 $('#signup-form form').submit(function(e) {
-    if ($('#myform').valid()) {
-        $(this).submit();
+    if (valid) {
+        
     } else {
-        e.preventDefault();
+        if ($('#signup-form form').valid()) {
+            valid = true;
+            $(this).submit();
+        } else {
+            e.preventDefault();
+        }
     }
 });
