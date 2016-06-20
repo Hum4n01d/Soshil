@@ -1,10 +1,22 @@
+import os
+
 from datetime import datetime
 
 from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 from peewee import *
 
-DATABASE = SqliteDatabase('soshil.db')
+db_proxy = Proxy()
+
+if 'HEROKU' in os.environ:
+    import urlparse, psycopg2
+    urlparse.uses_netloc.append('postgres')
+    url = urlparse.urlparse(os.environ["DATABASE_URL"])
+    db = PostgresqlDatabase(database=url.path[1:], user=url.username, password=url.password, host=url.hostname, port=url.port)
+    db_proxy.initialize(db)
+else:
+    db = SqliteDatabase('soshil.db')
+    db_proxy.initialize(db)
 
 class User(UserMixin, Model):
     username = CharField()
@@ -16,7 +28,7 @@ class User(UserMixin, Model):
     github_user = BooleanField(default=False)
   
     class Meta:
-        database = DATABASE
+        database = db_proxy
     
     def get_posts(self):
         return Post.select().where(Post.user == self)
@@ -75,7 +87,7 @@ class Post(Model):
     content = TextField()
     
     class Meta:
-        database = DATABASE
+        database = db_proxy
         order_by = ('-timestamp',)
 
 
@@ -84,12 +96,12 @@ class Relationship(Model):
     to_user = ForeignKeyField(User, related_name='relate_to')
 
     class Meta:
-        database = DATABASE
+        database = db_proxy
         indexes = (
             (('from_user', 'to_user'), True)
         )
     
 def initialize():
-    DATABASE.connect()
-    DATABASE.create_tables([User, Post, Relationship], safe=True)
-    DATABASE.close()
+    db_proxy.connect()
+    db_proxy.create_tables([User, Post, Relationship], safe=True)
+    db_proxy.close()
