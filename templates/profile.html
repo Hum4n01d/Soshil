@@ -3,18 +3,18 @@
 {% block body %}
 <div class="user_stream">
     <div class="user_header">
-        <h1>{{ user.username }}</h1>
-        <button>Follow</button>
+        <h1>{{ profile_user.username }}</h1>
+        <a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a>
     </div>
     <div class="user_stats">
         <div>
-            <h3>Posts: {{ user.posts.count() }}</h3>
+            <h3>Posts: {{ profile_user.posts.count() }}</h3>
         </div>
         <div>
-            <h3>Followers: 0</h3>
+            <h3>Followers: {{ profile_user.followers().count() }}</h3>
         </div>
         <div>
-            <h3>Following: 0</h3>
+            <h3>Following: {{ profile_user.following().count() }}</h3>
         </div>
     </div>
     <div class="user_posts">

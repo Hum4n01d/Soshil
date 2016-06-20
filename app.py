@@ -1,6 +1,6 @@
 import os
-import requests
 
+import requests
 from flask import Flask, g, render_template, flash, redirect, url_for, request
 from flask_bcrypt import check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -147,22 +147,34 @@ def index():
 
 @app.route('/stream')
 @app.route('/stream/<username>')
-@login_required
 def stream(username=None):
     template = 'stream.html'
-    
-    if username and username != current_user.username:
-        user = models.User.select().where(models.User.username ** username)
-        stream = user.posts.limit(100)
-        
-    else:
-        stream = current_user.get_stream().limit(100)
-        user = current_user
-        
+    profile_user = None
+    stream = None
+
     if username:
         template = 'profile.html'
-        
-    return render_template(template, user=user, stream=stream)
+
+        try:
+            if g.user._get_current_object().is_anonymous:
+                profile_user = models.User.select().where(models.User.username ** username).get()
+                stream = profile_user.posts.limit(100)
+
+            elif username != current_user.username:
+                profile_user = models.User.select().where(models.User.username ** username).get()
+                stream = profile_user.posts.limit(100)
+
+            else:
+                stream = current_user.get_stream().limit(100)
+                profile_user = current_user
+
+        except models.DoesNotExist:
+            return render_template('error.html', error=(404, 'User not found'), user=g.user)
+    else:
+        stream = current_user.get_stream().limit(100)
+        profile_user = current_user
+
+    return render_template(template, profile_user=profile_user, stream=stream, user=g.user._get_current_object())
 
 @app.route('/new_post', methods=('GET', 'POST'))
 @login_required
@@ -174,6 +186,48 @@ def post():
         return redirect(url_for('index'))
     
     return render_template('post.html', form=form, user=g.user)
+
+
+@app.route('/follow/<username>')
+@login_required
+def follow(username):
+    try:
+        to_user = models.User.get(models.User.username ** username)
+    except models.DoesNotExist:
+        pass
+    else:
+        try:
+            models.Relationship.create(
+                from_user=g.user._get_current_object(),
+                to_user=to_user
+            )
+        except models.IntegrityError:
+            pass
+        else:
+            flash("You're now following {}".format(to_user.username), 'success')
+
+    return redirect(url_for('stream', username=to_user.username))
+
+
+@app.route('/unfollow/<username>')
+@login_required
+def unfollow(username):
+    try:
+        to_user = models.User.get(models.User.username ** username)
+    except models.DoesNotExist:
+        pass
+    else:
+        try:
+            models.Relationship.get(
+                from_user=g.user._get_current_object(),
+                to_user=to_user
+            ).delete_instance()
+        except models.IntegrityError:
+            pass
+        else:
+            flash("You've unfollowed {}".format(to_user.username), 'success')
+
+    return redirect(url_for('stream', username=to_user.username))
 
 if __name__ == '__main__':
     models.initialize()
