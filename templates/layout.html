@@ -21,8 +21,9 @@
             <nav>
                 <a href="{{ url_for('index') }}">Home</a>
                 {% if user.is_authenticated %}
-                <a href="{{ url_for('logout')}} ">Logout</a>
                 <a href="{{ url_for('post')}} ">New Post</a>
+                <a href="{{ url_for('stream', username=user.username )}}">Profile</a>
+                <a href="{{ url_for('logout')}} ">Logout</a>
                 {% else %}
                 <a href="{{ url_for('login') }}">Log in</a>
                 <a href="{{ url_for('register') }}">Sign up</a>
