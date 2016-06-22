@@ -7,9 +7,9 @@
         {% if user.is_authenticated %}
             {% if profile_user != current_user %}
                 {% if not profile_user in user.following() %}
-                <a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a>
+                <button><a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a></button>
                 {% else %}
-                <a href="{{ url_for('unfollow', username=profile_user.username) }}" class="button">Unfollow</a>
+                <button><a href="{{ url_for('unfollow', username=profile_user.username) }}" class="button">Unfollow</a></button>
                 {% endif %}
             {% endif %}
         {% endif %}

@@ -8,8 +8,6 @@
         <meta charset="UTF-8">
     </head>
     <body>
-        <p>Current user: {{ user.username }}</p>
-        <p>User authenticated: {{ user.is_authenticated }}</p>
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
                 <ul class=flashes>
