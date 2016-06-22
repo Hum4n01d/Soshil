@@ -4,7 +4,15 @@
 <div class="user_stream">
     <div class="user_header">
         <h1>{{ profile_user.username }}</h1>
-        <a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a>
+        {% if user.is_authenticated %}
+            {% if profile_user != current_user %}
+                {% if not profile_user in user.following() %}
+                <a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a>
+                {% else %}
+                <a href="{{ url_for('unfollow', username=profile_user.username) }}" class="button">Unfollow</a>
+                {% endif %}
+            {% endif %}
+        {% endif %}
     </div>
     <div class="user_stats">
         <div>

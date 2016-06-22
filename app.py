@@ -42,6 +42,10 @@ def after_request(response):
     g.db.close()
     return response
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('error.html', error=error, user=g.user), 404
+
 @app.route('/register', methods=('GET', 'POST'))
 def register():
     form = forms.RegisterForm()
