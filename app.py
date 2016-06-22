@@ -1,7 +1,7 @@
 import os
 
 import requests
-from flask import Flask, g, render_template, flash, redirect, url_for, request
+from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_bcrypt import check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_sslify import SSLify
@@ -173,7 +173,7 @@ def stream(username=None):
                 profile_user = current_user
 
         except models.DoesNotExist:
-            return render_template('error.html', error=(404, 'User not found'), user=g.user)
+            abort(404)
     else:
         stream = current_user.get_stream().limit(100)
         profile_user = current_user
