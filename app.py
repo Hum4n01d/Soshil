@@ -4,10 +4,13 @@ import requests
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_bcrypt import check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from flask_sslify import SSLify
+
+from OpenSSL import SSL
+context = SSL.Context(SSL.SSLv23_METHOD)
+context.use_privatekey_file('server.key')
+context.use_certificate_file('server.crt')
 
 app = Flask(__name__)
-sslify = SSLify(app)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
 
 import forms
