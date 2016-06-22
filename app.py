@@ -238,4 +238,4 @@ def unfollow(username):
 
 if __name__ == '__main__':
     models.initialize()
-    app.run(debug=DEBUG, host=HOST, port=PORT)
+    app.run(host=HOST, port=PORT, debug=DEBUG, ssl_context=context)
