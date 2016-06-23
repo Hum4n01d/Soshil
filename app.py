@@ -5,11 +5,6 @@ from flask import Flask, g, render_template, flash, redirect, url_for, request, 
 from flask_bcrypt import check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
-from OpenSSL import SSL
-context = SSL.Context(SSL.SSLv23_METHOD)
-context.use_privatekey_file('server.key')
-context.use_certificate_file('server.crt')
-
 app = Flask(__name__)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
 
@@ -34,7 +29,7 @@ def load_user(userid):
 
 @app.before_request
 def before_request():
-    '''Connect to the database before each request'''
+    """Connect to the database before each request."""
     g.db = models.DATABASE
     g.db.connect()
     g.user = current_user
@@ -150,6 +145,9 @@ def logout():
 def index():
     stream = models.Post.select().limit(100)
 
+    print(stream)
+    print(g.user)
+
     return render_template('stream.html', user=g.user, stream=stream)
 
 @app.route('/stream')
@@ -238,4 +236,5 @@ def unfollow(username):
 
 if __name__ == '__main__':
     models.initialize()
+    context = ('server.crt', 'server.key')
     app.run(host=HOST, port=PORT, debug=DEBUG, ssl_context=context)
