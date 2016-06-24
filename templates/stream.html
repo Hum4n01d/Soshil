@@ -9,7 +9,7 @@
                 <div class="post-title">
                     <h2>{{ post.title }}</h2>
                     <p>
-                        <a href="{{ url_for('stream', username=post.user.username )}}">{{ post.user.username }}</a>
+                        <a href="{{ url_for('profile', username=post.user.username )}}">{{ post.user.username }}</a>
                         <span class="x-margin">-</span>
                         <time data-time="{{ post.timestamp }}" datetime="{{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}">{{ post.timestamp.strftime('%m-%d-%Y %H:%M') }}</time>
                     </p>

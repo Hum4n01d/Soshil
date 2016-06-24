@@ -150,36 +150,32 @@ def index():
 
     return render_template('stream.html', user=g.user, stream=stream)
 
+@app.route('/users/<username>')
+def profile(username):
+    try:
+        if g.user._get_current_object().is_anonymous:
+            profile_user = models.User.select().where(models.User.username ** username).get()
+            stream = profile_user.posts.limit(100)
+
+        elif username != current_user.username:
+            profile_user = models.User.select().where(models.User.username ** username).get()
+            stream = profile_user.posts.limit(100)
+
+        else:
+            stream = current_user.get_stream().limit(100)
+            profile_user = current_user
+
+    except models.DoesNotExist:
+        abort(404)
+
+    return render_template('profile.html', profile_user=profile_user, stream=stream, user=g.user._get_current_object())
+
 @app.route('/stream')
-@app.route('/stream/<username>')
-def stream(username=None):
-    template = 'stream.html'
-    profile_user = None
-    stream = None
+@login_required
+def stream():
+    stream = current_user.get_stream().limit(100)
 
-    if username:
-        template = 'profile.html'
-
-        try:
-            if g.user._get_current_object().is_anonymous:
-                profile_user = models.User.select().where(models.User.username ** username).get()
-                stream = profile_user.posts.limit(100)
-
-            elif username != current_user.username:
-                profile_user = models.User.select().where(models.User.username ** username).get()
-                stream = profile_user.posts.limit(100)
-
-            else:
-                stream = current_user.get_stream().limit(100)
-                profile_user = current_user
-
-        except models.DoesNotExist:
-            abort(404)
-    else:
-        stream = current_user.get_stream().limit(100)
-        profile_user = current_user
-
-    return render_template(template, profile_user=profile_user, stream=stream, user=g.user._get_current_object())
+    return render_template('stream.html', stream=stream, user=g.user._get_current_object())
 
 @app.route('/new_post', methods=('GET', 'POST'))
 @login_required
@@ -211,7 +207,7 @@ def follow(username):
         else:
             flash("You're now following {}".format(to_user.username), 'success')
 
-    return redirect(url_for('stream', username=to_user.username))
+    return redirect(url_for('profile', username=to_user.username))
 
 
 @app.route('/unfollow/<username>')
@@ -232,7 +228,7 @@ def unfollow(username):
         else:
             flash("You've unfollowed {}".format(to_user.username), 'success')
 
-    return redirect(url_for('stream', username=to_user.username))
+    return redirect(url_for('profile', username=to_user.username))
 
 if __name__ == '__main__':
     models.initialize()
