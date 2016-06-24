@@ -19,12 +19,14 @@
         {% endwith %}
         <header>
             <nav>
-                <a href="{{ url_for('index') }}">Home</a>
                 {% if user.is_authenticated %}
-                <a href="{{ url_for('post')}} ">New Post</a>
+                <a href="{{ url_for('stream') }}">My Stream</a>
+                <a href="{{ url_for('all_posts') }}">All Posts</a>
+                <a href="{{ url_for('new_post')}} ">New Post</a>
                 <a href="{{ url_for('profile', username=user.username )}}">Profile</a>
                 <a href="{{ url_for('logout')}} ">Logout {{ user.username }}</a>
                 {% else %}
+                <a href="{{ url_for('index') }}">Home</a>
                 <a href="{{ url_for('login') }}">Log in</a>
                 <a href="{{ url_for('register') }}">Sign up</a>
                 {% endif %}

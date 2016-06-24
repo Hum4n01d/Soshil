@@ -1,28 +1,42 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-{% if user.is_authenticated %}
-    <h1>Posts:</h1>
-    {% if stream %}
-        {% for post in stream %}
-            <article class="post">
-                <div class="post-title">
-                    <h2>{{ post.title }}</h2>
-                    <p>
-                        <a href="{{ url_for('profile', username=post.user.username )}}">{{ post.user.username }}</a>
-                        <span class="x-margin">-</span>
-                        <time data-time="{{ post.timestamp }}" datetime="{{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}">{{ post.timestamp.strftime('%m-%d-%Y %H:%M') }}</time>
-                    </p>
+{% if stream|length > 1 %}
+<h1>Posts:</h1>
+{% endif %}
+{% if stream %}
+    {% for post in stream %}
+        <article class="post
+            {% if stream|length == 1 %}
+            no-border
+            {% endif %}
+            ">
+            <div class="post-title">
+                <h2>{{ post.title }}</h2>
+
+                <div>
+                    {% if post.user == user %}
+                    <button class="danger"><a href="{{ url_for('delete', post_id=post.id) }}">Delete</a></button>
+                    {% endif %}
                 </div>
-                <div class="post-content">
-                    {{ post.content }}
-                </div>
-            </article>
-        {% endfor %}
-    {% else %}
-    <p>No posts</p>
-    {% endif %}
+            </div>
+            <div class="post-info">
+                <p>
+                    <a href="{{ url_for('profile', username=post.user.username )}}">{{ post.user.username }}</a>
+                    <span class="x-margin">-</span>
+                    <time data-time="{{ post.timestamp }}" datetime="{{ post.timestamp.strftime('%Y-%m-%d %I:%M') }}">{{ post.timestamp.strftime('%m-%d-%Y %H:%M') }}</time>
+                    {% if stream|length > 1 %}
+                    <span class="x-margin">-</span>
+                    <a href="{{ url_for('view_post', post_id=post.id) }}">View</a>
+                    {% endif %}
+                </p>
+            </div>
+            <div class="post-content">
+                {{- post.content -}}
+            </div>
+        </article>
+    {% endfor %}
 {% else %}
-<p>Soshil is a WIP social media website. To use it, sign up or log in.</p>
+<p>No posts</p>
 {% endif %}
 {% endblock %}

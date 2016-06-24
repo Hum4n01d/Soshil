@@ -1,9 +1,10 @@
 @import 'https://fonts.googleapis.com/css?family=Libre+Franklin';
+border-color = #ddd
 
 body
     font-family 'Libre Franklin', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif
     margin 0 10px
-    
+
     *
         box-sizing border-box
     
@@ -17,21 +18,24 @@ body
         a
             width 100%
             padding 10px 0
-            border-bottom 1px solid #ddd
-            
+            border-bottom 1px solid border-color
+
             &:hover
                 color black
-    
+
+            &:last-child
+                border-bottom 2px solid border-color
+
     /***************
     TEXT
     ***************/
     a
         text-decoration none
         color #999
-        
+
         &:hover
-            color #ddd
-    
+            color border-color
+
     /***************
     MODAL
     ***************/
@@ -55,28 +59,28 @@ body
         position absolute
         top 100px
         left 0
-        
+
         form
             margin 0
-        
+
             fieldset
                 margin-top 0
                 display flex
                 flex-direction column
                 padding 10px
-                
+
                 input,
                 button
                     width 100%
 
             button
                 margin-bottom 0
-                
+
     img[src="/static/github-logo.svg"]
         margin-bottom -3px
         margin-left 5px
         width 20px
-            
+
     /***************
     BUTTONS
     ***************/
@@ -90,14 +94,14 @@ body
 
         &:hover
             cursor pointer
-            color #ddd
-        
+            color border-color
+
         &.danger
             background-color orangered
-            
+
         a
             color white
-    
+
     /***************
     GENERAL
     ***************/
@@ -105,7 +109,7 @@ body
     h2,
     h3
         margin 10px 0
-        
+
     .flashes
         display none
         padding 0
@@ -113,7 +117,7 @@ body
         top 0
         left 5vw
         width 90vw
-        
+
         li
             border-radius 10px
             list-style none
@@ -121,62 +125,83 @@ body
             padding 10px
             text-align center
             background-color lightblue
-            
+
         .error
             background-color orangered
-        
+
     .x-margin
         margin 0 5px
-        
+
     /***************
     FORMS
     ***************/
     form
         margin 10px 0
-        
+
         fieldset
             border none
             padding 0
             margin 5px 0
-            
+
             input,
             textarea
                 border-radius 5px
-                border 1px solid #ddd
+                border 1px solid border-color
                 padding 10px
                 width 100%
-                
+
                 &:focus
                     outline none
-                
+
             textarea
                 height 200px
                 resize vertical
-                
+
     #login-form,
     #signup-form
         display none
-        
+
         fieldset
             padding 0
-            
+
     /***************
     STREAM
     ***************/
     .post
         margin 10px 0
         padding 10px
-        border 1px solid #ddd
+        border 1px solid border-color
         border-radius 10px
-        
+
+        &.no-border
+            border none
+            padding 0
+
         .post-title
-            border-bottom 1px solid #ddd
-        
+            display flex
+            justify-content space-between
+
+            h2
+                line-height 1.5em
+                margin 0
+
+            button.danger,
+            form
+                margin 0
+                height 36px
+
+        .post-info
+            border-bottom 1px solid border-color
+
+            p
+                margin-top 5px
+
         .post-content
             margin 10px 0
-            
+            white-space pre-line
+
             line-height 1.5em
-            
+
     /***************
     USER STREAM
     ***************/
@@ -184,7 +209,7 @@ body
         .user_header,
         .user_stats
             display flex
-            border-bottom 1px solid #ddd
+            border-bottom 1px solid border-color
             
         .user_header
             justify-content space-between
@@ -198,5 +223,18 @@ body
     ***************/
     footer
         padding 10px
-        border-top 1px solid #ddd
+        border-top 2px solid border-color
         text-align center
+
+    /***************
+    MEDIA QUERIES
+    ***************/
+    @media (min-width: 34em)
+        header
+            flex-direction row
+
+    @media (min-width: 48em)
+        background-color green
+
+    @media (min-width: 62em)
+        background-color blue

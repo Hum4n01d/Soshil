@@ -42,7 +42,11 @@ def after_request(response):
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return render_template('error.html', error=error, user=g.user), 404
+    return render_template('error.html', error=error, user=g.user._get_current_object()), 404
+
+@app.errorhandler(401)
+def unauthorized(error):
+    return render_template('error.html', error=error, user=g.user._get_current_object()), 401
 
 @app.route('/register', methods=('GET', 'POST'))
 def register():
@@ -58,7 +62,7 @@ def register():
         login_user(models.User.get(models.User.email == form.email.data))
         return redirect(url_for('index'))
     
-    return render_template('register.html', form=form, user=g.user)
+    return render_template('register.html', form=form, user=g.user._get_current_object())
 
 @app.route('/login', methods=('GET', 'POST'))
 def login():
@@ -88,7 +92,7 @@ def login():
                 else:
                     flash('Your email or password is incorrect', 'error')
                 
-    return render_template('login.html', form=form, user=g.user)
+    return render_template('login.html', form=form, user=g.user._get_current_object())
 
 @app.route('/login/github')
 def login_github():
@@ -143,12 +147,16 @@ def logout():
 
 @app.route('/')
 def index():
+    if g.user._get_current_object().is_authenticated:
+        return redirect(url_for('stream'))
+    else:
+        stream = models.Post.select().limit(100)
+        return render_template('index.html', user=g.user._get_current_object(), stream=stream)
+
+@app.route('/all')
+def all_posts():
     stream = models.Post.select().limit(100)
-
-    print(stream)
-    print(g.user)
-
-    return render_template('stream.html', user=g.user, stream=stream)
+    return render_template('stream.html', user=g.user._get_current_object(), stream=stream)
 
 @app.route('/users/<username>')
 def profile(username):
@@ -177,38 +185,49 @@ def stream():
 
     return render_template('stream.html', stream=stream, user=g.user._get_current_object())
 
+@app.route('/post/<int:post_id>')
+def view_post(post_id):
+    posts = models.Post.select().where(models.Post.id == post_id)
+
+    if posts:
+        return render_template('stream.html', stream=posts, user=g.user._get_current_object())
+    else:
+        abort(404)
+
 @app.route('/new_post', methods=('GET', 'POST'))
 @login_required
-def post():
+def new_post():
     form = forms.PostForm()
     if form.validate_on_submit():
         models.Post.create(user=g.user._get_current_object(), title=form.title.data, content=form.content.data.strip())
         flash('Message successfully posted!', 'success')
         return redirect(url_for('index'))
     
-    return render_template('post.html', form=form, user=g.user)
-
+    return render_template('post.html', form=form, user=g.user._get_current_object())
 
 @app.route('/follow/<username>')
 @login_required
 def follow(username):
-    try:
-        to_user = models.User.get(models.User.username ** username)
-    except models.DoesNotExist:
-        pass
+    if username.lower() == g.user._get_current_object().low_username:
+        flash("You can't follow yourself!")
+        return redirect(url_for('stream'))
     else:
         try:
-            models.Relationship.create(
-                from_user=g.user._get_current_object(),
-                to_user=to_user
-            )
-        except models.IntegrityError:
+            to_user = models.User.get(models.User.username ** username)
+        except models.DoesNotExist:
             pass
         else:
-            flash("You're now following {}".format(to_user.username), 'success')
+            try:
+                models.Relationship.create(
+                    from_user=g.user._get_current_object(),
+                    to_user=to_user
+                )
+            except models.IntegrityError:
+                pass
+            else:
+                flash("You're now following {}".format(to_user.username), 'success')
 
-    return redirect(url_for('profile', username=to_user.username))
-
+        return redirect(url_for('profile', username=to_user.username))
 
 @app.route('/unfollow/<username>')
 @login_required
@@ -229,6 +248,20 @@ def unfollow(username):
             flash("You've unfollowed {}".format(to_user.username), 'success')
 
     return redirect(url_for('profile', username=to_user.username))
+
+@app.route('/delete')
+def delete():
+    post_id = request.args.get('post_id')
+
+    try:
+        if models.Post.get(models.Post.id == post_id).user == g.user._get_current_object():
+            models.Post.get(models.Post.id == post_id).delete_instance()
+        else:
+            abort(401)
+        return redirect(url_for('index'))
+    except models.DoesNotExist:
+        abort(404)
+
 
 if __name__ == '__main__':
     models.initialize()
