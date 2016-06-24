@@ -18,27 +18,34 @@
             {% endif %}
         {% endwith %}
         <header>
-            <nav>
-                {% if user.is_authenticated %}
-                <a href="{{ url_for('stream') }}">My Stream</a>
-                <a href="{{ url_for('all_posts') }}">All Posts</a>
-                <a href="{{ url_for('new_post')}} ">New Post</a>
-                <a href="{{ url_for('profile', username=user.username )}}">Profile</a>
-                <a href="{{ url_for('logout')}} ">Logout {{ user.username }}</a>
-                {% else %}
-                <a href="{{ url_for('index') }}">Home</a>
-                <a href="{{ url_for('login') }}">Log in</a>
-                <a href="{{ url_for('register') }}">Sign up</a>
-                {% endif %}
-            </nav>
+            <div class="main-header">
+                <h1 class="logo"><a href="{{ url_for('index') }}">Soshil</a></h1>
+                <nav>
+                    {% if user.is_authenticated %}
+                    <a href="{{ url_for('stream') }}">My Stream</a>
+                    <a href="{{ url_for('all_posts') }}">All Posts</a>
+                    <a href="{{ url_for('new_post')}} ">New Post</a>
+                    <a href="{{ url_for('profile', username=user.username )}}">Profile</a>
+                    <a href="{{ url_for('logout')}} ">Logout {{ user.username }}</a>
+                    {% else %}
+                    <a href="{{ url_for('index') }}">Home</a>
+                    <a href="{{ url_for('login') }}">Log in</a>
+                    <a href="{{ url_for('register') }}">Sign up</a>
+                    {% endif %}
+                </nav>
+            </div>
         </header>
         <section id="body">
+            <div class="main-body">
             {% block body %}
             {% endblock %}
+            </div>
             <div id="blanket"></div>
         </section>
         <footer>
-            <a href="{{ url_for('index') }}">&copy;<span id="year"></span> Soshil</a>
+            <div class="main-footer">
+                <a href="{{ url_for('index') }}">&copy;<span id="year"></span> Soshil</a>
+            </div>
         </footer>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="/static/jquery.validate.min.js"></script>

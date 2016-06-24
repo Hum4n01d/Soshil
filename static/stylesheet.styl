@@ -9,22 +9,30 @@ body
         box-sizing border-box
     
     /***************
-    NAV
+    HEADER
     ***************/
-    nav
-        display flex
-        flex-direction column
+    .main-header
+        .logo
+            font-size 1.5em
+            text-align center
 
-        a
-            width 100%
-            padding 10px 0
-            border-bottom 1px solid border-color
-
-            &:hover
+            a
                 color black
 
-            &:last-child
-                border-bottom 2px solid border-color
+        nav
+            display flex
+            flex-direction column
+
+            a
+                width 100%
+                padding 10px 0
+                border-top 1px solid border-color
+
+                &:hover
+                    color black
+
+                &:last-child
+                    border-bottom 2px solid border-color
 
     /***************
     TEXT
@@ -115,8 +123,8 @@ body
         padding 0
         position absolute
         top 0
-        left 5vw
-        width 90vw
+        left 12.5vw
+        width 75vw
 
         li
             border-radius 10px
@@ -222,19 +230,50 @@ body
     FOOTER
     ***************/
     footer
-        padding 10px
         border-top 2px solid border-color
-        text-align center
+
+        .main-footer
+            padding 10px
+            text-align center
 
     /***************
     MEDIA QUERIES
     ***************/
     @media (min-width: 34em)
         header
-            flex-direction row
+            border-bottom 2px solid border-color
+
+            .main-header
+                display flex
+
+                .logo
+                    font-size 2em
+                    margin-right auto
+
+                nav
+                    flex-direction row
+                    align-items center
+
+                    a
+                        width auto
+                        margin 0
+                        border none
+                        margin-left 20px
+
+                        &:last-child
+                            border none
+
 
     @media (min-width: 48em)
-        background-color green
+        .main-header,
+        .main-body,
+        .main-footer
+            width 90vw
+            margin 0 5vw
 
     @media (min-width: 62em)
-        background-color blue
+        .main-header,
+        .main-body,
+        .main-footer
+            width 80vw
+            margin 0 10vw

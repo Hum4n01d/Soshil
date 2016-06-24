@@ -12,7 +12,7 @@ import forms
 import models
 
 DEBUG = True
-PORT = 8000
+PORT = 5000
 HOST = '0.0.0.0'
 
 login_manager = LoginManager()

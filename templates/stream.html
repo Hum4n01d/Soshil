@@ -5,6 +5,7 @@
 <h1>Posts:</h1>
 {% endif %}
 {% if stream %}
+<div class="posts">
     {% for post in stream %}
         <article class="post
             {% if stream|length == 1 %}
@@ -36,6 +37,7 @@
             </div>
         </article>
     {% endfor %}
+</div>
 {% else %}
 <p>No posts</p>
 {% endif %}
