@@ -79,6 +79,21 @@ class Post(Model):
         database = DATABASE
         order_by = ('-timestamp',)
 
+class Comment(Model):
+    timestamp = DateTimeField(default=datetime.now)
+    user = ForeignKeyField(
+        rel_model=User,
+        related_name='comments'
+    )
+    post = ForeignKeyField(
+        rel_model=Post,
+        related_name='comments'
+    )
+    content = CharField(max_length=250)
+
+    class Meta:
+        database= DATABASE
+        order_by = ('-timestamp',)
 
 class Relationship(Model):
     from_user = ForeignKeyField(User, related_name='relationships')

@@ -1,6 +1,7 @@
 import os
 
 import requests
+
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_bcrypt import check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -261,7 +262,6 @@ def delete():
         return redirect(url_for('index'))
     except models.DoesNotExist:
         abort(404)
-
 
 if __name__ == '__main__':
     models.initialize()
