@@ -15,7 +15,7 @@ import forms
 import models
 
 DEBUG = True
-PORT = int(os.environ['PORT'])
+PORT = int(os.environ.get('PORT', 5000))
 HOST = '0.0.0.0'
 
 login_manager = LoginManager()
