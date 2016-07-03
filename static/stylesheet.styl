@@ -81,9 +81,6 @@ body
                 button
                     width 100%
 
-            button
-                margin-bottom 0
-
     img[src="/static/github-logo.svg"]
         margin-bottom -3px
         margin-left 5px
@@ -97,6 +94,7 @@ body
         padding 10px
         border-radius 5px
         color white
+        height 40px
         background-color dodgerblue
         border none
 
@@ -144,7 +142,7 @@ body
     FORMS
     ***************/
     form
-        margin 10px 0
+        margin-bottom 10px
 
         fieldset
             border none
@@ -165,10 +163,15 @@ body
                 height 200px
                 resize vertical
 
+        button
+            margin-bottom 0
+
+    .login-title
+        display flex
+        justify-content space-between
+
     #login-form,
     #signup-form
-        display none
-
         fieldset
             padding 0
 
@@ -219,9 +222,20 @@ body
         .user_stats
             display flex
             border-bottom 1px solid border-color
-            
+
         .user_header
             justify-content space-between
+            align-items center
+
+            > div
+                display flex
+                align-items center
+
+                img.avatar
+                    width 75px
+                    height 75px
+                    margin 5px 0
+                    margin-right 20px
             
         .user_stats
             justify-content space-around
@@ -236,6 +250,9 @@ body
         .main-footer
             padding 10px
             text-align center
+
+            p
+                margin 0
 
     /***************
     MEDIA QUERIES
@@ -264,8 +281,13 @@ body
                         &:last-child
                             border none
 
+        .flashes
+            width 50%
+            left 25%
 
     @media (min-width: 48em)
+        margin 0
+
         .main-header,
         .main-body,
         .main-footer
@@ -273,6 +295,8 @@ body
             margin 0 5vw
 
     @media (min-width: 62em)
+        margin 0
+
         .main-header,
         .main-body,
         .main-footer

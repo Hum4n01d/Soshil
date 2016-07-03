@@ -8,10 +8,10 @@ DATABASE = SqliteDatabase('soshil.db')
 
 class User(UserMixin, Model):
     username = CharField()
-    low_username = CharField(unique=True)
     email = CharField(unique=True)
     password = CharField(max_length=100)
     joined_date = DateTimeField(default=datetime.now)
+    avatar_url = CharField()
     is_admin = BooleanField(default=False)
     github_user = BooleanField(default=False)
   
@@ -44,36 +44,36 @@ class User(UserMixin, Model):
         )
     
     @classmethod
-    def create_user(cls, username, email, password, admin=False, github_user=False, low_username=low_username):
+    def create_user(cls, username, email, password, avatar_url, admin=False, github_user=False):
         if github_user:
             cls.create(
                 username=username,
                 email=email,
                 password='',
                 is_admin=admin,
-                github_user=github_user,
-                low_username=low_username.lower()
+                avatar_url=avatar_url,
+                github_user=github_user
             )
         else:
             try:
                 cls.create(
                     username=username,
-                    low_username=username.lower(),
                     email=email,
                     password=generate_password_hash(password),
+                    avatar_url=avatar_url,
                     is_admin=admin
                 )
             except IntegrityError:
                 raise ValueError('User already exists')
 
 class Post(Model):
-    title = CharField()
+    title = CharField(max_length=100)
     timestamp = DateTimeField(default=datetime.now)
     user = ForeignKeyField(
         rel_model=User,
         related_name='posts'
     )
-    content = TextField()
+    content = CharField(max_length=250)
     
     class Meta:
         database = DATABASE

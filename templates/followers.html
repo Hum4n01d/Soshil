@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{% for following_user in user.followers() %}
+<a href="{{ url_for('profile', username=following_user.username) }}">
+    <img src="{{ following_user.avatar }}" alt="{{ following_user.username }}'s Avatar">
+    {{ following_user.username }}
+</a>
+{% endfor %}
+{% endblock %}

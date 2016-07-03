@@ -35,10 +35,13 @@ $.validator.addMethod('regex', function(value, element, regexpr) {
 
 $('#signup-form form').validate({
     rules: {
-        username: 'required',
+        username: {
+            required: true,
+            regex: /^[a-zA-Z0-9_]+$/
+        },
         email: {
             required: true,
-            regex: /^[\w.]+@[\w.]+.[\w]$/
+            regex: /^[\w.]+@[\w.]+.[\w]+$/
         },
         password: {
             required: true,
@@ -50,7 +53,10 @@ $('#signup-form form').validate({
         }
     },
     messages: {
-        username: 'Please enter your username',
+        username: {
+            required: 'Please enter your username',
+            regex: 'Username can only contain letters, numbers, and underscores'
+        },
         email: {
             required: 'Please enter your email address',
             regex: 'Please enter a valid email address'

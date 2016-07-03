@@ -5,15 +5,17 @@ import requests
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_bcrypt import check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_gravatar import Gravatar
 
 app = Flask(__name__)
+gravatar = Gravatar(app, size=75, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False, base_url=None)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
 
 import forms
 import models
 
 DEBUG = True
-PORT = os.environ['PORT']
+PORT = int(os.environ['PORT'])
 HOST = '0.0.0.0'
 
 login_manager = LoginManager()
@@ -49,30 +51,36 @@ def page_not_found(error):
 def unauthorized(error):
     return render_template('error.html', error=error, user=g.user._get_current_object()), 401
 
-@app.route('/register', methods=('GET', 'POST'))
-def register():
+@app.route('/sign_up', methods=('GET', 'POST'))
+def sign_up():
     form = forms.RegisterForm()
     if form.validate_on_submit():
-        flash('You\'ve been successfully registered!', 'success')
-        models.User.create_user(
-            username=form.username.data,
-            low_username=form.username.data.lower(),
-            email=form.email.data.lower(),
-            password=form.password.data
-        )
-        login_user(models.User.get(models.User.email == form.email.data))
-        return redirect(url_for('index'))
-    
+        try:
+            models.User.create_user(
+                username=form.username.data,
+                email=form.email.data.lower(),
+                password=form.password.data,
+                avatar_url=''
+            )
+            login_user(models.User.get(models.User.email == form.email.data))
+            flash('You\'ve been successfully registered!', 'success')
+
+            return redirect(url_for('index'))
+
+        except:
+            flash('Username already exists')
+            return render_template('register.html', form=form, user=g.user._get_current_object())
+
     return render_template('register.html', form=form, user=g.user._get_current_object())
 
-@app.route('/login', methods=('GET', 'POST'))
-def login():
+@app.route('/log_in', methods=('GET', 'POST'))
+def log_in():
     form = forms.LoginForm()
     next_url = request.args.get('next')
     
     if form.validate_on_submit():
         try:
-            user = models.User.get(models.User.low_username == form.username.data.lower())
+            user = models.User.get(models.User.username == form.username.data.lower())
             
         except models.DoesNotExist:
             flash('Your username or password is incorrect', 'error')
@@ -111,30 +119,35 @@ def login_github_callback():
     
     access_token = response.json()['access_token']
     
-    username = requests.get('https://api.github.com/user', {"access_token": access_token}).json()['login']
+    user_json = requests.get('https://api.github.com/user', {"access_token": access_token}).json()
+    username = user_json['login']
+    avatar_url = user_json['avatar_url']
     emails = requests.get('https://api.github.com/user/emails', {"access_token": access_token}).json()
     email = ''
     
     for address in emails:
         if address['primary']:
             if address['verified']:
-                    email = address['email']        
+                email = address['email']
+                break
             else:
                 flash('Please verify your Github account', 'error')
-    
+                break
+
+    del emails, access_token, code, address, user_json
+
     try:
+        login_user(user=models.User.get(models.User.email == email))
+    except models.DoesNotExist:
         models.User.create_user(
             username=username,
-            low_username=username.lower(),
             email=email.lower(),
             password='',
+            avatar_url=avatar_url,
             github_user=True
         )
-    except: pass
-    
-    user = models.User.get(models.User.email == email)
-            
-    login_user(user)
+
+    login_user(user = models.User.get(models.User.email == email))
     flash("You've been logged in!", "success")
     
     return redirect(url_for('index'))
@@ -144,7 +157,7 @@ def login_github_callback():
 def logout():
     logout_user()
     flash('You\'ve been logged out.', 'success')
-    return redirect(url_for('login'))
+    return redirect(url_for('log_in'))
 
 @app.route('/')
 def index():
@@ -162,22 +175,23 @@ def all_posts():
 @app.route('/users/<username>')
 def profile(username):
     try:
-        if g.user._get_current_object().is_anonymous:
-            profile_user = models.User.select().where(models.User.username ** username).get()
-            stream = profile_user.posts.limit(100)
-
-        elif username != current_user.username:
-            profile_user = models.User.select().where(models.User.username ** username).get()
-            stream = profile_user.posts.limit(100)
-
-        else:
-            stream = current_user.get_stream().limit(100)
-            profile_user = current_user
+        profile_user = models.User.select().where(models.User.username ** username).get()
+        stream = profile_user.posts.limit(100)
 
     except models.DoesNotExist:
         abort(404)
 
     return render_template('profile.html', profile_user=profile_user, stream=stream, user=g.user._get_current_object())
+
+@app.route('/users/<username>/followers')
+def followers(username):
+    try:
+        profile_user = models.User.select().where(models.User.username ** username).get()
+
+    except models.DoesNotExist:
+        abort(404)
+
+    return render_template('followers.html', profile_user=profile_user, stream=stream, user=g.user._get_current_object())
 
 @app.route('/stream')
 @login_required
@@ -209,7 +223,7 @@ def new_post():
 @app.route('/follow/<username>')
 @login_required
 def follow(username):
-    if username.lower() == g.user._get_current_object().low_username:
+    if username.lower() == g.user._get_current_object().username.lower():
         flash("You can't follow yourself!")
         return redirect(url_for('stream'))
     else:
@@ -255,13 +269,18 @@ def delete():
     post_id = request.args.get('post_id')
 
     try:
-        if models.Post.get(models.Post.id == post_id).user == g.user._get_current_object():
+        if models.Post.get(models.Post.id == post_id).user == g.user._get_current_object() or g.user._get_current_object().is_admin:
             models.Post.get(models.Post.id == post_id).delete_instance()
         else:
             abort(401)
         return redirect(url_for('index'))
     except models.DoesNotExist:
         abort(404)
+
+@app.route('/account', methods=('GET', 'POST'))
+@login_required
+def account():
+    return render_template('account.html', user=g.user._get_current_object())
 
 if __name__ == '__main__':
     models.initialize()

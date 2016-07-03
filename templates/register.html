@@ -2,11 +2,11 @@
 {% from 'macros.html' import render_field %}
 
 {% block body %}
-<h1>Sign up</h1>
-<button><a href="{{ url_for('login_github')}}">Sign up with GitHub<img src="/static/github-logo.svg" alt="Github's logo"></a></button>
-<span class="x-margins">or</span>
-<button class="modal-trigger">Sign up with your email</button>
-<div class="modal" id="signup-form">
+<div class="login-title">
+    <h1>Sign up</h1>
+    <button><a href="{{ url_for('login_github')}}">Log in with GitHub<img src="/static/github-logo.svg" alt="Github's logo"></a></button>
+</div>
+<div id="signup-form">
     <form method='POST' action=''>
         {{ form.hidden_tag() }}
         {% for field in form %}

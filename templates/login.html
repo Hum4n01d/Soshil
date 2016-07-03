@@ -2,11 +2,11 @@
 {% from 'macros.html' import render_field %}
 
 {% block body %}
-<h1>Login</h1>
-<button><a href="{{ url_for('login_github')}}">Log in with GitHub<img src="/static/github-logo.svg" alt="Github's logo"></a></button>
-<span class="x-margins">or</span>
-<button class="modal-trigger">Log in with your Soshil account</button>
-<div class="modal" id="login-form">
+<div class="login-title">
+    <h1>Log in</h1>
+    <button><a href="{{ url_for('login_github')}}">Log in with GitHub<img src="/static/github-logo.svg" alt="Github's logo"></a></button>
+</div>
+<div id="login-form">
     <form method='POST' action=''>
         {{ form.hidden_tag() }}
         {% for field in form %}
@@ -15,4 +15,5 @@
         <button type="submit">Log in!</button>
     </form>
 </div>
+<p>Don't have an account? <a href="{{ url_for('sign_up') }}">Sign up!</a></p>
 {% endblock %}

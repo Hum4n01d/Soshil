@@ -3,7 +3,16 @@
 {% block body %}
 <div class="user_stream">
     <div class="user_header">
-        <h1>{{ profile_user.username }}</h1>
+        <div>
+            <img class="avatar" src="
+                {% if user.github_user %}
+                {{ profile_user.avatar_url }}
+                {% else %}
+                {{ user.email | gravatar }}
+                {% endif %}
+            " alt="{{ profile_user.username }}'s Avatar">
+            <h1>{{ profile_user.username }}</h1>
+        </div>
         {% if user.is_authenticated %}
             {% if profile_user != current_user %}
                 {% if not profile_user in user.following() %}
