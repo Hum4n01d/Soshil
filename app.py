@@ -269,8 +269,9 @@ def delete():
     post_id = request.args.get('post_id')
 
     try:
-        if models.Post.get(models.Post.id == post_id).user == g.user._get_current_object() or g.user._get_current_object().is_admin:
+        if models.Post.get(models.Post.id == post_id).user == g.user._get_current_object():
             models.Post.get(models.Post.id == post_id).delete_instance()
+
         else:
             abort(401)
         return redirect(url_for('index'))
