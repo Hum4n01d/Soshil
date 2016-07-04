@@ -1,1 +1,1 @@
-web: gunicorn app:app --log-file - --certfile=server.crt --keyfile=server.key
+web: gunicorn app:app --log-file -
