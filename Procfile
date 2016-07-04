@@ -1,1 +1,1 @@
-web: touch soshil.db && python models.py && python app.py
+web: gunicorn app:app --log-file - --certfile=server.crt --keyfile=server.key
