@@ -284,5 +284,4 @@ def account():
 
 if __name__ == '__main__':
     models.initialize()
-    context = ('server.crt', 'server.key')
-    app.run(host=HOST, port=PORT, debug=DEBUG, ssl_context=context)
+    app.run(host=HOST, port=PORT, debug=DEBUG)
