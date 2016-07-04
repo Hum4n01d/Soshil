@@ -8,7 +8,7 @@
                 {% if user.github_user %}
                 {{ profile_user.avatar_url }}
                 {% else %}
-                {{ user.email | gravatar }}
+                {{ profile_user.email | gravatar }}
                 {% endif %}
             " alt="{{ profile_user.username }}'s Avatar">
             <h1>{{ profile_user.username }}</h1>
