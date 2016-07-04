@@ -109,3 +109,6 @@ def initialize():
     DATABASE.connect()
     DATABASE.create_tables([User, Post, Relationship], safe=True)
     DATABASE.close()
+
+if __name__ == '__main__':
+    initialize()
