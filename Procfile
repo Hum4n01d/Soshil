@@ -1,1 +1,1 @@
-web: python models.py && python app.py
+web: touch soshil.db && python models.py && python app.py
