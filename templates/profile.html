@@ -5,7 +5,7 @@
     <div class="user_header">
         <div>
             <img class="avatar" src="
-                {% if user.github_user %}
+                {% if profile_user.github_user %}
                 {{ profile_user.avatar_url }}
                 {% else %}
                 {{ profile_user.email | gravatar }}
@@ -13,13 +13,13 @@
             " alt="{{ profile_user.username }}'s Avatar">
             <h1>{{ profile_user.username }}</h1>
         </div>
-        {% if user.is_authenticated %}
-            {% if profile_user != current_user %}
-                {% if not profile_user in user.following() %}
-                <button><a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a></button>
-                {% else %}
-                <button><a href="{{ url_for('unfollow', username=profile_user.username) }}" class="button">Unfollow</a></button>
-                {% endif %}
+        {% if profile_user != user %}
+            {% if not user.is_authenticated %}
+            <button><a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a></button>
+            {% elif not profile_user in user.following() %}
+            <button><a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a></button>
+            {% else %}
+            <button><a href="{{ url_for('unfollow', username=profile_user.username) }}" class="button">Unfollow</a></button>
             {% endif %}
         {% endif %}
     </div>

@@ -21,7 +21,7 @@ HOST = '0.0.0.0'
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.session_protection = 'strong'
-login_manager.login_view = 'login'
+login_manager.login_view = 'log_in'
 
 @login_manager.user_loader
 def load_user(userid):
@@ -191,6 +191,8 @@ def followers(username):
     except models.DoesNotExist:
         abort(404)
 
+
+
     return render_template('followers.html', profile_user=profile_user, stream=stream, user=g.user._get_current_object())
 
 @app.route('/stream')
@@ -275,6 +277,7 @@ def delete():
         else:
             abort(401)
         return redirect(url_for('index'))
+
     except models.DoesNotExist:
         abort(404)
 
@@ -282,6 +285,10 @@ def delete():
 @login_required
 def account():
     return render_template('account.html', user=g.user._get_current_object())
+
+@app.route('/terms')
+def terms():
+    return render_template('terms.html', user=g.user._get_current_object())
 
 if __name__ == '__main__':
     models.initialize()
