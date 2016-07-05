@@ -44,7 +44,7 @@ class User(UserMixin, Model):
         )
     
     @classmethod
-    def create_user(cls, username, email, password, avatar_url, admin=False, github_user=False):
+    def create_user(cls, username, email, password, avatar_url='', admin=False, github_user=False):
         if github_user:
             cls.create(
                 username=username,
