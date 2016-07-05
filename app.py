@@ -55,21 +55,20 @@ def unauthorized(error):
 def sign_up():
     form = forms.RegisterForm()
     if form.validate_on_submit():
-        try:
-            models.User.create_user(
-                username=form.username.data,
-                email=form.email.data.lower(),
-                password=form.password.data,
-                avatar_url=''
-            )
-            login_user(models.User.get(models.User.email == form.email.data))
-            flash('You\'ve been successfully registered!', 'success')
+        models.User.create_user(
+            username=form.username.data,
+            email=form.email.data.lower(),
+            password=form.password.data,
+            avatar_url=''
+        )
+        login_user(models.User.get(models.User.email == form.email.data))
+        flash('You\'ve been successfully registered!', 'success')
 
-            return redirect(url_for('index'))
-
-        except:
-            flash('Username already exists')
-            return render_template('register.html', form=form, user=g.user._get_current_object())
+        return redirect(url_for('index'))
+        #
+        # except:
+        #     flash('Username already exists')
+        #     return render_template('register.html', form=form, user=g.user._get_current_object())
 
     return render_template('register.html', form=form, user=g.user._get_current_object())
 
