@@ -8,6 +8,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from flask_gravatar import Gravatar
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 gravatar = Gravatar(app, size=75, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False, base_url=None)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
 
