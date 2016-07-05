@@ -58,8 +58,7 @@ def sign_up():
         models.User.create_user(
             username=form.username.data,
             email=form.email.data.lower(),
-            password=form.password.data,
-            avatar_url=''
+            password=form.password.data
         )
         login_user(models.User.get(models.User.email == form.email.data))
         flash('You\'ve been successfully registered!', 'success')

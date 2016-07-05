@@ -11,7 +11,7 @@ class User(UserMixin, Model):
     email = CharField(unique=True)
     password = CharField(max_length=100)
     joined_date = DateTimeField(default=datetime.now)
-    avatar_url = CharField()
+    avatar_url = CharField(default='')
     is_admin = BooleanField(default=False)
     github_user = BooleanField(default=False)
   
