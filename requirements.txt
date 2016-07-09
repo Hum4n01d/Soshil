@@ -1,3 +1,4 @@
+bcrypt==3.1.0
 cffi==1.7.0
 click==6.6
 Flask==0.11.1
@@ -5,7 +6,6 @@ Flask-Bcrypt==0.7.1
 Flask-Gravatar==0.4.2
 Flask-Login==0.3.2
 Flask-WTF==0.12
-gunicorn==19.6.0
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23
