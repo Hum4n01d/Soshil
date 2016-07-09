@@ -60,7 +60,7 @@ class User(UserMixin, Model):
                 cls.create(
                     username=username,
                     email=email,
-                    password=bcrypt.hashpw(password, gensalt()),
+                    password=bcrypt.hashpw(password, bcrypt.gensalt()),
                     avatar_url=avatar_url,
                     is_admin=admin
                 )
