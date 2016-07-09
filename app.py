@@ -4,12 +4,10 @@ import requests
 
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from flask_gravatar import Gravatar
 from flask_bcrypt import Bcrypt, check_password_hash
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-gravatar = Gravatar(app, size=75, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False, base_url=None)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
 
 import forms
@@ -59,7 +57,8 @@ def sign_up():
         models.User.create_user(
             username=form.username.data,
             email=form.email.data.lower(),
-            password=form.password.data
+            password=form.password.data,
+            avatar_url='https://www.gravatar.com/avatar/' + str(hash(form.email.data.lower())) + '?d=retro'
         )
         login_user(models.User.get(models.User.email == form.email.data))
         flash('You\'ve been successfully registered!', 'success')
@@ -80,7 +79,6 @@ def log_in():
     if form.validate_on_submit():
         try:
             user = models.User.get(models.User.username == form.username.data.lower())
-            
         except models.DoesNotExist:
             flash('Your username or password is incorrect', 'error')
         else:
@@ -90,10 +88,10 @@ def log_in():
                 if check_password_hash(user.password, form.password.data):
                     login_user(user)
                     flash('You are now logged in {}'.format(user.username), 'success')
-                    
+
                     if next_url:
                         return redirect(next_url)
-                    
+
                     else:
                         return redirect(url_for('index'))
 
@@ -190,8 +188,6 @@ def followers(username):
     except models.DoesNotExist:
         abort(404)
 
-
-
     return render_template('followers.html', profile_user=profile_user, stream=stream, user=g.user._get_current_object())
 
 @app.route('/stream')
@@ -201,25 +197,40 @@ def stream():
 
     return render_template('stream.html', stream=stream, user=g.user._get_current_object())
 
-@app.route('/post/<int:post_id>')
+@app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def view_post(post_id):
-    posts = models.Post.select().where(models.Post.id == post_id)
+    form = forms.CommentForm()
+    post = models.Post.select().where(models.Post.id == post_id).get()
+    comments = models.Comment.select().where(models.Comment.post == post)
 
-    if posts:
-        return render_template('stream.html', stream=posts, user=g.user._get_current_object())
+    if form.validate_on_submit():
+        models.Comment.create(
+            user=g.user._get_current_object(),
+            post=post,
+            content=form.content.data
+        )
+        return redirect(url_for('view_post', post_id=post_id))
+
     else:
-        abort(404)
+        if not post:
+            abort(404)
+
+    return render_template('post.html', post=post, user=g.user._get_current_object(), comments=comments, form=form)
 
 @app.route('/new_post', methods=('GET', 'POST'))
 @login_required
 def new_post():
     form = forms.PostForm()
     if form.validate_on_submit():
-        models.Post.create(user=g.user._get_current_object(), title=form.title.data, content=form.content.data.strip())
+        models.Post.create(
+            user=g.user._get_current_object(),
+            title=form.title.data,
+            content=form.content.data.strip()
+        )
         flash('Message successfully posted!', 'success')
         return redirect(url_for('index'))
     
-    return render_template('post.html', form=form, user=g.user._get_current_object())
+    return render_template('new_post.html', form=form, user=g.user._get_current_object())
 
 @app.route('/follow/<username>')
 @login_required
@@ -265,8 +276,8 @@ def unfollow(username):
 
     return redirect(url_for('profile', username=to_user.username))
 
-@app.route('/delete')
-def delete():
+@app.route('/delete_post')
+def delete_post():
     post_id = request.args.get('post_id')
 
     try:
@@ -275,10 +286,32 @@ def delete():
 
         else:
             abort(401)
+
+        flash('Post deleted!', 'sucess')
         return redirect(url_for('index'))
 
     except models.DoesNotExist:
         abort(404)
+
+@app.route('/delete_comment')
+def delete_comment():
+    comment_id = request.args.get('comment_id')
+    comment = models.Comment.get(models.Comment.id == comment_id)
+    post_id = comment.post.id
+
+    try:
+        if comment.user == g.user._get_current_object():
+            comment.delete_instance()
+
+        else:
+            abort(401)
+
+        flash('Comment deleted!', 'sucess')
+        return redirect(url_for('view_post', post_id=post_id))
+
+    except models.DoesNotExist:
+        abort(404)
+
 
 @app.route('/account', methods=('GET', 'POST'))
 @login_required

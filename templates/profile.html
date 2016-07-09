@@ -4,13 +4,7 @@
 <div class="user_stream">
     <div class="user_header">
         <div>
-            <img class="avatar" src="
-                {% if profile_user.github_user %}
-                {{ profile_user.avatar_url }}
-                {% else %}
-                {{ profile_user.email | gravatar }}
-                {% endif %}
-            " alt="{{ profile_user.username }}'s Avatar">
+            <img class="avatar" src="{{ profile_user.avatar_url }}" alt="{{ profile_user.username }}'s Avatar">
             <h1>{{ profile_user.username }}</h1>
         </div>
         {% if profile_user != user %}

@@ -84,16 +84,16 @@ class Comment(Model):
     timestamp = DateTimeField(default=datetime.now)
     user = ForeignKeyField(
         rel_model=User,
-        related_name='comments'
+        related_name='commenter'
     )
     post = ForeignKeyField(
         rel_model=Post,
-        related_name='comments'
+        related_name='post_comments'
     )
     content = CharField(max_length=250)
 
     class Meta:
-        database= DATABASE
+        database = DATABASE
         order_by = ('-timestamp',)
 
 class Relationship(Model):
@@ -108,5 +108,5 @@ class Relationship(Model):
     
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Post, Relationship], safe=True)
+    DATABASE.create_tables([User, Relationship, Post, Comment], safe=True)
     DATABASE.close()

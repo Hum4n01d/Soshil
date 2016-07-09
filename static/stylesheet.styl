@@ -194,6 +194,7 @@ body
             justify-content space-between
 
             h2
+                color black
                 line-height 1.5em
                 margin 0
 
@@ -209,10 +210,57 @@ body
                 margin-top 5px
 
         .post-content
-            margin 10px 0
+            padding 10px 0
             white-space pre-line
-
+            border-bottom 1px solid border-color
             line-height 1.5em
+
+        .post-comments
+            margin-top 10px
+
+            .comment
+                border 1px solid border-color
+                border-radius 5px
+                padding 10px
+                margin-bottom 10px
+
+
+                p
+                    margin 0
+
+                .comment-user
+                    display flex
+                    align-items center
+                    padding-bottom 10px
+                    margin-bottom 10px
+                    border-bottom 1px solid border-color
+
+                    img
+                        width 30px
+                        height 30px
+                        margin-right 10px
+
+                    h3
+                        margin 0
+                        color black
+
+                    .comment-delete
+                        margin-left auto
+
+                        button
+                            margin 0
+                            height 30px
+                            padding 5px 10px
+
+            form
+                textarea
+                    height 75px
+                    flex-grow 2
+                    resize none
+
+                button
+                    margin-top 0
+
 
     /***************
     USER STREAM

@@ -52,3 +52,9 @@ class LoginForm(Form):
 class PostForm(Form):
     title = StringField('Post title', validators=[DataRequired()])
     content = TextAreaField("What's on your mind?", validators=[DataRequired()])
+
+class CommentForm(Form):
+    content = TextAreaField("Leave a comment", validators=[
+        DataRequired(),
+        Length(max=250)
+    ])
