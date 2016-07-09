@@ -162,7 +162,8 @@ def index():
         return redirect(url_for('stream'))
     else:
         stream = models.Post.select().limit(100)
-        return render_template('index.html', user=g.user._get_current_object(), stream=stream)
+        users = models.User.select()
+        return render_template('index.html', user=g.user._get_current_object(), stream=stream, users=users)
 
 @app.route('/all')
 def all_posts():

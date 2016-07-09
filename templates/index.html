@@ -2,5 +2,9 @@
 
 {% block body %}
 <p>Soshil is a WIP social media website. To use it, sign up or log in.</p>
+<p>Current Users:</p>
+{% for user in users %}
+<p>{{ user.username }}</p>
+{% endfor %}
 {{ super() }}
 {% endblock %}
