@@ -1,6 +1,7 @@
 import os
 
 import requests
+import bcrypt
 
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -85,7 +86,7 @@ def log_in():
             if user.github_user:
                 flash('Please sign in through Github', 'error')
             else:
-                if checkpw(user.password, form.password.data):
+                if bcrypt.checkpw(user.password, form.password.data):
                     login_user(user)
                     flash('You are now logged in {}'.format(user.username), 'success')
                     

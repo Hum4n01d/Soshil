@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from bcrypt import hashpw, gensalt
+import bcrypt
+
 from flask_login import UserMixin
 from peewee import *
 
@@ -59,7 +60,7 @@ class User(UserMixin, Model):
                 cls.create(
                     username=username,
                     email=email,
-                    password=hashpw(password, gensalt()),
+                    password=bcrypt.hashpw(password, gensalt()),
                     avatar_url=avatar_url,
                     is_admin=admin
                 )
