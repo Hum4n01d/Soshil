@@ -1,13 +1,14 @@
 import os
 
 import requests
-import bcrypt
 
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_gravatar import Gravatar
+from flask_bcrypt import Bcrypt, check_password_hash
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 gravatar = Gravatar(app, size=75, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False, base_url=None)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
 
@@ -86,7 +87,7 @@ def log_in():
             if user.github_user:
                 flash('Please sign in through Github', 'error')
             else:
-                if bcrypt.checkpw(user.password, form.password.data):
+                if check_password_hash(user.password, form.password.data):
                     login_user(user)
                     flash('You are now logged in {}'.format(user.username), 'success')
                     
