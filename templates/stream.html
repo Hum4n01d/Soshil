@@ -11,7 +11,7 @@
     {% for post in stream %}
         <article class="post">
             <div class="post-title">
-                <a href="{{ url_for('view_post', post_id=post.id) }}"><h2>{{ post.title }}</h2></a>
+                <a href="{{ url_for('view_post', post_id=post.id) }}"><h2>{{ post.title|oembed(html=False, maxwidth=600, maxheight=600) }}</h2></a>
 
                 <div>
                     {% if post.user == user %}
@@ -32,7 +32,7 @@
                 </p>
             </div>
             <div class="post-content">
-                {{- post.content -}}
+                {{- post.content|oembed(html=False, maxwidth=600, maxheight=600) -}}
             </div>
         </article>
     {% endfor %}

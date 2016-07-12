@@ -6,6 +6,8 @@ from flask import Flask, g, render_template, flash, redirect, url_for, request, 
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt, check_password_hash
 # from flask_mail import Mail, Message
+from micawber.providers import bootstrap_basic
+from micawber.contrib.mcflask import add_oembed_filters
 
 import forms
 import models
@@ -13,11 +15,14 @@ import models
 app = Flask(__name__)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
 
-app.config.update(
-    MAIL_SERVER='smtp-relay.gmail.com',
-    MAIL_PORT=465,
-    MAIL_USE_SSL=True
-)
+oembed_providers = bootstrap_basic()
+add_oembed_filters(app, oembed_providers)
+
+# app.config.update(
+#     MAIL_SERVER='smtp-relay.gmail.com',
+#     MAIL_PORT=465,
+#     MAIL_USE_SSL=True
+# )
 ####
 #### IMPORTANT: USE ITSDANGEROUS TIMEDSERIALIZER THING FOR CONFIRMATION CODE
 

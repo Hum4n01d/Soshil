@@ -4,7 +4,7 @@
 {% block body %}
 <article class="post">
     <div class="post-title">
-        <h2>{{ post.title }}</h2>
+        <h2>{{ post.title|oembed(html=False, maxwidth=600, maxheight=600) }}</h2>
 
         <div>
             {% if post.user == user %}
@@ -24,7 +24,7 @@
         </p>
     </div>
     <div class="post-content">
-        {{- post.content -}}
+        {{- post.content|oembed(html=False, maxwidth=600, maxheight=600) -}}
     </div>
 </article>
 <div class="post-comments">
@@ -49,7 +49,7 @@
                 {% endif %}
             </div>
         </div>
-        <p>{{ comment.content }}</p>
+        <p>{{ comment.content|oembed(html=False, maxwidth=600, maxheight=600) }}</p>
     </div>
     {% endfor %}
 </div>
