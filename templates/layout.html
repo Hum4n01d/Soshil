@@ -19,14 +19,24 @@
         {% endwith %}
         <header>
             <div class="main-header">
-                <h1 class="logo"><a href="{{ url_for('index') }}">Soshil</a></h1>
+                <a href="{{ url_for('index') }}"><h1 class="logo">Soshil</h1></a>
                 <nav>
                     {% if user.is_authenticated %}
-                    <a href="{{ url_for('stream') }}">Stream</a>
-                    <a href="{{ url_for('all_posts') }}">All Posts</a>
                     <a href="{{ url_for('new_post')}} ">New Post</a>
-                    <a href="{{ url_for('account')}} ">Account</a>
-                    <a href="{{ url_for('logout')}} ">Logout {{ user.username }}</a>
+                    <a href="{{ url_for('stream') }}">Stream</a>
+                    <a href="{{ url_for('explore') }}">Explore</a>
+                    <div id="user-options">
+                        <a href="javascript:void(0)" id="user-options-toggle">
+                            <img src="{{ user.avatar_url }}" alt="{{ user.username }}'s Avatar">
+                            <p>{{ user.username }}</p>
+                            <img src="/static/down_arrow.svg">
+                        </a>
+                        <div id="user-options-inner">
+                            <a href="{{ url_for('profile', username=user.username) }}">Profile</a>
+                            <a href="{{ url_for('account')}} ">Account</a>
+                            <a href="{{ url_for('log_out')}} ">Log out</a>
+                        </div>
+                    </div>
                     {% else %}
                     <a href="{{ url_for('index') }}">Home</a>
                     <a href="{{ url_for('log_in') }}">Log in</a>

@@ -1,2 +1,417 @@
 @import 'https://fonts.googleapis.com/css?family=Libre+Franklin';
-body{font-family:'Libre Franklin','HelveticaNeue-Light','Helvetica Neue Light','Helvetica Neue',Helvetica,Arial,'Lucida Grande',sans-serif;margin:0 10px;}body *{box-sizing:border-box}body .main-header .logo{font-size:1.5em;text-align:center;}body .main-header .logo a{color:#000}body .main-header nav{display:flex;flex-direction:column;}body .main-header nav a{width:100%;padding:10px 0;border-top:1px solid #ddd;}body .main-header nav a:hover{color:#000}body .main-header nav a:last-child{border-bottom:2px solid #ddd}body a{text-decoration:none;color:#999;}body a:hover{color:#ddd}body #blanket{display:none;position:absolute;top:0;left:0;z-index:999;background-color:rgba(0,0,0,0.75);width:100vw;height:100vh}body .modal{width:90%;padding:10px;background-color:#fff;z-index:1000;margin:10px;border-radius:10px;position:absolute;top:100px;left:0;}body .modal form{margin:0;}body .modal form fieldset{margin-top:0;display:flex;flex-direction:column;padding:10px;}body .modal form fieldset input,body .modal form fieldset button{width:100%}body img[src="/static/github-logo.svg"]{margin-bottom:-3px;margin-left:5px;width:20px}body button{margin:10px 0;padding:10px;border-radius:5px;color:#fff;height:40px;background-color:#1e90ff;border:none;}body button:hover{cursor:pointer;color:#ddd}body button.danger{background-color:#ff4500}body button a{color:#fff}body h1,body h2,body h3{margin:10px 0}body .flashes{display:none;padding:0;position:absolute;top:0;left:12.5vw;width:75vw;}body .flashes li{border-radius:10px;list-style:none;margin-left:none;padding:10px;text-align:center;background-color:#add8e6}body .flashes .error{background-color:#ff4500}body .x-margin{margin:0 5px}body form{margin-bottom:10px;}body form fieldset{border:none;padding:0;margin:5px 0;}body form fieldset input,body form fieldset textarea{border-radius:5px;border:1px solid #ddd;padding:10px;width:100%;}body form fieldset input:focus,body form fieldset textarea:focus{outline:none}body form fieldset textarea{height:200px;resize:vertical}body form button{margin-bottom:0}body .login-title{display:flex;justify-content:space-between}body #login-form fieldset,body #signup-form fieldset{padding:0}body .post{margin:10px 0;padding:10px;border:1px solid #ddd;border-radius:10px;word-wrap:break-word;}body .post.no-border{border:none;padding:0}body .post .post-title{display:flex;justify-content:space-between;}body .post .post-title h2{color:#000;line-height:1.5em;margin:0}body .post .post-title button.danger,body .post .post-title form{margin:0;height:36px}body .post .post-info{border-bottom:1px solid #ddd;}body .post .post-info p{margin-top:5px}body .post .post-content{padding:10px 0;white-space:pre-line;border-bottom:1px solid #ddd;line-height:1.5em}body .post .post-comments{margin-top:10px;}body .post .post-comments .comment{border:1px solid #ddd;border-radius:5px;padding:10px;margin-bottom:10px;}body .post .post-comments .comment p{margin:0}body .post .post-comments .comment .comment-user{display:flex;align-items:center;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid #ddd;}body .post .post-comments .comment .comment-user img{width:30px;height:30px;margin-right:10px}body .post .post-comments .comment .comment-user h3{margin:0;color:#000}body .post .post-comments .comment .comment-user .comment-delete{margin-left:auto;}body .post .post-comments .comment .comment-user .comment-delete button{margin:0;height:30px;padding:5px 10px}body .post .post-comments form textarea{height:75px;flex-grow:2;resize:none}body .post .post-comments form button{margin-top:0}body .user_stream .user_header,body .user_stream .user_stats{display:flex;border-bottom:1px solid #ddd}body .user_stream .user_header{justify-content:space-between;align-items:center;}body .user_stream .user_header > div{display:flex;align-items:center;}body .user_stream .user_header > div img.avatar{width:75px;height:75px;margin:5px 0;margin-right:20px}body .user_stream .user_stats{justify-content:space-around}body footer{border-top:2px solid #ddd;}body footer .main-footer{padding:10px;text-align:center;}body footer .main-footer > p{margin:0}@media (min-width:34em){body header{border-bottom:2px solid #ddd;}body header .main-header{display:flex;}body header .main-header .logo{font-size:2em;margin-right:auto}body header .main-header nav{flex-direction:row;align-items:center;}body header .main-header nav a{width:auto;margin:0;border:none;margin-left:20px;}body header .main-header nav a:last-child{border:none}body .flashes{width:50%;left:25%}}@media (min-width:48em){body{margin:0}body .main-header,body .main-body,body .main-footer{width:90vw;margin:0 5vw}}@media (min-width:62em){body{margin:0}body .main-header,body .main-body,body .main-footer{width:80vw;margin:0 10vw}}
+body {
+  font-family: 'Libre Franklin', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+  margin: 0 10px;
+/***************
+    HEADER
+    ***************/
+/***************
+    TEXT
+    ***************/
+/***************
+    MODAL
+    ***************/
+/***************
+    BUTTONS
+    ***************/
+/***************
+    GENERAL
+    ***************/
+/***************
+    FORMS
+    ***************/
+/***************
+    POST
+    ***************/
+/***************
+    USER STREAM
+    ***************/
+/***************
+    FOOTER
+    ***************/
+/***************
+    MEDIA QUERIES
+    ***************/
+}
+body * {
+  box-sizing: border-box;
+}
+body .main-header .logo {
+  font-size: 1.5em;
+  text-align: center;
+  color: #000;
+}
+body .main-header nav {
+  display: flex;
+  flex-direction: column;
+}
+body .main-header nav > a,
+body .main-header nav #user-options-toggle,
+body .main-header nav .user-options-inner-showing a {
+  width: 100%;
+  padding: 10px 0;
+  border-top: 1px solid #ddd;
+}
+body .main-header nav > a:hover,
+body .main-header nav #user-options-toggle:hover,
+body .main-header nav .user-options-inner-showing a:hover {
+  color: #000;
+}
+body .main-header nav #user-options #user-options-toggle {
+  border-bottom: 2px solid #ddd;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+body .main-header nav #user-options #user-options-toggle p {
+  margin: 0 10px;
+}
+body .main-header nav #user-options #user-options-toggle img {
+  height: 20px;
+}
+body .main-header nav #user-options #user-options-inner {
+  display: none;
+}
+body .main-header nav #user-options #user-options-inner.user-options-inner-showing {
+  display: flex !important;
+  flex-direction: column;
+}
+body .main-header nav #user-options #user-options-inner.user-options-inner-showing a:first-child {
+  border-top: none;
+}
+body .main-header nav #user-options #user-options-inner.user-options-inner-showing a:last-child {
+  border-bottom: 1px solid #ddd;
+}
+body a {
+  text-decoration: none;
+  color: #999;
+}
+body a:hover {
+  color: #ddd;
+}
+body #blanket {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  background-color: rgba(0,0,0,0.75);
+  width: 100vw;
+  height: 100vh;
+}
+body .modal {
+  width: 90%;
+  padding: 10px;
+  background-color: #fff;
+  z-index: 1000;
+  margin: 10px;
+  border-radius: 10px;
+  position: absolute;
+  top: 100px;
+  left: 0;
+}
+body .modal form {
+  margin: 0;
+}
+body .modal form fieldset {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+body .modal form fieldset input,
+body .modal form fieldset button {
+  width: 100%;
+}
+body img[src="/static/github-logo.svg"] {
+  margin-bottom: -3px;
+  margin-left: 5px;
+  width: 20px;
+}
+body button {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+  height: 40px;
+  background-color: #1e90ff;
+  border: none;
+}
+body button:hover {
+  cursor: pointer;
+  color: #ddd;
+}
+body button.danger {
+  background-color: #ff4500;
+}
+body button a {
+  color: #fff;
+}
+body h1,
+body h2,
+body h3 {
+  margin: 10px 0;
+}
+body .flashes {
+  z-index: 10000000;
+  display: none;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 12.5vw;
+  width: 75vw;
+}
+body .flashes li {
+  border-radius: 10px;
+  list-style: none;
+  margin-left: none;
+  padding: 10px;
+  text-align: center;
+  background-color: #add8e6;
+}
+body .flashes .error {
+  background-color: #ff4500;
+}
+body .x-margin {
+  margin: 0 5px;
+}
+body button:focus,
+body input:focus,
+body textarea:focus {
+  outline: none;
+}
+body form {
+  margin-bottom: 10px;
+}
+body form fieldset {
+  border: none;
+  padding: 0;
+  margin: 5px 0;
+}
+body form fieldset input,
+body form fieldset textarea {
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  width: 100%;
+}
+body form fieldset textarea {
+  height: 200px;
+  resize: vertical;
+}
+body form button {
+  margin-bottom: 0;
+}
+body .login-title {
+  display: flex;
+  justify-content: space-between;
+}
+body #login-form fieldset,
+body #signup-form fieldset {
+  padding: 0;
+}
+body .post {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  word-wrap: break-word;
+}
+body .post.no-border {
+  border: none;
+  padding: 0;
+}
+body .post .post-title {
+  display: flex;
+  justify-content: space-between;
+}
+body .post .post-title h2 {
+  color: #000;
+  line-height: 1.5em;
+  margin: 0;
+}
+body .post .post-title button.danger,
+body .post .post-title form {
+  margin: 0;
+  height: 36px;
+}
+body .post .post-info {
+  border-bottom: 1px solid #ddd;
+}
+body .post .post-info p {
+  margin: 5px 0;
+}
+body .post .post-info .post-user img {
+  height: 17.5px;
+  margin-right: 10px;
+}
+body .post .post-content {
+  padding-top: 10px;
+  white-space: pre-line;
+  line-height: 1.5em;
+}
+body .post-comments {
+  margin-top: 10px;
+}
+body .post-comments .comment {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+body .post-comments .comment p {
+  margin: 0;
+}
+body .post-comments .comment .comment-user {
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+body .post-comments .comment .comment-user img {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+body .post-comments .comment .comment-user h3 {
+  margin: 0;
+  color: #000;
+}
+body .post-comments .comment .comment-user .comment-delete {
+  margin-left: auto;
+}
+body .post-comments .comment .comment-user .comment-delete button {
+  margin: 0;
+  height: 30px;
+  padding: 5px 10px;
+}
+body .post-comments form textarea {
+  height: 75px;
+  flex-grow: 2;
+  resize: none;
+}
+body .post-comments form button {
+  margin-top: 0;
+}
+body .user_stream .user_header,
+body .user_stream .user_stats {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+}
+body .user_stream .user_header {
+  justify-content: space-between;
+  align-items: center;
+}
+body .user_stream .user_header > div {
+  display: flex;
+  align-items: center;
+}
+body .user_stream .user_header > div img.avatar {
+  width: 75px;
+  height: 75px;
+  margin: 5px 0;
+  margin-right: 20px;
+}
+body .user_stream .user_stats {
+  justify-content: space-around;
+}
+body footer {
+  border-top: 2px solid #ddd;
+}
+body footer .main-footer {
+  padding: 10px;
+  text-align: center;
+}
+body footer .main-footer > p {
+  margin: 0;
+}
+@media (min-width: 34em) {
+  body header {
+    border-bottom: 2px solid #ddd;
+  }
+  body header .main-header {
+    display: flex;
+  }
+  body header .main-header .logo {
+    font-size: 2em;
+    margin-right: auto;
+    padding: 10px;
+    margin: 0;
+  }
+  body header .main-header .logo:hover {
+    background-color: #ddd;
+  }
+  body header .main-header nav {
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+  }
+  body header .main-header nav a {
+    padding: 20px 10px;
+    width: auto;
+    margin: 0;
+    border: none;
+  }
+  body header .main-header nav a:hover {
+    background-color: #ddd;
+  }
+  body header .main-header nav a:last-child {
+    border: none;
+  }
+  body header .main-header nav #user-options {
+    position: relative;
+  }
+  body header .main-header nav #user-options #user-options-toggle {
+    padding: 10px;
+    border: none !important;
+  }
+  body header .main-header nav #user-options #user-options-toggle img:first-child {
+    height: 40px;
+  }
+  body header .main-header nav #user-options #user-options-toggle:hover img {
+    color: #000;
+  }
+  body header .main-header nav #user-options #user-options-inner {
+    width: 100%;
+    background-color: #fff;
+    margin-right: 10px;
+    position: absolute;
+    top: 60px;
+    border: 1px solid #ddd;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+  body header .main-header nav #user-options #user-options-inner a {
+    padding: 10px;
+  }
+  body header .main-header nav #user-options #user-options-inner a:last-child {
+    border: 1px solid #ddd;
+  }
+  body .flashes {
+    width: 50%;
+    left: 25%;
+  }
+}
+@media (min-width: 48em) {
+  body {
+    margin: 0;
+  }
+  body .main-header,
+  body .main-body,
+  body .main-footer {
+    width: 90vw;
+    margin: 0 5vw;
+  }
+}
+@media (min-width: 62em) {
+  body {
+    margin: 0;
+  }
+  body .main-header,
+  body .main-body,
+  body .main-footer {
+    width: 80vw;
+    margin: 0 10vw;
+  }
+}

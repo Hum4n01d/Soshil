@@ -3,6 +3,18 @@
 //Copyright year
 document.getElementById('year').innerHTML = new Date().getFullYear();
 
+// Nav user options
+$('body').click(function(e) {
+    if ($(e.target).parents('#user-options').length) {
+        console.log('use op');
+        $('#user-options-inner').toggleClass('user-options-inner-showing');
+        $('#user-options').css('border', 'none');
+    } else {
+        console.log($(e.target));
+        $('#user-options-inner').removeClass('user-options-inner-showing');
+    }
+})
+
 //Modal
 $('.modal-trigger').click(function() {
     $('#blanket').fadeIn();
@@ -15,7 +27,7 @@ $('#blanket').click(function() {
 
 
 //Flashes
-$('.flashes').slideDown().delay(2000).slideUp();
+$('.flashes').slideDown().delay(1000).slideUp();
 
 
 //Forms
@@ -41,7 +53,7 @@ $('#signup-form form').validate({
         },
         email: {
             required: true,
-            regex: /^[\w.]+@[\w.]+.[\w]+$/
+            regex: /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i
         },
         password: {
             required: true,

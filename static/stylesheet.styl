@@ -15,15 +15,15 @@ body
         .logo
             font-size 1.5em
             text-align center
-
-            a
-                color black
+            color black
 
         nav
             display flex
             flex-direction column
 
-            a
+            > a,
+            #user-options-toggle,
+            .user-options-inner-showing a
                 width 100%
                 padding 10px 0
                 border-top 1px solid border-color
@@ -31,8 +31,31 @@ body
                 &:hover
                     color black
 
-                &:last-child
+            #user-options
+                #user-options-toggle
                     border-bottom 2px solid border-color
+                    display flex
+                    align-items center
+                    width 100%
+
+                    p
+                        margin 0 10px
+
+                    img
+                        height 20px
+
+                #user-options-inner
+                    display none
+
+                    &.user-options-inner-showing
+                        display flex !important
+                        flex-direction column
+
+                        a:first-child
+                            border-top none
+
+                        a:last-child
+                            border-bottom 1px solid border-color
 
     /***************
     TEXT
@@ -117,6 +140,7 @@ body
         margin 10px 0
 
     .flashes
+        z-index 10000000
         display none
         padding 0
         position absolute
@@ -138,6 +162,12 @@ body
     .x-margin
         margin 0 5px
 
+    button,
+    input,
+    textarea
+        &:focus
+            outline none
+
     /***************
     FORMS
     ***************/
@@ -156,9 +186,6 @@ body
                 padding 10px
                 width 100%
 
-                &:focus
-                    outline none
-
             textarea
                 height 200px
                 resize vertical
@@ -176,7 +203,7 @@ body
             padding 0
 
     /***************
-    STREAM
+    POST
     ***************/
     .post
         margin 10px 0
@@ -207,15 +234,19 @@ body
             border-bottom 1px solid border-color
 
             p
-                margin-top 5px
+                margin 5px 0
+
+            .post-user
+                img
+                    height 17.5px
+                    margin-right 10px
 
         .post-content
-            padding 10px 0
+            padding-top 10px
             white-space pre-line
-            border-bottom 1px solid border-color
             line-height 1.5em
 
-        .post-comments
+    .post-comments
             margin-top 10px
 
             .comment
@@ -260,7 +291,6 @@ body
 
                 button
                     margin-top 0
-
 
     /***************
     USER STREAM
@@ -315,19 +345,57 @@ body
                 .logo
                     font-size 2em
                     margin-right auto
+                    padding 10px
+                    margin 0
+
+                    &:hover
+                        background-color border-color
 
                 nav
                     flex-direction row
                     align-items center
+                    margin-left auto
 
                     a
+                        padding 20px 10px
                         width auto
                         margin 0
                         border none
-                        margin-left 20px
+
+                        &:hover
+                            background-color border-color
 
                         &:last-child
                             border none
+
+                    #user-options
+                        position relative
+
+                        #user-options-toggle
+                            padding 10px
+                            border none !important
+
+                            img:first-child
+                                height 40px
+
+                            &:hover img
+                                color black
+
+                        #user-options-inner
+                            width 100%
+                            background-color white
+                            margin-right 10px
+                            position absolute
+                            top 60px
+                            border 1px solid border-color
+                            border-bottom-right-radius 5px
+                            border-bottom-left-radius 5px
+
+                            a
+                                padding 10px
+
+                                &:last-child
+                                    border 1px solid border-color
 
         .flashes
             width 50%

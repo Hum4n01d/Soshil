@@ -5,13 +5,25 @@ import requests
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt, check_password_hash
-
-app = Flask(__name__)
-bcrypt = Bcrypt(app)
-app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
+# from flask_mail import Mail, Message
 
 import forms
 import models
+
+app = Flask(__name__)
+app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
+
+# app.config.update(
+#     MAIL_SERVER='smtp-relay.gmail.com',
+#     MAIL_PORT=465,
+#     MAIL_USE_SSL=True
+# )
+####
+#### IMPORTANT: USE ITSDANGEROUS TIMEDSERIALIZER THING FOR CONFIRMATION CODE
+
+bcrypt = Bcrypt(app)
+
+# mail = Mail(app)
 
 DEBUG = True
 PORT = int(os.environ.get('PORT', 5000))
@@ -53,6 +65,7 @@ def unauthorized(error):
 @app.route('/sign_up', methods=('GET', 'POST'))
 def sign_up():
     form = forms.RegisterForm()
+
     if form.validate_on_submit():
         models.User.create_user(
             username=form.username.data,
@@ -60,16 +73,16 @@ def sign_up():
             password=form.password.data,
             avatar_url='https://www.gravatar.com/avatar/' + str(hash(form.email.data.lower())) + '?d=retro'
         )
-        login_user(models.User.get(models.User.email == form.email.data))
+        login_user(models.User.get(models.User.username ** form.username.data.lower()))
         flash('You\'ve been successfully registered!', 'success')
 
         return redirect(url_for('index'))
         #
         # except:
         #     flash('Username already exists')
-        #     return render_template('register.html', form=form, user=g.user._get_current_object())
+        #     return render_template('sign_up.html', form=form, user=g.user._get_current_object())
 
-    return render_template('register.html', form=form, user=g.user._get_current_object())
+    return render_template('sign_up.html', form=form, user=g.user._get_current_object())
 
 @app.route('/log_in', methods=('GET', 'POST'))
 def log_in():
@@ -78,7 +91,7 @@ def log_in():
     
     if form.validate_on_submit():
         try:
-            user = models.User.get(models.User.username == form.username.data.lower())
+            user = models.User.get(models.User.username ** form.username.data.lower())
         except models.DoesNotExist:
             flash('Your username or password is incorrect', 'error')
         else:
@@ -98,7 +111,7 @@ def log_in():
                 else:
                     flash('Your email or password is incorrect', 'error')
                 
-    return render_template('login.html', form=form, user=g.user._get_current_object())
+    return render_template('log_in.html', form=form, user=g.user._get_current_object())
 
 @app.route('/login/github')
 def login_github():
@@ -149,9 +162,9 @@ def login_github_callback():
     
     return redirect(url_for('index'))
 
-@app.route('/logout')
+@app.route('/log_out')
 @login_required
-def logout():
+def log_out():
     logout_user()
     flash('You\'ve been logged out.', 'success')
     return redirect(url_for('log_in'))
@@ -162,13 +175,12 @@ def index():
         return redirect(url_for('stream'))
     else:
         stream = models.Post.select().limit(100)
-        users = models.User.select()
-        return render_template('index.html', user=g.user._get_current_object(), stream=stream, users=users)
+        return render_template('index.html', user=g.user._get_current_object(), stream=stream, public=True)
 
-@app.route('/all')
-def all_posts():
+@app.route('/explore')
+def explore():
     stream = models.Post.select().limit(100)
-    return render_template('stream.html', user=g.user._get_current_object(), stream=stream)
+    return render_template('stream.html', user=g.user._get_current_object(), stream=stream, explore=True)
 
 @app.route('/users/<username>')
 def profile(username):
@@ -280,10 +292,12 @@ def unfollow(username):
 @app.route('/delete_post')
 def delete_post():
     post_id = request.args.get('post_id')
+    post = models.Post.get(models.Post.id == post_id)
 
     try:
-        if models.Post.get(models.Post.id == post_id).user == g.user._get_current_object():
-            models.Post.get(models.Post.id == post_id).delete_instance()
+        if post.user == g.user._get_current_object():
+            post.delete_instance()
+            models.Comment.get(models.Comment.post == post)
 
         else:
             abort(401)
@@ -313,11 +327,35 @@ def delete_comment():
     except models.DoesNotExist:
         abort(404)
 
-
-@app.route('/account', methods=('GET', 'POST'))
+@app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
+    # if request.method == 'POST':
+    #     user = g.user._get_current_object()
+    #     msg = Message('Soshil Account Deletion',
+    #                   sender='soshil@example.com',
+    #                   recipients=[user.email])
+    #     url = 'https://soshil.herokuapp.com/delete_account?confirmed=True&username=' + user.username
+    #     msg.html = '''<p>You requested an account deletion on Soshil for the account {username} ({email}).</p>
+    #     <p>Are you sure you want to delete your account? All of your comments and posts will be deleted. You can't undo this action</p>
+    #
+    #     <a href='{url}'>I understand the consequences and want to delete my account</a>'''.format(username=user.username, email=user.email, url=url)
+    #
+    #     mail.send(msg)
+    #
+    #     flash('Account deletion email sent to ' + user.email)
+    #     return redirect(url_for('index'))
+
     return render_template('account.html', user=g.user._get_current_object())
+
+# @app.route('/delete_account')
+# @login_required
+# def delete_account():
+#     if request.args.get('confirmed'):
+#         username = request.args.get('username')
+#         models.User.get().where(models.User.username == username).delete_instance()
+#     else:
+#         return redirect(url_for('account'))
 
 @app.route('/terms')
 def terms():
