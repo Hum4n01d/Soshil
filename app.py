@@ -13,11 +13,11 @@ import models
 app = Flask(__name__)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
 
-# app.config.update(
-#     MAIL_SERVER='smtp-relay.gmail.com',
-#     MAIL_PORT=465,
-#     MAIL_USE_SSL=True
-# )
+app.config.update(
+    MAIL_SERVER='smtp-relay.gmail.com',
+    MAIL_PORT=465,
+    MAIL_USE_SSL=True
+)
 ####
 #### IMPORTANT: USE ITSDANGEROUS TIMEDSERIALIZER THING FOR CONFIRMATION CODE
 
@@ -297,7 +297,7 @@ def delete_post():
     try:
         if post.user == g.user._get_current_object():
             post.delete_instance()
-            models.Comment.get(models.Comment.post == post)
+            models.Comment.get(models.Comment.post == post).delete_instance()
 
         else:
             abort(401)
