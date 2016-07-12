@@ -2,8 +2,7 @@
 <html>
     <head>
         <title>Soshil</title>
-        <link rel="stylesheet" type="text/css" href="/static/normalize.min.css">
-        <link rel="stylesheet" type="text/css" href="/static/stylesheet.css">
+        <link rel="stylesheet" type="text/css" href="/static/styles/stylesheet.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="UTF-8">
     </head>
@@ -33,7 +32,7 @@
                         </a>
                         <div id="user-options-inner">
                             <a href="{{ url_for('profile', username=user.username) }}">Profile</a>
-                            <a href="{{ url_for('account')}} ">Account</a>
+                            <!--<a href="{{ url_for('account')}} ">Account</a>-->
                             <a href="{{ url_for('log_out')}} ">Log out</a>
                         </div>
                     </div>
@@ -58,6 +57,7 @@
                 <div class="terms">
                     <p><a href="{{ url_for('terms') }}">Terms and Conditions</a></p>
                 </div>
+                <p>WARNING: This app is incomplete. Read the terms for more details.</p>
             </div>
         </footer>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

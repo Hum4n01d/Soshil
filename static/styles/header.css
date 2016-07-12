@@ -1,0 +1,46 @@
+/***************
+HEADER
+***************/
+.main-header .logo {
+  font-size: 1.5em;
+  text-align: center;
+  color: #000;
+}
+.main-header nav {
+  display: flex;
+  flex-direction: column;
+}
+.main-header nav > a,
+.main-header nav #user-options-toggle,
+.main-header nav .user-options-inner-showing a {
+  width: 100%;
+  padding: 10px 0;
+  border-top: 1px solid border-color;
+}
+.main-header nav > a:hover,
+.main-header nav #user-options-toggle:hover,
+.main-header nav .user-options-inner-showing a:hover {
+  color: #000;
+}
+.main-header nav #user-options #user-options-toggle {
+  border-bottom: 1px solid border-color;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.main-header nav #user-options #user-options-toggle p {
+  margin: 0 10px;
+}
+.main-header nav #user-options #user-options-toggle img {
+  height: 20px;
+}
+.main-header nav #user-options #user-options-inner {
+  display: none;
+}
+.main-header nav #user-options #user-options-inner.user-options-inner-showing {
+  display: flex !important;
+  flex-direction: column;
+}
+.main-header nav #user-options #user-options-inner.user-options-inner-showing a:first-child {
+  border-top: none;
+}

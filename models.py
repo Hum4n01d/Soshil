@@ -75,6 +75,7 @@ class Post(Model):
         related_name='posts'
     )
     content = CharField(max_length=250)
+    likes = IntegerField(default=0)
     
     class Meta:
         database = DATABASE

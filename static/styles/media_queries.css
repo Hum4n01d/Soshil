@@ -1,0 +1,87 @@
+/***************
+MEDIA QUERIES
+***************/
+@media (min-width: 34em) {
+  header {
+    border-bottom: 2px solid border-color;
+  }
+  header .main-header {
+    display: flex;
+  }
+  header .main-header .logo {
+    font-size: 2em;
+    margin-right: auto;
+  }
+  header .main-header .logo:hover {
+    color: border-color;
+  }
+  header .main-header nav {
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+  }
+  header .main-header nav a {
+    padding: 20px 10px;
+    width: auto;
+    margin: 0;
+    border: none;
+  }
+  header .main-header nav a:hover {
+    background-color: border-color;
+  }
+  header .main-header nav a:last-child {
+    border: none;
+  }
+  header .main-header nav #user-options {
+    position: relative;
+  }
+  header .main-header nav #user-options #user-options-toggle {
+    padding: 10px;
+    border: none !important;
+  }
+  header .main-header nav #user-options #user-options-toggle img:first-child {
+    height: 40px;
+  }
+  header .main-header nav #user-options #user-options-toggle:hover img {
+    color: #000;
+  }
+  header .main-header nav #user-options #user-options-inner {
+    width: 100%;
+    background-color: #fff;
+    margin-right: 10px;
+    position: absolute;
+    top: 60px;
+    border: 1px solid border-color;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+  header .main-header nav #user-options #user-options-inner a {
+    padding: 10px;
+  }
+  header .main-header nav #user-options #user-options-inner a:last-child {
+    border: 1px solid border-color;
+  }
+  #body {
+    border: none;
+  }
+  #body .flashes {
+    width: 50%;
+    left: 25%;
+  }
+}
+@media (min-width: 48em) {
+  .main-header,
+  .main-body,
+  .main-footer {
+    width: 90vw;
+    margin: 0 5vw;
+  }
+}
+@media (min-width: 62em) {
+  .main-header,
+  .main-body,
+  .main-footer {
+    width: 80vw;
+    margin: 0 10vw;
+  }
+}

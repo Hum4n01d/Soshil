@@ -1,0 +1,80 @@
+@import 'https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css'
+@import 'https://fonts.googleapis.com/css?family=Libre+Franklin';
+
+border-color = #ddd
+
+body
+    font-family 'Libre Franklin', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif
+    margin 0 10px
+
+*
+    box-sizing border-box
+
+a
+    text-decoration none
+    color #999
+
+    &:hover
+        color border-color
+
+#body
+    border-top 1px solid border-color
+h1,
+h2,
+h3
+    margin 10px 0
+
+.flashes
+    z-index 10000000
+    display none
+    padding 0
+    position absolute
+    top 0
+    left 12.5vw
+    width 75vw
+
+    li
+        border-radius 10px
+        list-style none
+        margin-left none
+        padding 10px
+        text-align center
+        background-color lightblue
+
+    .error
+        background-color orangered
+
+.x-margin
+    margin 0 5px
+
+button,
+input,
+textarea
+    &:focus
+        outline none
+
+button
+    margin 10px 0
+    padding 10px
+    border-radius 5px
+    color white
+    height 40px
+    background-color dodgerblue
+    border none
+
+    &:hover
+        cursor pointer
+        color border-color
+
+    &.danger
+        background-color orangered
+
+    a
+        color white
+
+@import 'header.styl'
+@import 'post.styl'
+@import 'profile.styl'
+@import 'forms.styl'
+@import 'footer.styl'
+@import 'media_queries.styl'

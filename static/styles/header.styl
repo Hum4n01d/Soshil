@@ -1,0 +1,45 @@
+/***************
+HEADER
+***************/
+.main-header
+    .logo
+        font-size 1.5em
+        text-align center
+        color black
+
+    nav
+        display flex
+        flex-direction column
+
+        > a,
+        #user-options-toggle,
+        .user-options-inner-showing a
+            width 100%
+            padding 10px 0
+            border-top 1px solid border-color
+
+            &:hover
+                color black
+
+        #user-options
+            #user-options-toggle
+                border-bottom 1px solid border-color
+                display flex
+                align-items center
+                width 100%
+
+                p
+                    margin 0 10px
+
+                img
+                    height 20px
+
+            #user-options-inner
+                display none
+
+                &.user-options-inner-showing
+                    display flex !important
+                    flex-direction column
+
+                    a:first-child
+                        border-top none

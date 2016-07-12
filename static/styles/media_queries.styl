@@ -1,0 +1,87 @@
+/***************
+MEDIA QUERIES
+***************/
+@media (min-width: 34em)
+    header
+        border-bottom 2px solid border-color
+
+        .main-header
+            display flex
+
+            .logo
+                font-size 2em
+                margin-right auto
+
+                &:hover
+                    color border-color
+
+            nav
+                flex-direction row
+                align-items center
+                margin-left auto
+
+                a
+                    padding 20px 10px
+                    width auto
+                    margin 0
+                    border none
+
+                    &:hover
+                        background-color border-color
+
+                    &:last-child
+                        border none
+
+                #user-options
+                    position relative
+
+                    #user-options-toggle
+                        padding 10px
+                        border none !important
+
+                        img:first-child
+                            height 40px
+
+                        &:hover img
+                            color black
+
+                    #user-options-inner
+                        width 100%
+                        background-color white
+                        margin-right 10px
+                        position absolute
+                        top 60px
+                        border 1px solid border-color
+                        border-bottom-right-radius 5px
+                        border-bottom-left-radius 5px
+
+                        a
+                            padding 10px
+
+                            &:last-child
+                                border 1px solid border-color
+
+    #body
+        border none
+
+        .flashes
+            width 50%
+            left 25%
+
+@media (min-width: 48em)
+    margin 0
+
+    .main-header,
+    .main-body,
+    .main-footer
+        width 90vw
+        margin 0 5vw
+
+@media (min-width: 62em)
+    margin 0
+
+    .main-header,
+    .main-body,
+    .main-footer
+        width 80vw
+        margin 0 10vw

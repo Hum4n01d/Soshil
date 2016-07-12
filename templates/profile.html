@@ -1,8 +1,8 @@
 {% extends 'stream.html' %}
 
 {% block body %}
-<div class="user_stream">
-    <div class="user_header">
+<div class="profile">
+    <div class="profile_header">
         <div>
             <img class="avatar" src="{{ profile_user.avatar_url }}" alt="{{ profile_user.username }}'s Avatar">
             <h1>{{ profile_user.username }}</h1>
@@ -17,18 +17,18 @@
             {% endif %}
         {% endif %}
     </div>
-    <div class="user_stats">
+    <div class="profile_stats">
         <div>
             <h3>Posts: {{ profile_user.posts.count() }}</h3>
         </div>
         <div>
-            <h3>Followers: {{ profile_user.followers().count() }}</h3>
+            <a href="{{ url_for('followers', username=profile_user.username) }}"><h3>Followers: {{ profile_user.followers().count() }}</h3></a>
         </div>
         <div>
-            <h3>Following: {{ profile_user.following().count() }}</h3>
+            <a href="{{ url_for('following', username=profile_user.username) }}"><h3>Following: {{ profile_user.following().count() }}</h3></a>
         </div>
     </div>
-    <div class="user_posts">
+    <div class="profile_posts">
         {{ super() }}
     </div>
 </div>

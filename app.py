@@ -1,11 +1,11 @@
 import os
+import hashlib
 
 import requests
 
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt, check_password_hash
-# from flask_mail import Mail, Message
 from micawber.providers import bootstrap_basic
 from micawber.contrib.mcflask import add_oembed_filters
 
@@ -18,20 +18,10 @@ app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89
 oembed_providers = bootstrap_basic()
 add_oembed_filters(app, oembed_providers)
 
-# app.config.update(
-#     MAIL_SERVER='smtp-relay.gmail.com',
-#     MAIL_PORT=465,
-#     MAIL_USE_SSL=True
-# )
-####
-#### IMPORTANT: USE ITSDANGEROUS TIMEDSERIALIZER THING FOR CONFIRMATION CODE
-
 bcrypt = Bcrypt(app)
 
-# mail = Mail(app)
-
 DEBUG = True
-PORT = int(os.environ.get('PORT', 5000))
+PORT = int(os.environ.get('PORT', 8000))
 HOST = '0.0.0.0'
 
 login_manager = LoginManager()
@@ -72,20 +62,24 @@ def sign_up():
     form = forms.RegisterForm()
 
     if form.validate_on_submit():
-        models.User.create_user(
-            username=form.username.data,
-            email=form.email.data.lower(),
-            password=form.password.data,
-            avatar_url='https://www.gravatar.com/avatar/' + str(hash(form.email.data.lower())) + '?d=retro'
-        )
-        login_user(models.User.get(models.User.username ** form.username.data.lower()))
-        flash('You\'ve been successfully registered!', 'success')
+        email = form.email.data.lower().encode('utf-8')
+        gravatar_url = 'https://www.gravatar.com/avatar/' + hashlib.md5(email).hexdigest() + '?d=retro&s=75'
 
-        return redirect(url_for('index'))
-        #
-        # except:
-        #     flash('Username already exists')
-        #     return render_template('sign_up.html', form=form, user=g.user._get_current_object())
+        try:
+            models.User.create_user(
+                username=form.username.data,
+                email=email,
+                password=form.password.data,
+                avatar_url=gravatar_url
+            )
+            login_user(models.User.get(models.User.username ** form.username.data.lower()))
+            flash('You\'ve been successfully registered!', 'success')
+
+            return redirect(url_for('index'))
+
+        except:
+            flash('Username already exists')
+            return render_template('sign_up.html', form=form, user=g.user._get_current_object())
 
     return render_template('sign_up.html', form=form, user=g.user._get_current_object())
 
@@ -202,11 +196,23 @@ def profile(username):
 def followers(username):
     try:
         profile_user = models.User.select().where(models.User.username ** username).get()
+        followers = profile_user.followers()
 
     except models.DoesNotExist:
         abort(404)
 
-    return render_template('followers.html', profile_user=profile_user, stream=stream, user=g.user._get_current_object())
+    return render_template('followers.html', profile_user=profile_user, stream=stream, user=g.user._get_current_object(), user_list=followers)
+
+@app.route('/users/<username>/following')
+def following(username):
+    try:
+        profile_user = models.User.select().where(models.User.username ** username).get()
+        following = profile_user.following()
+
+    except models.DoesNotExist:
+        abort(404)
+
+    return render_template('following.html', profile_user=profile_user, stream=stream, user=g.user._get_current_object(), user_list=following)
 
 @app.route('/stream')
 @login_required
@@ -340,32 +346,7 @@ def delete_comment():
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    # if request.method == 'POST':
-    #     user = g.user._get_current_object()
-    #     msg = Message('Soshil Account Deletion',
-    #                   sender='soshil@example.com',
-    #                   recipients=[user.email])
-    #     url = 'https://soshil.herokuapp.com/delete_account?confirmed=True&username=' + user.username
-    #     msg.html = '''<p>You requested an account deletion on Soshil for the account {username} ({email}).</p>
-    #     <p>Are you sure you want to delete your account? All of your comments and posts will be deleted. You can't undo this action</p>
-    #
-    #     <a href='{url}'>I understand the consequences and want to delete my account</a>'''.format(username=user.username, email=user.email, url=url)
-    #
-    #     mail.send(msg)
-    #
-    #     flash('Account deletion email sent to ' + user.email)
-    #     return redirect(url_for('index'))
-
     return render_template('account.html', user=g.user._get_current_object())
-
-# @app.route('/delete_account')
-# @login_required
-# def delete_account():
-#     if request.args.get('confirmed'):
-#         username = request.args.get('username')
-#         models.User.get().where(models.User.username == username).delete_instance()
-#     else:
-#         return redirect(url_for('account'))
 
 @app.route('/terms')
 def terms():

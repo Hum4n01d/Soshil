@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<ul class="user-list">
+    {% if user_list %}
+        {% for _user in user_list %}
+        <li>
+            <a href="{{ url_for('profile', username=_user.username) }}">
+                <img src="{{ _user.avatar_url }}" alt="{{ _user.username }}'s Avatar">
+                <p>{{ _user.username }}</p>
+            </a>
+        </li>
+        {% endfor %}
+    {% else %}
+    <p>No followers</p>
+    {% endif %}
+</ul>
+{% endblock %}

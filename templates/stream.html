@@ -1,40 +1,17 @@
 {% extends 'layout.html' %}
+{% from 'macros.html' import new_post %}
 
 {% block body %}
 {% if explore or public %}
 <h1>Newest posts:</h1>
+{% elif profile_user %}
 {% else %}
 <h1>Your stream:</h1>
 {% endif %}
 {% if stream %}
 <div class="posts">
     {% for post in stream %}
-        <article class="post">
-            <div class="post-title">
-                <a href="{{ url_for('view_post', post_id=post.id) }}"><h2>{{ post.title|oembed(html=False, maxwidth=600, maxheight=600) }}</h2></a>
-
-                <div>
-                    {% if post.user == user %}
-                    <button class="danger"><a href="{{ url_for('delete_post', post_id=post.id) }}">Delete</a></button>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="post-info">
-                <p>
-                    <a href="{{ url_for('profile', username=post.user.username )}}" class="post-user">
-                        <img class="avatar" src="{{ post.user.avatar_url }}" alt="{{ post.user.username }}'s Avatar">
-                        {{ post.user.username }}
-                    </a>
-                    <span class="x-margin">-</span>
-                    <time data-time="{{ post.timestamp }}" datetime="{{ post.timestamp.strftime('%Y-%m-%d %I:%M') }}">{{ post.timestamp.strftime('%m-%d-%Y %H:%M') }}</time>
-                    <span class="x-margin">-</span>
-                    <a href="{{ url_for('view_post', post_id=post.id) }}">View</a>
-                </p>
-            </div>
-            <div class="post-content">
-                {{- post.content|oembed(html=False, maxwidth=600, maxheight=600) -}}
-            </div>
-        </article>
+        {{ new_post(post) }}
     {% endfor %}
 </div>
 {% else %}

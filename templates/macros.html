@@ -10,3 +10,31 @@
     {{ field(placeholder=field.label.text) }}
 </fieldset>
 {% endmacro %}
+
+{% macro new_post(post) %}
+<article class="post">
+    <div class="post-title">
+        <h2>{{ post.title|oembed(html=False, maxwidth=600, maxheight=600) }}</h2>
+
+        <div>
+            {% if post.user == user %}
+            <button class="danger"><a href="{{ url_for('delete_post', post_id=post.id) }}">Delete</a></button>
+            {% endif %}
+        </div>
+    </div>
+    <div class="post-info">
+        <p>
+            <a href="{{ url_for('profile', username=post.user.username )}}">{{ post.user.username }}</a>
+            <span class="x-margin">-</span>
+            <time data-time="{{ post.timestamp }}" datetime="{{ post.timestamp.strftime('%Y-%m-%d %I:%M') }}">{{ post.timestamp.strftime('%m-%d-%Y %H:%M') }}</time>
+            {% if stream|length > 1 %}
+            <span class="x-margin">-</span>
+            <a href="{{ url_for('view_post', post_id=post.id) }}">View</a>
+            {% endif %}
+        </p>
+    </div>
+    <div class="post-content">
+        {{- post.content|oembed(html=False, maxwidth=600, maxheight=600) -}}
+    </div>
+</article>
+{% endmacro %}
