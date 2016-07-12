@@ -213,7 +213,12 @@ def stream():
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def view_post(post_id):
     form = forms.CommentForm()
-    post = models.Post.select().where(models.Post.id == post_id).get()
+
+    try:
+        post = models.Post.select().where(models.Post.id == post_id).get()
+    except models.DoesNotExist:
+        abort(404)
+
     comments = models.Comment.select().where(models.Comment.post == post)
 
     if form.validate_on_submit():
