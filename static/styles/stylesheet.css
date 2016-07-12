@@ -17,6 +17,7 @@ a:hover {
 }
 #body {
   border-top: 1px solid #ddd;
+  padding-top: 10px;
 }
 h1,
 h2,
