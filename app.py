@@ -87,7 +87,7 @@ def sign_up():
 def log_in():
     form = forms.LoginForm()
     next_url = request.args.get('next')
-    
+
     if form.validate_on_submit():
         try:
             user = models.User.get(models.User.username ** form.username.data.lower())
@@ -109,7 +109,7 @@ def log_in():
 
                 else:
                     flash('Your email or password is incorrect', 'error')
-                
+
     return render_template('log_in.html', form=form, user=g.user._get_current_object())
 
 @app.route('/login/github')
@@ -125,15 +125,15 @@ def login_github_callback():
         "client_secret": os.environ['CLIENT_SECRET'],
         "code": code
     }, headers={"accept": "application/json"})
-    
+
     access_token = response.json()['access_token']
-    
+
     user_json = requests.get('https://api.github.com/user', {"access_token": access_token}).json()
     username = user_json['login']
     avatar_url = user_json['avatar_url']
     emails = requests.get('https://api.github.com/user/emails', {"access_token": access_token}).json()
     email = ''
-    
+
     for address in emails:
         if address['primary']:
             if address['verified']:
@@ -158,7 +158,7 @@ def login_github_callback():
 
     login_user(user = models.User.get(models.User.email == email))
     flash("You've been logged in!", "success")
-    
+
     return redirect(url_for('index'))
 
 @app.route('/log_out')
