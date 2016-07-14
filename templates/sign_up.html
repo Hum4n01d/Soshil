@@ -1,10 +1,10 @@
 {% extends 'layout.html' %}
-{% from 'macros.html' import render_field %}
+{% from 'macros.html' import render_field, github_login %}
 
 {% block body %}
 <div class="login-title">
     <h1>Sign up</h1>
-    <button><a href="{{ url_for('login_github')}}">Log in with GitHub<img src="/static/github-logo.svg" alt="Github's logo"></a></button>
+    {{ github_login() }}
 </div>
 <div id="signup-form">
     <form method='POST' action=''>

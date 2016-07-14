@@ -177,8 +177,17 @@ def index():
         return render_template('index.html', user=g.user._get_current_object(), stream=stream, public=True)
 
 @app.route('/explore')
+@login_required
 def explore():
-    stream = models.Post.select().limit(100)
+    users_following = g.user._get_current_object().following()
+    users_following_users_following = []
+
+    for user in users_following:
+        users_following_users_following.append(user.following())
+
+    stream = models.Post.select().where(
+        models.Post.user << users_following_users_following
+    ).limit(100)
     return render_template('stream.html', user=g.user._get_current_object(), stream=stream, explore=True)
 
 @app.route('/users/<username>')
@@ -308,12 +317,20 @@ def unfollow(username):
 @app.route('/delete_post')
 def delete_post():
     post_id = request.args.get('post_id')
-    post = models.Post.get(models.Post.id == post_id)
+
+    try:
+        post = models.Post.get(models.Post.id == post_id)
+    except models.DoesNotExist:
+        abort(404)
 
     try:
         if post.user == g.user._get_current_object():
+            try:
+                models.Comment.get(models.Comment.post == post).delete_instance()
+            except models.DoesNotExist:
+                pass
+
             post.delete_instance()
-            models.Comment.get(models.Comment.post == post).delete_instance()
 
         else:
             abort(401)
@@ -354,4 +371,15 @@ def terms():
 
 if __name__ == '__main__':
     models.initialize()
+
+    extra_dirs = ['templates/']
+    extra_files = extra_dirs[:]
+    for extra_dir in extra_dirs:
+        for dirname, dirs, files in os.walk(extra_dir):
+            for filename in files:
+                filename = os.path.join(dirname, filename)
+                if os.path.isfile(filename):
+                    extra_files.append(filename)
+    app.extra_files = extra_files
+
     app.run(host=HOST, port=PORT, debug=DEBUG)

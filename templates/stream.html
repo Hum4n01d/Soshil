@@ -2,8 +2,11 @@
 {% from 'macros.html' import new_post %}
 
 {% block body %}
-{% if explore or public %}
+{% if public %}
 <h1>Newest posts:</h1>
+{% elif explore %}
+<h1>Suggested posts:</h1>
+<p>Suggested posts are based on people you are following</p>
 {% elif profile_user %}
 {% else %}
 <h1>Your stream:</h1>

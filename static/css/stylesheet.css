@@ -3,7 +3,7 @@
 body {
   font-family: 'Libre Franklin', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
   margin: 0 10px;
-  line-height: 1.5em;
+  font-size: 0.9em;
 }
 * {
   box-sizing: border-box;
@@ -17,7 +17,6 @@ a:hover {
 }
 #body {
   border-top: 1px solid #ddd;
-  padding-top: 10px;
 }
 h1,
 h2,
@@ -57,7 +56,6 @@ button {
   padding: 10px;
   border-radius: 5px;
   color: #fff;
-  height: 40px;
   background-color: #1e90ff;
   border: none;
 }
@@ -70,6 +68,9 @@ button.danger {
 }
 button a {
   color: #fff;
+}
+p {
+  line-height: 1.5em;
 }
 .main-header .logo {
   font-size: 1.5em;
@@ -147,12 +148,15 @@ button a {
 }
 .post .post-info .post-user img {
   height: 17.5px;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 .post .post-content {
   padding-top: 10px;
   white-space: pre-line;
   line-height: 1.5em;
+}
+.post:last-child {
+  margin-top: 0;
 }
 .post-comments {
   margin-top: 10px;
@@ -246,6 +250,8 @@ form fieldset textarea {
   border: 1px solid #ddd;
   padding: 10px;
   width: 100%;
+  box-shadow: none;
+  -webkit-appearance: none;
 }
 form fieldset textarea {
   height: 200px;
@@ -277,7 +283,13 @@ footer .main-footer {
 footer .main-footer > p {
   margin: 0;
 }
+footer .main-footer .terms {
+  font-size: 0.75em;
+}
 @media (min-width: 34em) {
+  body {
+    font-size: 1em;
+  }
   header {
     border-bottom: 2px solid #ddd;
   }
