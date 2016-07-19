@@ -5,6 +5,7 @@
 {{ new_post(post) }}
 
 <div class="post-comments">
+    {% if user.is_authenticated %}
     <form method='POST' action=''>
         {{ form.hidden_tag() }}
         {% for field in form %}
@@ -12,6 +13,7 @@
         {% endfor %}
         <button type="submit">Post!</button>
     </form>
+    {% endif %}
     {% for comment in comments %}
     <div class="comment">
         <div class="comment-user">
