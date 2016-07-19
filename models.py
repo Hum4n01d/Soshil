@@ -2,9 +2,6 @@ from datetime import datetime
 
 from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
-from flask import Markup
-from markdown import markdown
-from micawber import parse_html
 from peewee import *
 
 DATABASE = SqliteDatabase('soshil.db')
