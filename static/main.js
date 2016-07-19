@@ -6,14 +6,12 @@ document.getElementById('year').innerHTML = new Date().getFullYear();
 // Nav user options
 $('body').click(function(e) {
     if ($(e.target).parents('#user-options').length) {
-        console.log('use op');
         $('#user-options-inner').toggleClass('user-options-inner-showing');
         $('#user-options').css('border', 'none');
     } else {
-        console.log($(e.target));
         $('#user-options-inner').removeClass('user-options-inner-showing');
     }
-})
+});
 
 //Modal
 $('.modal-trigger').click(function() {
@@ -95,4 +93,9 @@ $('#signup-form form').submit(function(e) {
             e.preventDefault();
         }
     }
+});
+
+// Nav
+$('.toggle-nav').click(function() {
+    $('nav').slideToggle();
 });

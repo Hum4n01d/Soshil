@@ -7,8 +7,6 @@ from markdown import markdown
 from micawber import parse_html
 from peewee import *
 
-from app import oembed_providers
-
 DATABASE = SqliteDatabase('soshil.db')
 
 class User(UserMixin, Model):
@@ -80,14 +78,6 @@ class Post(Model):
     )
     content = CharField(max_length=250)
     likes = IntegerField(default=0)
-
-    def html(self):
-        html = parse_html(
-            markdown(self.content),
-            oembed_providers,
-            maxwidth=300,
-            urlize_all=True)
-        return Markup(html)
 
     class Meta:
         database = DATABASE

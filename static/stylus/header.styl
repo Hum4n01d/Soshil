@@ -2,14 +2,25 @@
 HEADER
 ***************/
 .main-header
+    .title-bar
+        display flex
+        justify-content space-between
+        align-items center
+
+        .toggle-nav
+            font-size 2em
+            color black
+
     .logo
         font-size 1.5em
         text-align center
         color black
 
     nav
-        display flex
-        flex-direction column
+        display none
+
+        > a
+            display block
 
         > a,
         #user-options-toggle,

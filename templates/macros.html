@@ -14,8 +14,9 @@
 {% macro new_post(post) %}
 <article class="post">
     <div class="post-title">
-        <h2>{{ post.title|oembed(html=False, maxwidth=600, maxheight=600) }}</h2>
-
+        <a href="{{ url_for('view_post', post_id=post.id) }}">
+            <h2>{{ post.title }}</h2>
+        </a>
         <div>
             {% if post.user == g.user._get_current_object() %}
             <button class="danger"><a href="{{ url_for('delete_post', post_id=post.id) }}">Delete</a></button>
@@ -37,11 +38,14 @@
         </p>
     </div>
     <div class="post-content">
-        {{- post.content|oembed(html=False, maxwidth=600, maxheight=600) -}}
+        {{- post.content|safe -}}
     </div>
 </article>
 {% endmacro %}
 
 {% macro github_login() %}
-<button><a href="{{ url_for('login_github')}}">Github <img src="/static/github-logo.svg" alt="Github's logo"></a></button>
+<button><a href="{{ url_for('login_github')}}">
+    <p>Github</p>
+    <img src="/static/github-logo.svg" alt="Github's logo">
+</a></button>
 {% endmacro %}

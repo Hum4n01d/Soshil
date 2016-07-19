@@ -15,6 +15,9 @@ a {
 a:hover {
   color: #ddd;
 }
+strong {
+  font-weight: b;
+}
 #body {
   border-top: 1px solid #ddd;
 }
@@ -29,8 +32,8 @@ h3 {
   padding: 0;
   position: absolute;
   top: 0;
-  left: 12.5vw;
-  width: 75vw;
+  left: 20vw;
+  width: 60vw;
 }
 .flashes li {
   border-radius: 10px;
@@ -69,8 +72,14 @@ button.danger {
 button a {
   color: #fff;
 }
-p {
-  line-height: 1.5em;
+.main-header .title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.main-header .title-bar .toggle-nav {
+  font-size: 2em;
+  color: #000;
 }
 .main-header .logo {
   font-size: 1.5em;
@@ -78,8 +87,10 @@ p {
   color: #000;
 }
 .main-header nav {
-  display: flex;
-  flex-direction: column;
+  display: none;
+}
+.main-header nav > a {
+  display: block;
 }
 .main-header nav > a,
 .main-header nav #user-options-toggle,
@@ -152,7 +163,6 @@ p {
 }
 .post .post-content {
   padding-top: 10px;
-  white-space: pre-line;
   line-height: 1.5em;
 }
 .post:last-child {
@@ -263,8 +273,13 @@ form button {
 .login-title {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
-.login-title img[src="/static/github-logo.svg"] {
+.login-title a p {
+  margin: 0;
+  display: inline-block;
+}
+.login-title a img[src="/static/github-logo.svg"] {
   margin-bottom: -3px;
   margin-left: 5px;
   width: 20px;
@@ -296,6 +311,9 @@ footer .main-footer .terms {
   header .main-header {
     display: flex;
   }
+  header .main-header .toggle-nav {
+    display: none;
+  }
   header .main-header .logo {
     font-size: 2em;
     margin-right: auto;
@@ -304,6 +322,7 @@ footer .main-footer .terms {
     color: #ddd;
   }
   header .main-header nav {
+    display: flex !important;
     flex-direction: row;
     align-items: center;
     margin-left: auto;

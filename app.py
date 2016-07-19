@@ -6,8 +6,6 @@ import requests
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt, check_password_hash
-from micawber.providers import bootstrap_basic
-from micawber.contrib.mcflask import add_oembed_filters
 
 import forms
 import models
@@ -15,14 +13,15 @@ import models
 app = Flask(__name__)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
 
-oembed_providers = bootstrap_basic()
-add_oembed_filters(app, oembed_providers)
-
 bcrypt = Bcrypt(app)
 
 DEBUG = True
 PORT = int(os.environ.get('PORT', 8000))
 HOST = '0.0.0.0'
+
+@app.context_processor
+def inject_user():
+    return dict(user=g.user._get_current_object())
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -51,11 +50,11 @@ def after_request(response):
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return render_template('error.html', error=error, user=g.user._get_current_object()), 404
+    return render_template('error.html', error=error), 404
 
 @app.errorhandler(401)
 def unauthorized(error):
-    return render_template('error.html', error=error, user=g.user._get_current_object()), 401
+    return render_template('error.html', error=error), 401
 
 @app.route('/sign_up', methods=('GET', 'POST'))
 def sign_up():
@@ -79,9 +78,8 @@ def sign_up():
 
         except:
             flash('Username already exists')
-            return render_template('sign_up.html', form=form, user=g.user._get_current_object())
 
-    return render_template('sign_up.html', form=form, user=g.user._get_current_object())
+    return render_template('sign_up.html', form=form)
 
 @app.route('/log_in', methods=('GET', 'POST'))
 def log_in():
@@ -110,7 +108,7 @@ def log_in():
                 else:
                     flash('Your email or password is incorrect', 'error')
 
-    return render_template('log_in.html', form=form, user=g.user._get_current_object())
+    return render_template('log_in.html', form=form)
 
 @app.route('/login/github')
 def login_github():
@@ -170,11 +168,8 @@ def log_out():
 
 @app.route('/')
 def index():
-    if g.user._get_current_object().is_authenticated:
-        return redirect(url_for('stream'))
-    else:
-        stream = models.Post.select().limit(100)
-        return render_template('index.html', user=g.user._get_current_object(), stream=stream, public=True)
+    stream = models.Post.select().limit(100)
+    return render_template('index.html', stream=stream, public=True)
 
 @app.route('/explore')
 @login_required
@@ -188,7 +183,7 @@ def explore():
     stream = models.Post.select().where(
         models.Post.user << users_following_users_following
     ).limit(100)
-    return render_template('stream.html', user=g.user._get_current_object(), stream=stream, explore=True)
+    return render_template('stream.html', stream=stream, explore=True)
 
 @app.route('/users/<username>')
 def profile(username):
@@ -199,7 +194,7 @@ def profile(username):
     except models.DoesNotExist:
         abort(404)
 
-    return render_template('profile.html', profile_user=profile_user, stream=stream, user=g.user._get_current_object())
+    return render_template('profile.html', profile_user=profile_user, stream=stream)
 
 @app.route('/users/<username>/followers')
 def followers(username):
@@ -210,7 +205,7 @@ def followers(username):
     except models.DoesNotExist:
         abort(404)
 
-    return render_template('followers.html', profile_user=profile_user, stream=stream, user=g.user._get_current_object(), user_list=followers)
+    return render_template('followers.html', profile_user=profile_user, stream=stream, user_list=followers)
 
 @app.route('/users/<username>/following')
 def following(username):
@@ -221,14 +216,14 @@ def following(username):
     except models.DoesNotExist:
         abort(404)
 
-    return render_template('following.html', profile_user=profile_user, stream=stream, user=g.user._get_current_object(), user_list=following)
+    return render_template('following.html', profile_user=profile_user, stream=stream, user_list=following)
 
 @app.route('/stream')
 @login_required
 def stream():
     stream = current_user.get_stream().limit(100)
 
-    return render_template('stream.html', stream=stream, user=g.user._get_current_object())
+    return render_template('stream.html', stream=stream)
 
 @app.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def view_post(post_id):
@@ -253,7 +248,7 @@ def view_post(post_id):
         if not post:
             abort(404)
 
-    return render_template('post.html', post=post, user=g.user._get_current_object(), comments=comments, form=form)
+    return render_template('post.html', post=post, comments=comments, form=form)
 
 @app.route('/new_post', methods=('GET', 'POST'))
 @login_required
@@ -268,7 +263,7 @@ def new_post():
         flash('Message successfully posted!', 'success')
         return redirect(url_for('index'))
     
-    return render_template('new_post.html', form=form, user=g.user._get_current_object())
+    return render_template('new_post.html', form=form)
 
 @app.route('/follow/<username>')
 @login_required
@@ -363,16 +358,16 @@ def delete_comment():
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    return render_template('account.html', user=g.user._get_current_object())
+    return render_template('account.html')
 
 @app.route('/terms')
 def terms():
-    return render_template('terms.html', user=g.user._get_current_object())
+    return render_template('terms.html')
 
 if __name__ == '__main__':
     models.initialize()
 
-    extra_dirs = ['templates/']
+    extra_dirs = ['templates/*']
     extra_files = extra_dirs[:]
     for extra_dir in extra_dirs:
         for dirname, dirs, files in os.walk(extra_dir):

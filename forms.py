@@ -27,7 +27,7 @@ class RegisterForm(Form):
             name_exists
         ])
     email = StringField(
-        'Email',
+        'Email (gravatar will be used)',
         validators=[
             DataRequired(),
             Email(),
