@@ -1,10 +1,23 @@
+import os
+
 from datetime import datetime
 
 from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 from peewee import *
 
-DATABASE = SqliteDatabase('soshil.db')
+db_proxy = Proxy()
+
+if 'HEROKU' in os.environ:
+    import psycopg2
+    import urllib.parse
+    urllib.parse.uses_netloc.append('postgres')
+    url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
+    db = PostgresqlDatabase(database=url.path[1:], user=url.username, password=url.password, host=url.hostname, port=url.port)
+    db_proxy.initialize(db)
+else:
+    db = SqliteDatabase('soshil.db')
+    db_proxy.initialize(db)
 
 class User(UserMixin, Model):
     username = CharField()
@@ -16,7 +29,7 @@ class User(UserMixin, Model):
     github_user = BooleanField(default=False)
   
     class Meta:
-        database = DATABASE
+        database = db_proxy
     
     def get_posts(self):
         return Post.select().where(Post.user == self)
@@ -77,7 +90,7 @@ class Post(Model):
     likes = IntegerField(default=0)
 
     class Meta:
-        database = DATABASE
+        database = db_proxy
         order_by = ('-timestamp',)
 
 class Comment(Model):
@@ -93,7 +106,7 @@ class Comment(Model):
     content = CharField(max_length=250)
 
     class Meta:
-        database = DATABASE
+        database = db_proxy
         order_by = ('-timestamp',)
 
 class Relationship(Model):
@@ -101,12 +114,20 @@ class Relationship(Model):
     to_user = ForeignKeyField(User, related_name='relate_to')
 
     class Meta:
-        database = DATABASE
+        database = db_proxy
         indexes = (
             (('from_user', 'to_user'), True),
         )
-    
+
+class Notification(Model):
+    content = CharField()
+    date = DateTimeField(default=datetime.now())
+    user = ForeignKeyField(
+        rel_model=User,
+        related_name='user'
+    )
+
 def initialize():
-    DATABASE.connect()
-    DATABASE.create_tables([User, Relationship, Post, Comment], safe=True)
-    DATABASE.close()
+    db_proxy.connect()
+    db_proxy.create_tables([User, Relationship, Post, Comment], safe=True)
+    db_proxy.close()
