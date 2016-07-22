@@ -5,19 +5,20 @@ from datetime import datetime
 from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 from peewee import *
+import psycopg2
+import urllib.parse
 
 db_proxy = Proxy()
 
-if 'HEROKU' in os.environ:
-    import psycopg2
-    import urllib.parse
+if os.environ['HEROKU']:
     urllib.parse.uses_netloc.append('postgres')
     url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
     db = PostgresqlDatabase(database=url.path[1:], user=url.username, password=url.password, host=url.hostname, port=url.port)
-    db_proxy.initialize(db)
+    
 else:
     db = SqliteDatabase('soshil.db')
-    db_proxy.initialize(db)
+    
+db_proxy.initialize(db)
 
 class User(UserMixin, Model):
     username = CharField()
@@ -95,14 +96,8 @@ class Post(Model):
 
 class Comment(Model):
     timestamp = DateTimeField(default=datetime.now)
-    user = ForeignKeyField(
-        rel_model=User,
-        related_name='commenter'
-    )
-    post = ForeignKeyField(
-        rel_model=Post,
-        related_name='post_comments'
-    )
+    user = ForeignKeyField(User, related_name='commenter')
+    post = ForeignKeyField(Post, related_name='post_comments')
     content = CharField(max_length=250)
 
     class Meta:
@@ -117,15 +112,7 @@ class Relationship(Model):
         database = db_proxy
         indexes = (
             (('from_user', 'to_user'), True),
-        )
-
-class Notification(Model):
-    content = CharField()
-    date = DateTimeField(default=datetime.now())
-    user = ForeignKeyField(
-        rel_model=User,
-        related_name='user'
-    )
+	)
 
 def initialize():
     db_proxy.connect()
