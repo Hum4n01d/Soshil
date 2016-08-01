@@ -10,12 +10,12 @@ import urllib.parse
 
 db_proxy = Proxy()
 
-if os.environ['HEROKU']:
+try:
+    os.environ.get('HEROKU')
     urllib.parse.uses_netloc.append('postgres')
     url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
     db = PostgresqlDatabase(database=url.path[1:], user=url.username, password=url.password, host=url.hostname, port=url.port)
-    
-else:
+except KeyError:
     db = SqliteDatabase('soshil.db')
     
 db_proxy.initialize(db)
