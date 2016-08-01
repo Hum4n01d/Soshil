@@ -6,12 +6,15 @@ import requests
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt, check_password_hash
+from flaskext.markdown import Markdown
 
 import forms
 import models
 
 app = Flask(__name__)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
+
+markdown = Markdown(app)
 
 bcrypt = Bcrypt(app)
 

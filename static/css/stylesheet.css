@@ -16,7 +16,7 @@ a:hover {
   color: #ddd;
 }
 strong {
-  font-weight: b;
+  font-weight: bold;
 }
 #body {
   border-top: 1px solid #ddd;
@@ -48,6 +48,9 @@ h3 {
 }
 .x-margin {
   margin: 0 5px;
+}
+img {
+  max-width: 100%;
 }
 button:focus,
 input:focus,

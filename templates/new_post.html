@@ -2,7 +2,7 @@
 {% from 'macros.html' import render_field %}
 
 {% block body %}
-<h1>Posts:</h1>
+<h1>New Post:</h1>
 <form method='POST' action=''>
     {{ form.hidden_tag() }}
     {% for field in form %}
@@ -12,34 +12,6 @@
 </form>
 {% endblock %}
 {% block scripts %}
-<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-<script>
-    tinymce.init({
-        selector: 'textarea',
-        height: 500,
-        theme: 'modern',
-        plugins: [
-        'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-        'searchreplace wordcount visualblocks visualchars code fullscreen',
-        'insertdatetime media nonbreaking save table contextmenu directionality',
-        'emoticons template paste textcolor colorpicker textpattern imagetools'
-        ],
-        toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-        toolbar2: 'print preview media | forecolor backcolor emoticons',
-        content_css: [
-        '//fast.fonts.net/cssapi/e6dc9b99-64fe-4292-ad98-6974f93cd2a2.css',
-        '//www.tinymce.com/css/codepen.min.css'
-        ],
-        menu : {
-            file   : {title : 'File'  , items : 'print'},
-            edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall'},
-            insert : {title : 'Insert', items : 'link media | template hr'},
-            view   : {title : 'View'  , items : 'visualaid'},
-            format : {title : 'Format', items : 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
-            table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
-            tools  : {title : 'Tools' , items : 'spellchecker code'}
-        },
-    });
-
-</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 {% endblock %}

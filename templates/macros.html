@@ -38,7 +38,7 @@
         </p>
     </div>
     <div class="post-content">
-        {{- post.content|safe -}}
+        {{ post.content|markdown }}
     </div>
 </article>
 {% endmacro %}

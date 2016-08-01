@@ -99,3 +99,8 @@ $('#signup-form form').submit(function(e) {
 $('.toggle-nav').click(function() {
     $('nav').slideToggle();
 });
+
+//SimpleMDE
+var simplemde = new SimpleMDE({
+    element: document.getElementById('content')
+});
