@@ -5,7 +5,6 @@
         <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="UTF-8">
-        {% block scripts %}{% endblock %}
     </head>
     <body>
         {% with messages = get_flashed_messages(with_categories=True) %}
@@ -67,5 +66,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="/static/jquery.validate.min.js"></script>
         <script src="/static/main.js"></script>
+        {% block scripts %}
+        {% endblock %}
     </body>
 </html>

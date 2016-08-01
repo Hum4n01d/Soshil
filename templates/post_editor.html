@@ -2,7 +2,11 @@
 {% from 'macros.html' import render_field %}
 
 {% block body %}
+{% if edit %}
+<h1>Edit Post:</h1>
+{% else %}
 <h1>New Post:</h1>
+{% endif %}
 <form method='POST' action=''>
     {{ form.hidden_tag() }}
     {% for field in form %}
@@ -14,4 +18,9 @@
 {% block scripts %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script>
+    var simplemde = new SimpleMDE({
+        element: document.getElementById('content')
+    });
+</script>
 {% endblock %}

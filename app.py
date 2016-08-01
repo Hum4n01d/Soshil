@@ -253,6 +253,28 @@ def view_post(post_id):
 
     return render_template('post.html', post=post, comments=comments, form=form)
 
+@app.route('/post/<int:post_id>/edit', methods=['GET', 'POST'])
+def edit_post(post_id):
+    form = forms.PostForm()
+
+    try:
+        post = models.Post.select().where(models.Post.id == post_id).get()
+
+    except models.DoesNotExist:
+        abort(404)
+
+    if form.validate_on_submit():
+        q = models.Post.update(content=form.content.data, title=form.title.data).where(id == post_id)
+        q.execute()
+
+        return redirect(url_for('view_post', post_id=post_id))
+
+    else:
+        form.title.data = post.title
+        form.content.data = post.content
+
+    return render_template('post_editor.html', form=form, edit=True)
+
 @app.route('/new_post', methods=('GET', 'POST'))
 @login_required
 def new_post():
@@ -266,7 +288,7 @@ def new_post():
         flash('Message successfully posted!', 'success')
         return redirect(url_for('index'))
     
-    return render_template('new_post.html', form=form)
+    return render_template('post_editor.html', form=form)
 
 @app.route('/follow/<username>')
 @login_required

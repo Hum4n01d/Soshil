@@ -12,6 +12,7 @@ db_proxy = Proxy()
 
 try:
     heroku = os.environ['HEROKU']
+
     if heroku:
         urllib.parse.uses_netloc.append('postgres')
         url = urllib.parse.urlparse(os.environ["DATABASE_URL"])

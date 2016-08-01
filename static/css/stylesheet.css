@@ -132,6 +132,7 @@ button a {
 .post {
   margin: 10px 0;
   padding: 10px;
+  padding-bottom: 0;
   border: 1px solid #ddd;
   border-radius: 10px;
   word-wrap: break-word;
@@ -149,7 +150,7 @@ button a {
   line-height: 1.5em;
   margin: 0;
 }
-.post .post-title button.danger,
+.post .post-title button,
 .post .post-title form {
   margin: 0;
   height: 36px;
@@ -163,10 +164,6 @@ button a {
 .post .post-info .post-user img {
   height: 17.5px;
   margin-right: 5px;
-}
-.post .post-content {
-  padding-top: 10px;
-  line-height: 1.5em;
 }
 .post:last-child {
   margin-top: 0;
