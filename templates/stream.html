@@ -4,12 +4,14 @@
 {% block body %}
 {% if public %}
 <h1>Newest posts:</h1>
+<p>This shows all recent posts to Soshil.</p>
 {% elif explore %}
 <h1>Suggested posts:</h1>
 <p>Suggested posts are based on people you are following</p>
 {% elif profile_user %}
 {% else %}
 <h1>Your stream:</h1>
+<p>This is your stream. Posts by you and people you are folling will show up here.</p>
 {% endif %}
 {% if stream %}
 <div class="posts">
