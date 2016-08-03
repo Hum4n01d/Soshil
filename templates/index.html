@@ -4,7 +4,7 @@
 {% if user.is_authenticated %}
 <p>Welcome {{ user.username }}</p>
 {% else %}
-<p>Soshil is a WIP social media website. To use it, sign up or log in.</p>
+<p>Soshil is a WIP social media website. To use it, <a href="{{ url_for('sign_up') }}">sign up</a> or <a href="{{ url_for('log_in') }}">log in</a>.</p>
 {% endif %}
 {{ super() }}
 {% endblock %}
