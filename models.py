@@ -116,6 +116,15 @@ class Relationship(Model):
             (('from_user', 'to_user'), True),
 	)
 
+def Notifcation(Model):
+    title = CharField(default='Notification')
+    content = TextField()
+    date = DateTimeField(default=datetime.now)
+    user = ForeignKeyField(User, related_name='notifications')
+
+    class Meta:
+        database = db_proxy
+
 def initialize():
     db_proxy.connect()
     db_proxy.create_tables([User, Relationship, Post, Comment], safe=True)

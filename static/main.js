@@ -11,6 +11,11 @@ $('body').click(function(e) {
     } else {
         $('#user-options-inner').removeClass('user-options-inner-showing');
     }
+    if ($(e.target).parents('.notifications').length) {
+        $('.notifications-inner').toggleClass('notifications-inner-showing');
+    } else {
+        $('.notifications-inner').removeClass('notifications-inner-showing');
+    }
 });
 
 //Modal

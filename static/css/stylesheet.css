@@ -129,6 +129,19 @@ button a {
 .main-header nav #user-options #user-options-inner.user-options-inner-showing a:first-child {
   border-top: none;
 }
+.main-header nav .notifications {
+  padding: 10px 0;
+}
+.main-header nav .notifications > img {
+  width: 15px;
+}
+.main-header nav .notifications > p {
+  margin: 0 10px;
+  display: inline-block;
+}
+.main-header nav .notifications > p > img {
+  height: 20px;
+}
 .post {
   margin: 10px 0;
   padding: 10px;

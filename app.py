@@ -264,7 +264,8 @@ def edit_post(post_id):
         abort(404)
 
     if form.validate_on_submit():
-        q = models.Post.update(content=form.content.data, title=form.title.data).where(id == post_id)
+        q = models.Post.update(content=form.content.data, title=form.title.data).where(models.Post.id == post_id,
+                                                                                       models.Post.user == g.user._get_current_object())
         q.execute()
 
         return redirect(url_for('view_post', post_id=post_id))

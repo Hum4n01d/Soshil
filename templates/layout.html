@@ -39,6 +39,19 @@
                             <a href="{{ url_for('log_out')}} ">Log out</a>
                         </div>
                     </div>
+                    <div class="notifications">
+                        <img src="/static/bell.svg" alt="Notification Bell">
+                        <p>Notifications</p>
+                        <img src="/static/down_arrow.svg">
+                        <div class="notifications-inner">
+                            {% for notification in notifications %}
+                            <div class="notification">
+                                <p class="notification-title">{{ notification.title }}</p>
+                                <p class="notification-content">{{ notification.content }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                     {% else %}
                     <a href="{{ url_for('index') }}">Home</a>
                     <a href="{{ url_for('log_in') }}">Log in</a>
