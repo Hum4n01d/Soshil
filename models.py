@@ -8,7 +8,7 @@ from peewee import *
 import psycopg2
 import urllib.parse
 
-from app import parse_for_mentions
+import app
 
 db_proxy = Proxy()
 
@@ -129,7 +129,7 @@ class Notification(Model):
         cls.create(
             user=user,
             link=link,
-            title=parse_for_mentions(title)
+            title=app.parse_for_mentions(title)
         )
 
 def initialize():
