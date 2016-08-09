@@ -1,5 +1,6 @@
 import os
 import hashlib
+import re
 
 import requests
 
@@ -45,6 +46,12 @@ def before_request():
     g.db.connect()
     g.user = current_user
 
+    if g.user._get_current_object().is_authenticated:
+        try:
+            g.notification_count = models.Notification.select().where(models.Notification.user == g.user._get_current_object()).count()
+        except models.DoesNotExist:
+            g.notification_count = 0
+
 @app.after_request
 def after_request(response):
     '''Close the database connection after each request'''
@@ -58,6 +65,19 @@ def page_not_found(error):
 @app.errorhandler(401)
 def unauthorized(error):
     return render_template('error.html', error=error), 401
+
+def parse_for_mentions(text):
+    matches = re.findall(r'@[\w]+', text)
+
+    for match in matches:
+        username = match.strip('@')
+        link = url_for('profile', username=username)
+        text = text.replace(match, '<a href={link}>@{username}</a>'.format(
+            link=link,
+            username=username
+        ))
+
+    return text
 
 @app.route('/sign_up', methods=('GET', 'POST'))
 def sign_up():
@@ -76,6 +96,7 @@ def sign_up():
             )
             login_user(models.User.get(models.User.username ** form.username.data.lower()))
             flash('You\'ve been successfully registered!', 'success')
+            models.Notification.create_notification('Welcome to Soshil!', g.user._get_current_object())
 
             return redirect(url_for('index'))
 
@@ -240,11 +261,15 @@ def view_post(post_id):
     comments = models.Comment.select().where(models.Comment.post == post)
 
     if form.validate_on_submit():
+        content = parse_for_mentions(form.content.data)
+
         models.Comment.create(
             user=g.user._get_current_object(),
             post=post,
-            content=form.content.data
+            content=content
         )
+        models.Notification.create_notification('@{} commented on your post!'.format(g.user._get_current_object().username), url_for('view_post', post_id=post_id), post.user)
+
         return redirect(url_for('view_post', post_id=post_id))
 
     else:
@@ -264,15 +289,21 @@ def edit_post(post_id):
         abort(404)
 
     if form.validate_on_submit():
-        q = models.Post.update(content=form.content.data, title=form.title.data).where(models.Post.id == post_id,
-                                                                                       models.Post.user == g.user._get_current_object())
+        raw_content = form.content.data.strip()
+
+        q = models.Post.update(
+            user=g.user._get_current_object(),
+            title=form.title.data,
+            raw_content=raw_content,
+            content=parse_for_mentions(raw_content)
+        ).where(models.Post.id == post_id)
         q.execute()
 
         return redirect(url_for('view_post', post_id=post_id))
 
     else:
         form.title.data = post.title
-        form.content.data = post.content
+        form.content.data = post.raw_content
 
     return render_template('post_editor.html', form=form, edit=True)
 
@@ -281,14 +312,16 @@ def edit_post(post_id):
 def new_post():
     form = forms.PostForm()
     if form.validate_on_submit():
+        raw_content = form.content.data.strip()
         models.Post.create(
             user=g.user._get_current_object(),
-            title=form.title.data,
-            content=form.content.data.strip()
+            title=form.title.data.strip(),
+            raw_content=raw_content,
+            content=parse_for_mentions(raw_content)
         )
         flash('Message successfully posted!', 'success')
         return redirect(url_for('index'))
-    
+
     return render_template('post_editor.html', form=form)
 
 @app.route('/follow/<username>')
@@ -296,7 +329,7 @@ def new_post():
 def follow(username):
     if username.lower() == g.user._get_current_object().username.lower():
         flash("You can't follow yourself!")
-        return redirect(url_for('stream'))
+        return redirect(url_for('profile'), username=g.user._get_current_object().username)
     else:
         try:
             to_user = models.User.get(models.User.username ** username)
@@ -311,6 +344,11 @@ def follow(username):
             except models.IntegrityError:
                 pass
             else:
+                username = g.user._get_current_object().username
+                models.Notification.create_notification(
+                    title='@{} is now following you!'.format(username),
+                    link=url_for('profile', username=username)
+                )
                 flash("You're now following {}".format(to_user.username), 'success')
 
         return redirect(url_for('profile', username=to_user.username))
@@ -365,7 +403,12 @@ def delete_post():
 @app.route('/delete_comment')
 def delete_comment():
     comment_id = request.args.get('comment_id')
-    comment = models.Comment.get(models.Comment.id == comment_id)
+
+    try:
+        comment = models.Comment.get(models.Comment.id == comment_id)
+    except models.DoesNotExist:
+        abort(404)
+
     post_id = comment.post.id
 
     try:
@@ -389,6 +432,19 @@ def account():
 @app.route('/terms')
 def terms():
     return render_template('terms.html')
+
+@app.route('/notifications')
+@login_required
+def notifications():
+    try:
+        notifications = models.Notification.select().where(models.Notification.user == g.user._get_current_object())
+    except models.DoesNotExist:
+        notifications = None
+
+    for notification in notifications:
+        notification.delete_instance()
+
+    return render_template('notifications.html', notifications=notifications)
 
 if __name__ == '__main__':
     models.initialize()

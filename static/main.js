@@ -5,16 +5,10 @@ document.getElementById('year').innerHTML = new Date().getFullYear();
 
 // Nav user options
 $('body').click(function(e) {
-    if ($(e.target).parents('#user-options').length) {
-        $('#user-options-inner').toggleClass('user-options-inner-showing');
-        $('#user-options').css('border', 'none');
+    if ($(e.target).parents('.user-options').length) {
+        $('.user-options-inner').slideToggle();
     } else {
-        $('#user-options-inner').removeClass('user-options-inner-showing');
-    }
-    if ($(e.target).parents('.notifications').length) {
-        $('.notifications-inner').toggleClass('notifications-inner-showing');
-    } else {
-        $('.notifications-inner').removeClass('notifications-inner-showing');
+        $('.user-options-inner').slideUp();
     }
 });
 
@@ -104,3 +98,8 @@ $('#signup-form form').submit(function(e) {
 $('.toggle-nav').click(function() {
     $('nav').slideToggle();
 });
+
+// Notification icon
+if ($('#notification-count').text() != '0') {
+    $('#notification-count').show();
+}

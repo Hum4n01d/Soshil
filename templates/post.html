@@ -28,7 +28,7 @@
                 {% endif %}
             </div>
         </div>
-        <p>{{ comment.content }}</p>
+        <p>{{ comment.content|markdown }}</p>
     </div>
     {% endfor %}
 </div>

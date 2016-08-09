@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{% if notifications %}
+<ul class="notifications">
+    {% for notification in notifications %}
+    <li class="notification">
+        <a href="{{ notification.link }}s">
+            <p>{{ notification.title|safe }}</p>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No notifications</p>
+{% endif %}
+{% endblock %}

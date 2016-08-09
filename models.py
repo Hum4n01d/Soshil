@@ -8,6 +8,8 @@ from peewee import *
 import psycopg2
 import urllib.parse
 
+from app import parse_for_mentions
+
 db_proxy = Proxy()
 
 try:
@@ -61,35 +63,32 @@ class User(UserMixin, Model):
     
     @classmethod
     def create_user(cls, username, email, password, avatar_url='', admin=False, github_user=False):
-        if github_user:
+        if not password == '':
+            password = generate_password_hash(password)
+
+        try:
             cls.create(
                 username=username,
                 email=email,
-                password='',
-                is_admin=admin,
+                password=password,
                 avatar_url=avatar_url,
+                is_admin=admin,
                 github_user=github_user
             )
-        else:
-            try:
-                cls.create(
-                    username=username,
-                    email=email,
-                    password=generate_password_hash(password),
-                    avatar_url=avatar_url,
-                    is_admin=admin
-                )
-            except IntegrityError:
-                raise ValueError('User already exists')
+        except IntegrityError:
+            raise ValueError('User already exists')
 
 class Post(Model):
     title = CharField(max_length=100)
+    content = CharField(max_length=250)
+    raw_content = CharField(default='')
+
     timestamp = DateTimeField(default=datetime.now)
     user = ForeignKeyField(
         rel_model=User,
         related_name='posts'
     )
-    content = CharField(max_length=250)
+
     likes = IntegerField(default=0)
 
     class Meta:
@@ -116,16 +115,24 @@ class Relationship(Model):
             (('from_user', 'to_user'), True),
 	)
 
-def Notifcation(Model):
+class Notification(Model):
     title = CharField(default='Notification')
-    content = TextField()
+    link = CharField()
     date = DateTimeField(default=datetime.now)
     user = ForeignKeyField(User, related_name='notifications')
 
     class Meta:
         database = db_proxy
 
+    @classmethod
+    def create_notification(cls, title, link, user):
+        cls.create(
+            user=user,
+            link=link,
+            title=parse_for_mentions(title)
+        )
+
 def initialize():
     db_proxy.connect()
-    db_proxy.create_tables([User, Relationship, Post, Comment], safe=True)
+    db_proxy.create_tables([User, Relationship, Post, Comment, Notification], safe=True)
     db_proxy.close()

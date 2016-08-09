@@ -27,31 +27,22 @@
                     <a href="{{ url_for('new_post')}} ">New Post</a>
                     <a href="{{ url_for('stream') }}">Stream</a>
                     <a href="{{ url_for('explore') }}">Explore</a>
-                    <div id="user-options">
-                        <a href="javascript:void(0)" id="user-options-toggle">
+                    <div class="user-options">
+                        <a href="javascript:void(0)" class="user-options-toggle">
                             <img src="{{ user.avatar_url }}" alt="{{ user.username }}'s Avatar">
                             <p>{{ user.username }}</p>
                             <img src="/static/down_arrow.svg">
                         </a>
-                        <div id="user-options-inner">
+                        <div class="user-options-inner">
                             <a href="{{ url_for('profile', username=user.username) }}">Profile</a>
-                            <!--<a href="{{ url_for('account')}} ">Account</a>-->
                             <a href="{{ url_for('log_out')}} ">Log out</a>
                         </div>
                     </div>
-                    <div class="notifications">
+                    <a href="{{ url_for('notifications') }}" id="notifications-link">
                         <img src="/static/bell.svg" alt="Notification Bell">
+                        <span id="notification-count">{{ g.notification_count }}</span>
                         <p>Notifications</p>
-                        <img src="/static/down_arrow.svg">
-                        <div class="notifications-inner">
-                            {% for notification in notifications %}
-                            <div class="notification">
-                                <p class="notification-title">{{ notification.title }}</p>
-                                <p class="notification-content">{{ notification.content }}</p>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+                    </a>
                     {% else %}
                     <a href="{{ url_for('index') }}">Home</a>
                     <a href="{{ url_for('log_in') }}">Log in</a>

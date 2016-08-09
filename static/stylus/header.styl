@@ -19,6 +19,34 @@ HEADER
     nav
         display none
 
+
+        #notifications-link
+            position relative
+            padding 10px 0
+
+            display flex
+            align-items center
+
+            > p
+                margin 0
+                margin-left 10px
+
+            #notification-count
+                display none
+
+                background-color red
+                border-radius 100%
+                position absolute
+                width 20px
+                height 20px
+                top 10px
+                left 120px
+
+                color white
+                text-align center
+
+                line-height 1.4em
+
         > a
             display block
 
@@ -32,12 +60,13 @@ HEADER
             &:hover
                 color black
 
-        #user-options
-            #user-options-toggle
-                border-bottom 1px solid border-color
+        .user-options
+            .user-options-toggle
+                border-top 1px solid border-color
                 display flex
                 align-items center
                 width 100%
+                padding 10px 0
 
                 p
                     margin 0 10px
@@ -45,24 +74,17 @@ HEADER
                 img
                     height 20px
 
-            #user-options-inner
+            .user-options-inner
                 display none
 
-                &.user-options-inner-showing
-                    display flex !important
-                    flex-direction column
+                > *
+                    display block
+                    border-top 1px solid border-color
+                    padding 10px 0
 
-                    a:first-child
-                        border-top none
+                > p
+                    margin 0
 
-        .notifications
-            padding 10px 0
-            > img
-                width 15px
-
-            > p
-                margin 0 10px
-                display inline-block
-
-                > img
-                    height 20px
+        #notifications-link
+            img[src="/static/bell.svg"]
+                height 20px
