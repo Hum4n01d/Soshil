@@ -5,9 +5,9 @@
 <ul class="notifications">
     {% for notification in notifications %}
     <li class="notification">
-        <a href="{{ notification.link }}">
-            <p>{{ notification.title|safe }}</p>
-        </a>
+        <p>{{ notification.title|markdown }}</p>
+        <span class="x-margin">-</span>
+        <a href="{{ notification.link }}">View</a>
     </li>
     {% endfor %}
 </ul>

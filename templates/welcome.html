@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+{% if user.is_authenticated %}
+<h2>Welcome to Soshil!</h2>
+<p>Here are some of the things you can do with Soshil:</p>
+<ul>
+    <li>Post with Markdown</li>
+    <li>Edit and delete your posts</li>
+    <li>Use @mentions</li>
+    <li>Comment on anyone's posts</li>
+    <li>Follow other users to see their posts in your stream</li>
+    <li>Receive notifications for comments on your posts and people following you</li>
+</ul>
+{% endif %}
+{% endblock %}

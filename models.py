@@ -132,9 +132,16 @@ class Notification(Model):
             title=app.parse_for_mentions(title)
         )
 
+class Like(Model):
+    post = ForeignKeyField(Post, related_name='liked_post')
+    user = ForeignKeyField(User, related_name='liker')
+
+    class Meta:
+        database = db_proxy
+
 def initialize():
     db_proxy.connect()
-    db_proxy.create_tables([User, Relationship, Post, Comment, Notification], safe=True)
+    db_proxy.create_tables([User, Relationship, Post, Comment, Notification, Like], safe=True)
     db_proxy.close()
 
 if __name__ == '__main__':

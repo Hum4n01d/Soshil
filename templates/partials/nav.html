@@ -1,0 +1,27 @@
+<nav>
+    {% if user.is_authenticated %}
+    <a href="{{ url_for('new_post')}} ">New Post</a>
+    <a href="{{ url_for('stream') }}">Stream</a>
+    <a href="{{ url_for('explore') }}">Explore</a>
+    <div class="user-options">
+        <a href="javascript:void(0)" class="user-options-toggle">
+            <img src="{{ user.avatar_url }}" alt="{{ user.username }}'s Avatar">
+            <p>{{ user.username }}</p>
+            <img src="/static/down_arrow.svg">
+        </a>
+        <div class="user-options-inner">
+            <a href="{{ url_for('profile', username=user.username) }}">Profile</a>
+            <a href="{{ url_for('log_out')}} ">Log out</a>
+        </div>
+    </div>
+    <a href="{{ url_for('notifications') }}" id="notifications-link">
+        <img src="/static/bell.svg" alt="Notification Bell">
+        <span id="notification-count">{{ g.notification_count }}</span>
+        <p>Notifications</p>
+    </a>
+    {% else %}
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('log_in') }}">Log in</a>
+    <a href="{{ url_for('sign_up') }}">Sign up</a>
+    {% endif %}
+</nav>

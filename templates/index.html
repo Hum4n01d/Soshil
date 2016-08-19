@@ -1,4 +1,4 @@
-{% extends 'stream.html' %}
+{% extends 'layout.html' %}
 
 {% block body %}
 {% if user.is_authenticated %}
@@ -6,5 +6,4 @@
 {% else %}
 <p>Soshil is a WIP social media website. To use it, <a href="{{ url_for('sign_up') }}">sign up</a> or <a href="{{ url_for('log_in') }}">log in</a>.</p>
 {% endif %}
-{{ super() }}
 {% endblock %}

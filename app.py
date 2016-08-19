@@ -98,7 +98,7 @@ def sign_up():
             flash('You\'ve been successfully registered!', 'success')
             models.Notification.create_notification(
                 title='Welcome to Soshil!',
-                link=url_for('index'),
+                link=url_for('welcome'),
                 user=g.user._get_current_object()
             )
 
@@ -196,8 +196,21 @@ def log_out():
 
 @app.route('/')
 def index():
+    if g.user._get_current_object().is_authenticated:
+        return redirect('stream')
+    else:
+        return render_template('index.html')
+
+@app.route('/all')
+def all_posts():
     stream = models.Post.select().limit(100)
+
     return render_template('index.html', stream=stream, public=True)
+
+@app.route('/welcome')
+@login_required
+def welcome():
+    return render_template('welcome.html')
 
 @app.route('/explore')
 @login_required
@@ -272,7 +285,12 @@ def view_post(post_id):
             post=post,
             content=content
         )
-        models.Notification.create_notification('@{} commented on your post!'.format(g.user._get_current_object().username), url_for('view_post', post_id=post_id), post.user)
+
+        models.Notification.create_notification(
+            title='@{} commented on your post!'.format(g.user._get_current_object().username),
+            link=url_for('view_post', post_id=post_id),
+            user=post.user
+        )
 
         return redirect(url_for('view_post', post_id=post_id))
 
@@ -405,6 +423,13 @@ def delete_post():
 
     except models.DoesNotExist:
         abort(404)
+
+@app.route('/like_post/<post_id>')
+def like_post(post_id):
+    if not post_id:
+        abort(404)
+
+    return redirect(url_for())
 
 @app.route('/delete_comment')
 def delete_comment():

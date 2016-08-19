@@ -103,3 +103,12 @@ $('.toggle-nav').click(function() {
 if ($('#notification-count').text() != '0') {
     $('#notification-count').show();
 }
+
+// Delete comment/post confirm
+$('button.danger a').click(function(e) {
+    e.preventDefault();
+
+    if (confirm('Are you sure? You cannot undo this action.')) {
+        window.location = $(this).attr('href')
+    }
+});
