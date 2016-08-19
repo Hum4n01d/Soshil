@@ -49,6 +49,9 @@ h3 {
 .x-margin {
   margin: 0 5px;
 }
+.no-margin {
+  margin: 0 !important;
+}
 img {
   max-width: 100%;
 }
@@ -293,6 +296,13 @@ form fieldset {
   border: none;
   padding: 0;
   margin: 5px 0;
+}
+form fieldset .notification.error {
+  color: #f00;
+}
+form fieldset .notification.error ~ input {
+  border-color: #f00;
+  color: #f00;
 }
 form fieldset input,
 form fieldset textarea {
