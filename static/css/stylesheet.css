@@ -353,7 +353,7 @@ footer .main-footer > p {
 footer .main-footer .terms {
   font-size: 0.75em;
 }
-@media (min-width: 34em) {
+@media (min-width: 45em) {
   body {
     font-size: 1em;
   }
