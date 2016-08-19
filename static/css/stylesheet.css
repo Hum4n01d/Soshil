@@ -176,7 +176,6 @@ button a {
   padding-bottom: 0;
   border: 1px solid #ddd;
   border-radius: 10px;
-  word-wrap: break-word;
 }
 .post.no-border {
   border: none;
@@ -386,6 +385,7 @@ footer .main-footer .terms {
   }
   header .main-header nav a:hover {
     background-color: #ddd;
+    color: #000;
   }
   header .main-header nav a:last-child {
     border: none;
@@ -399,9 +399,6 @@ footer .main-footer .terms {
   }
   header .main-header nav .user-options .user-options-toggle img:first-child {
     height: 40px;
-  }
-  header .main-header nav .user-options .user-options-toggle:hover img {
-    color: #000;
   }
   header .main-header nav .user-options .user-options-inner {
     width: 100%;

@@ -125,7 +125,7 @@ class Notification(Model):
         database = db_proxy
 
     @classmethod
-    def create_notification(cls, title, link, user):
+    def create_notification(cls, title, user, link=''):
         cls.create(
             user=user,
             link=link,
@@ -136,3 +136,6 @@ def initialize():
     db_proxy.connect()
     db_proxy.create_tables([User, Relationship, Post, Comment, Notification], safe=True)
     db_proxy.close()
+
+if __name__ == '__main__':
+    initialize()

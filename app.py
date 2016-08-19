@@ -15,9 +15,9 @@ import models
 app = Flask(__name__)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
 
-markdown = Markdown(app)
-
 bcrypt = Bcrypt(app)
+
+markdown = Markdown(app)
 
 DEBUG = True
 PORT = int(os.environ.get('PORT', 8000))
@@ -72,7 +72,7 @@ def parse_for_mentions(text):
     for match in matches:
         username = match.strip('@')
         link = url_for('profile', username=username)
-        text = text.replace(match, '<a href={link}>@{username}</a>'.format(
+        text = text.replace(match, '[@{username}]({link})'.format(
             link=link,
             username=username
         ))
@@ -96,7 +96,11 @@ def sign_up():
             )
             login_user(models.User.get(models.User.username ** form.username.data.lower()))
             flash('You\'ve been successfully registered!', 'success')
-            models.Notification.create_notification('Welcome to Soshil!', g.user._get_current_object())
+            models.Notification.create_notification(
+                title='Welcome to Soshil!',
+                link=url_for('index'),
+                user=g.user._get_current_object()
+            )
 
             return redirect(url_for('index'))
 
@@ -292,7 +296,6 @@ def edit_post(post_id):
         raw_content = form.content.data.strip()
 
         q = models.Post.update(
-            user=g.user._get_current_object(),
             title=form.title.data,
             raw_content=raw_content,
             content=parse_for_mentions(raw_content)
@@ -317,7 +320,7 @@ def new_post():
             user=g.user._get_current_object(),
             title=form.title.data.strip(),
             raw_content=raw_content,
-            content=parse_for_mentions(raw_content)
+            content=parse_for_mentions(raw_content).replace('<', '&lt;').replace('>', '&gt;')
         )
         flash('Message successfully posted!', 'success')
         return redirect(url_for('index'))
@@ -347,7 +350,8 @@ def follow(username):
                 username = g.user._get_current_object().username
                 models.Notification.create_notification(
                     title='@{} is now following you!'.format(username),
-                    link=url_for('profile', username=username)
+                    link=url_for('profile', username=username),
+                    user=to_user
                 )
                 flash("You're now following {}".format(to_user.username), 'success')
 
@@ -383,7 +387,9 @@ def delete_post():
         abort(404)
 
     try:
-        if post.user == g.user._get_current_object():
+        user = g.user._get_current_object()
+
+        if post.user == user or user.is_admin:
             try:
                 models.Comment.get(models.Comment.post == post).delete_instance()
             except models.DoesNotExist:
@@ -449,14 +455,16 @@ def notifications():
 if __name__ == '__main__':
     models.initialize()
 
-    extra_dirs = ['templates/*']
-    extra_files = extra_dirs[:]
-    for extra_dir in extra_dirs:
-        for dirname, dirs, files in os.walk(extra_dir):
-            for filename in files:
-                filename = os.path.join(dirname, filename)
-                if os.path.isfile(filename):
-                    extra_files.append(filename)
-    app.extra_files = extra_files
+    try:
+        models.User.create_user(
+            username='Hum4n01d',
+            email='hum4n01d@icloud.com',
+            password='',
+            avatar_url='https://avatars.githubusercontent.com/u/17228477?v=3',
+            github_user=True,
+            admin=True
+        )
+    except ValueError:
+        pass
 
     app.run(host=HOST, port=PORT, debug=DEBUG)
