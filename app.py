@@ -205,7 +205,7 @@ def index():
 def all_posts():
     stream = models.Post.select().limit(100)
 
-    return render_template('index.html', stream=stream, public=True)
+    return render_template('stream.html', stream=stream, public=True)
 
 @app.route('/welcome')
 @login_required
