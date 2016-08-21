@@ -447,7 +447,6 @@ def delete_comment():
     except models.DoesNotExist:
         abort(404)
 
-    post_id = comment.post.id
 
     try:
         user = g.user._get_current_object()
@@ -459,7 +458,7 @@ def delete_comment():
             abort(401)
 
         flash('Comment deleted!', 'sucess')
-        return redirect(url_for('view_post', post_id=post_id))
+        return redirect(url_for('view_post', post_id=comment.post.id))
 
     except models.DoesNotExist:
         abort(404)
@@ -485,6 +484,10 @@ def notifications():
         notification.delete_instance()
 
     return render_template('notifications.html', notifications=notifications)
+
+@app.route('/google46cfa7a8f3f231ed.html')
+def google_verify():
+    return 'google-site-verification: google46cfa7a8f3f231ed.html'
 
 if __name__ == '__main__':
     models.initialize()
