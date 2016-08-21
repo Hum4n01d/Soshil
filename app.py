@@ -215,15 +215,21 @@ def welcome():
 @app.route('/explore')
 @login_required
 def explore():
-    users_following = g.user._get_current_object().following()
-    users_following_users_following = []
+    try:
+        users_following = g.user._get_current_object().following()
 
-    for user in users_following:
-        users_following_users_following.append(user.following())
+        users_following_users_following = []
 
-    stream = models.Post.select().where(
-        models.Post.user << users_following_users_following
-    ).limit(100)
+        for user in users_following:
+            users_following_users_following.append(user.following())
+
+        stream = models.Post.select().where(
+            models.Post.user << users_following_users_following,
+            models.Post.user != g.user._get_current_object()
+        ).limit(100)
+
+    except models.DoesNotExist:
+        stream = None
     return render_template('stream.html', stream=stream, explore=True)
 
 @app.route('/users/<username>')
@@ -286,11 +292,12 @@ def view_post(post_id):
             content=content
         )
 
-        models.Notification.create_notification(
-            title='@{} commented on your post!'.format(g.user._get_current_object().username),
-            link=url_for('view_post', post_id=post_id),
-            user=post.user
-        )
+        if not g.user._get_current_object() == post.user:
+            models.Notification.create_notification(
+                title='@{} commented on your post!'.format(g.user._get_current_object().username),
+                link=url_for('view_post', post_id=post_id),
+                user=post.user
+            )
 
         return redirect(url_for('view_post', post_id=post_id))
 

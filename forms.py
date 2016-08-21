@@ -54,7 +54,7 @@ class PostForm(Form):
     content = TextAreaField("What's on your mind?", id='content', validators=[DataRequired()])
 
 class CommentForm(Form):
-    content = TextAreaField("Leave a comment", validators=[
+    content = TextAreaField("Leave a comment", id="comment_editor", validators=[
         DataRequired(),
         Length(max=250)
     ])
