@@ -450,7 +450,9 @@ def delete_comment():
     post_id = comment.post.id
 
     try:
-        if comment.user == g.user._get_current_object():
+        user = g.user._get_current_object()
+
+        if comment.user == user or user.is_admin:
             comment.delete_instance()
 
         else:

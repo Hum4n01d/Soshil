@@ -23,7 +23,7 @@
             </a>
 
             <div class="comment-delete">
-                {% if comment.user == user %}
+                {% if comment.user == user or user.is_admin %}
                 <button class="danger"><a href="{{ url_for('delete_comment', comment_id=comment.id) }}">Delete</a></button>
                 {% endif %}
             </div>
