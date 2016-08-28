@@ -294,8 +294,15 @@ button a {
 .user-list li {
   margin: 0 10px;
 }
+.user-list li img {
+  width: 100px;
+}
 .user-list li p {
-  margin: 0 5px;
+  margin: 0;
+  text-overflow: ellipsis;
+  text-align: center;
+  width: 100px;
+  overflow: hidden;
 }
 form {
   margin-bottom: 10px;

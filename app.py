@@ -21,7 +21,7 @@ markdown = Markdown(app)
 
 DEBUG = True
 PORT = int(os.environ.get('PORT', 8000))
-HOST = '0.0.0.0'
+HOST = "localhost" #'0.0.0.0'
 
 @app.context_processor
 def inject_user():

@@ -1,38 +1,8 @@
 {% extends 'stream.html' %}
 
 {% block body %}
-<div class="profile">
-    <div class="profile_header">
-        <div>
-            <img class="avatar" src="{{ profile_user.avatar_url }}" alt="{{ profile_user.username }}'s Avatar">
-            <h1>{{ profile_user.username }}</h1>
-            {% if profile_user.id_admin %}
-            <span>*</span>
-            {% endif %}
-        </div>
-        {% if profile_user != user %}
-            {% if not user.is_authenticated %}
-            <button><a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a></button>
-            {% elif not profile_user in user.following() %}
-            <button><a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a></button>
-            {% else %}
-            <button><a href="{{ url_for('unfollow', username=profile_user.username) }}" class="button">Unfollow</a></button>
-            {% endif %}
-        {% endif %}
-    </div>
-    <div class="profile_stats">
-        <div>
-            <h3>Posts: {{ profile_user.posts.count() }}</h3>
-        </div>
-        <div>
-            <a href="{{ url_for('followers', username=profile_user.username) }}"><h3>Followers: {{ profile_user.followers().count() }}</h3></a>
-        </div>
-        <div>
-            <a href="{{ url_for('following', username=profile_user.username) }}"><h3>Following: {{ profile_user.following().count() }}</h3></a>
-        </div>
-    </div>
-    <div class="profile_posts">
-        {{ super() }}
-    </div>
+{% include 'partials/profile_header.html' %}
+<div class="profile_posts">
+    {{ super() }}
 </div>
 {% endblock %}

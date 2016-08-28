@@ -1,6 +1,9 @@
 {% extends 'user_list.html' %}
 
-{% block body %}
+{% block title %}
+{% include 'partials/profile_header.html' %}
 <h1>{{ profile_user.username }}'s Followers:</h1>
+{% endblock %}
+{% block body %}
 {{ super() }}
 {% endblock %}
