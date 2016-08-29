@@ -21,5 +21,10 @@
 </div>
 {% else %}
 <p>No posts</p>
+{% if explore %}
+<p>Go follow some users to see suggested posts on your explore page! To see all posts visit the <a href="{{ url_for('all_posts') }}">all posts</a> page.</p>
+{% else %}
+<p>Go follow some users to see their posts in your stream! To see all posts visit the <a href="{{ url_for('all_posts') }}">all posts</a> page.</p>
+{% endif %}
 {% endif %}
 {% endblock %}
