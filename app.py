@@ -21,7 +21,7 @@ markdown = Markdown(app)
 
 DEBUG = True
 PORT = int(os.environ.get('PORT', 8000))
-HOST = "localhost" #'0.0.0.0'
+HOST = '0.0.0.0'
 
 @app.context_processor
 def inject_user():
@@ -308,14 +308,20 @@ def view_post(post_id):
     return render_template('post.html', post=post, comments=comments, form=form)
 
 @app.route('/post/<int:post_id>/edit', methods=['GET', 'POST'])
+@login_required
 def edit_post(post_id):
-    form = forms.PostForm()
-
     try:
         post = models.Post.select().where(models.Post.id == post_id).get()
 
     except models.DoesNotExist:
         abort(404)
+
+    user = g.user._get_current_object()
+
+    if not user.is_admin or not post.user == user:
+        abort(401)
+
+    form = forms.PostForm()
 
     if form.validate_on_submit():
         raw_content = form.content.data.strip()
