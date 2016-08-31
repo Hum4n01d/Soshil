@@ -422,7 +422,7 @@ def delete_post():
 
         if post.user == user or user.is_admin:
             try:
-                models.Comment.get(models.Comment.post == post).delete_instance()
+                models.Comment.delete().where(models.Comment.post == post)
             except models.DoesNotExist:
                 pass
 
