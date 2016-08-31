@@ -60,11 +60,15 @@ def after_request(response):
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return render_template('error.html', error=error), 404
+    return render_template('error.html', num=404), 404
 
 @app.errorhandler(401)
 def unauthorized(error):
-    return render_template('error.html', error=error), 401
+    return render_template('error.html', num=401), 401
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return render_template('error.html', num=500), 500
 
 def parse_for_mentions(text):
     matches = re.findall(r'@[\w]+', text)
@@ -362,8 +366,8 @@ def new_post():
 @login_required
 def follow(username):
     if username.lower() == g.user._get_current_object().username.lower():
-        flash("You can't follow yourself!")
-        return redirect(url_for('profile'), username=g.user._get_current_object().username)
+        flash("You can't follow yourself! Nice try though")
+        return redirect(url_for('profile', username=g.user._get_current_object().username))
     else:
         try:
             to_user = models.User.get(models.User.username ** username)
