@@ -3,9 +3,6 @@
         <div>
             <img class="avatar" src="{{ profile_user.avatar_url }}" alt="{{ profile_user.username }}'s Avatar">
             <h1>{{ profile_user.username }}</h1>
-            {% if profile_user.id_admin %}
-            <span>*</span>
-            {% endif %}
         </div>
         {% if profile_user != user %}
             {% if not user.is_authenticated %}

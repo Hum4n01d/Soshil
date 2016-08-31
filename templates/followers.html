@@ -1,9 +1,9 @@
 {% extends 'user_list.html' %}
 
 {% block title %}
-{% include 'partials/profile_header.html' %}
-<h1>{{ profile_user.username }}'s Followers:</h1>
+<h2>{{ profile_user.username }}'s Followers:</h2>
 {% endblock %}
 {% block body %}
+{% include 'partials/profile_header.html' %}
 {{ super() }}
 {% endblock %}
