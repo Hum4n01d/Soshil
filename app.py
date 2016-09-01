@@ -315,33 +315,33 @@ def view_post(post_id):
 @login_required
 def edit_post(post_id):
     try:
-        post = models.Post.select().where(models.Post.id == post_id).get()
+        post = models.Post.get(models.Post.id == post_id)
 
     except models.DoesNotExist:
         abort(404)
 
     user = g.user._get_current_object()
 
-    if not user.is_admin or not post.user == user:
-        abort(401)
+    if user.is_admin or post.user == user:
+        form = forms.PostForm()
 
-    form = forms.PostForm()
+        if form.validate_on_submit():
+            raw_content = form.content.data.strip()
 
-    if form.validate_on_submit():
-        raw_content = form.content.data.strip()
+            q = models.Post.update(
+                title=form.title.data,
+                raw_content=raw_content,
+                content=parse_for_mentions(raw_content)
+            ).where(models.Post.id == post_id)
+            q.execute()
 
-        q = models.Post.update(
-            title=form.title.data,
-            raw_content=raw_content,
-            content=parse_for_mentions(raw_content)
-        ).where(models.Post.id == post_id)
-        q.execute()
+            return redirect(url_for('view_post', post_id=post_id))
 
-        return redirect(url_for('view_post', post_id=post_id))
-
+        else:
+            form.title.data = post.title
+            form.content.data = post.raw_content
     else:
-        form.title.data = post.title
-        form.content.data = post.raw_content
+        abort(401)
 
     return render_template('post_editor.html', form=form, edit=True)
 
@@ -421,32 +421,19 @@ def delete_post():
     except models.DoesNotExist:
         abort(404)
 
-    try:
-        user = g.user._get_current_object()
+    user = g.user._get_current_object()
 
-        if post.user == user or user.is_admin:
-            try:
-                models.Comment.delete().where(models.Comment.post == post)
-            except models.DoesNotExist:
-                pass
+    if post.user == user or user.is_admin:
+        if models.Comment.select().where(models.Comment.post == post).exists():
+            models.Comment.delete().where(models.Comment.post == post).execute()
 
-            post.delete_instance()
+        post.delete_instance()
 
-        else:
-            abort(401)
+    else:
+        abort(401)
 
-        flash('Post deleted!', 'sucess')
-        return redirect(url_for('index'))
-
-    except models.DoesNotExist:
-        abort(404)
-
-@app.route('/like_post/<post_id>')
-def like_post(post_id):
-    if not post_id:
-        abort(404)
-
-    return redirect(url_for())
+    flash('Post deleted!', 'sucess')
+    return redirect(url_for('index'))
 
 @app.route('/delete_comment')
 def delete_comment():
