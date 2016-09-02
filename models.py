@@ -24,7 +24,11 @@ except KeyError:
     
 db_proxy.initialize(db)
 
-class User(UserMixin, Model):
+class BaseModel(Model):
+    class Meta:
+        database = db_proxy
+
+class User(UserMixin, BaseModel):
     username = CharField()
     email = CharField(unique=True)
     password = CharField(max_length=100)
@@ -78,7 +82,7 @@ class User(UserMixin, Model):
         except IntegrityError:
             raise ValueError('User already exists')
 
-class Post(Model):
+class Post(BaseModel):
     title = CharField(max_length=100)
     content = CharField(max_length=250)
     raw_content = CharField(default='')
@@ -95,7 +99,7 @@ class Post(Model):
         database = db_proxy
         order_by = ('-timestamp',)
 
-class Comment(Model):
+class Comment(BaseModel):
     timestamp = DateTimeField(default=datetime.now)
     user = ForeignKeyField(User, related_name='commenter')
     post = ForeignKeyField(Post, related_name='post_comments')
@@ -105,7 +109,7 @@ class Comment(Model):
         database = db_proxy
         order_by = ('-timestamp',)
 
-class Relationship(Model):
+class Relationship(BaseModel):
     from_user = ForeignKeyField(User, related_name='relationships')
     to_user = ForeignKeyField(User, related_name='relate_to')
 
@@ -115,7 +119,7 @@ class Relationship(Model):
             (('from_user', 'to_user'), True),
 	)
 
-class Notification(Model):
+class Notification(BaseModel):
     title = CharField(default='Notification')
     link = CharField()
     date = DateTimeField(default=datetime.now)
@@ -129,7 +133,7 @@ class Notification(Model):
         cls.create(
             user=user,
             link=link,
-            title=app.parse_for_mentions(title)
+            title=app.parse_for_mentions(title, notification=True)
         )
 
 def initialize():

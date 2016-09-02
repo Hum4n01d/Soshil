@@ -70,16 +70,28 @@ def unauthorized(error):
 def internal_server_error(error):
     return render_template('error.html', num=500), 500
 
-def parse_for_mentions(text):
+def parse_for_mentions(text, notification=False, page='', edit=False):
     matches = re.findall(r'@[\w]+', text)
 
     for match in matches:
-        username = match.strip('@')
+        username = match.strip().strip('@')
+
         link = url_for('profile', username=username)
-        text = text.replace(match, '[@{username}]({link})'.format(
+
+        text = text.replace(match, '[@]({link})[{username}]({link})'.format(
             link=link,
             username=username
         ))
+
+        if not notification and not edit:
+            try:
+                models.Notification.create_notification(
+                    title='@{} mentioned you!'.format(g.user._get_current_object().username),
+                    link=page,
+                    user=models.User.get(models.User.username ** username)
+                )
+            except models.DoesNotExist:
+                pass
 
     return text
 
@@ -288,7 +300,7 @@ def view_post(post_id):
     comments = models.Comment.select().where(models.Comment.post == post)
 
     if form.validate_on_submit():
-        content = parse_for_mentions(form.content.data)
+        content = parse_for_mentions(form.content.data, page=url_for('view_post', post_id=post_id))
 
         models.Comment.create(
             user=g.user._get_current_object(),
@@ -331,7 +343,7 @@ def edit_post(post_id):
             q = models.Post.update(
                 title=form.title.data,
                 raw_content=raw_content,
-                content=parse_for_mentions(raw_content)
+                content=parse_for_mentions(raw_content, page=url_for('view_post', post_id=post_id), edit=True)
             ).where(models.Post.id == post_id)
             q.execute()
 
@@ -345,18 +357,24 @@ def edit_post(post_id):
 
     return render_template('post_editor.html', form=form, edit=True)
 
-@app.route('/new_post', methods=('GET', 'POST'))
+@app.route('/new_post', methods=['GET', 'POST'])
 @login_required
 def new_post():
     form = forms.PostForm()
     if form.validate_on_submit():
         raw_content = form.content.data.strip()
-        models.Post.create(
+
+        p = models.Post.create(
             user=g.user._get_current_object(),
             title=form.title.data.strip(),
             raw_content=raw_content,
-            content=parse_for_mentions(raw_content).replace('<', '&lt;').replace('>', '&gt;')
+            content=raw_content
         )
+
+        models.Post.update(
+            content=parse_for_mentions(raw_content, page=url_for('view_post', post_id=p.id))
+        ).where(models.Post.id == p.id).execute()
+
         flash('Message successfully posted!', 'success')
         return redirect(url_for('index'))
 
