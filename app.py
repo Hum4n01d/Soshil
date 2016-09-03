@@ -71,7 +71,7 @@ def internal_server_error(error):
     return render_template('error.html', num=500), 500
 
 def parse_for_mentions(text, notification=False, page='', edit=False):
-    matches = re.findall(r'@[\w]+', text)
+    matches = re.findall(r'[^\\]@[\w]+', text)
 
     for match in matches:
         username = match.strip().strip('@')
@@ -92,6 +92,11 @@ def parse_for_mentions(text, notification=False, page='', edit=False):
                 )
             except models.DoesNotExist:
                 pass
+
+    backslash_matches = re.findall(r'\\@[\w]+', text)
+
+    for backslash_match in backslash_matches:
+        text = text.replace(backslash_match, backslash_match.strip('\\'))
 
     return text
 
