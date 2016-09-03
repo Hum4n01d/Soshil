@@ -418,6 +418,11 @@ def unfollow(username):
     except models.DoesNotExist:
         pass
     else:
+        user = g.user._get_current_object()
+
+        if to_user == user:
+            flash('Why are you unfollowing yourself? Nice try.')
+            return redirect(url_for('profile', username=user.username))
         try:
             models.Relationship.get(
                 from_user=g.user._get_current_object(),

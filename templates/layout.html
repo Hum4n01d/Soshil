@@ -7,6 +7,9 @@
         <meta charset="UTF-8">
         {% block stylesheet %}
         {% endblock %}
+        {% if dark_style %}
+        <link rel="stylesheet" type="text/css" href="/static/css/dark.css">
+        {% endif %}gs
     </head>
     <body>
         {% with messages = get_flashed_messages(with_categories=True) %}
