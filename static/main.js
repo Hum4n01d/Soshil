@@ -46,7 +46,7 @@ $('#signup-form form').validate({
     rules: {
         username: {
             required: true,
-            regex: /^[a-zA-Z0-9_]+$/
+            regex: /^[a-zA-Z0-9_​]+$/
         },
         email: {
             required: true,

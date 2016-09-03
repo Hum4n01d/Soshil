@@ -21,7 +21,7 @@ class RegisterForm(Form):
         validators=[
             DataRequired(),
             Regexp(
-                r'^[a-zA-Z0-9_]+$',
+                r'^[a-zA-Z0-9_​]+$',
                 message=('Username can only contain letters, numbers, and underscores')
             ),
             name_exists
