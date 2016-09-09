@@ -15,6 +15,10 @@ import models
 app = Flask(__name__)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
 
+RECAPTCHA_PUBLIC_KEY = os.environ['SOSHIL_RECAPTCHA_PUBLIC_KEY']
+RECAPTCHA_PRIVATE_KEY = os.environ['SOSHIL_RECAPTCHA_PRIVATE_KEY']
+app.config.from_object(__name__)
+
 bcrypt = Bcrypt(app)
 
 markdown = Markdown(app)
@@ -105,6 +109,7 @@ def sign_up():
     form = forms.RegisterForm()
 
     if form.validate_on_submit():
+
         email = form.email.data.lower().encode('utf-8')
         gravatar_url = 'https://www.gravatar.com/avatar/' + hashlib.md5(email).hexdigest() + '?d=retro&s=75'
 
@@ -366,6 +371,7 @@ def edit_post(post_id):
 @login_required
 def new_post():
     form = forms.PostForm()
+
     if form.validate_on_submit():
         raw_content = form.content.data.strip()
 
@@ -491,11 +497,73 @@ def delete_comment():
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    return render_template('account.html')
+    form = forms.AccountForm()
+    user = g.user._get_current_object()
+
+    if form.validate_on_submit():
+        email = form.email.data
+        avatar_url = form.avatar_url.data
+
+        if email and not email == user.email:
+            models.User.update(email=email).execute()
+
+        if avatar_url and not avatar_url == user.avatar_url:
+            models.User.update(avatar_url=form.avatar_url.data).execute()
+
+        flash('Your account settings were updated')
+
+    return render_template('account.html', form=form)
 
 @app.route('/terms')
 def terms():
     return render_template('terms.html')
+
+@app.route('/delete_my_account')
+@login_required
+def delete_my_account():
+    user = g.user._get_current_object()
+
+    models.User.delete().where(
+        models.User.id == user.id
+    ).execute()
+
+    models.Post.delete().where(
+        models.Post.user == user
+    ).execute()
+
+    models.Comment.delete().where(
+        models.Comment.user == user
+    ).execute()
+
+    flash('Your account was deleted')
+
+    return redirect(url_for('log_in'))
+
+@app.route('/delete_my_posts')
+@login_required
+def delete_my_posts():
+    user = g.user._get_current_object()
+
+    models.Post.delete().where(
+        models.Post.user == user
+    ).execute()
+
+    flash('Your posts were deleted')
+
+    return redirect(url_for('account'))
+
+@app.route('/delete_my_comments')
+@login_required
+def delete_my_comments():
+    user = g.user._get_current_object()
+
+    models.Comment.delete().where(
+        models.Comment.user == user
+    ).execute()
+
+    flash('Your comments were deleted')
+
+    return redirect(url_for('account'))
 
 @app.route('/notifications')
 @login_required
@@ -529,4 +597,20 @@ if __name__ == '__main__':
     except ValueError:
         pass
 
-    app.run(host=HOST, port=PORT, debug=DEBUG)
+    production = not os.environ.get('DEBUG', True)
+
+    if production:
+        app.run(host=HOST, port=PORT)
+
+    else:
+        extra_dirs = ['templates/']
+        extra_files = extra_dirs[:]
+        for extra_dir in extra_dirs:
+            for dirname, dirs, files in os.walk(extra_dir):
+                for filename in files:
+                    filename = os.path.join(dirname, filename)
+                    if os.path.isfile(filename):
+                        extra_files.append(filename)
+
+        app.run(debug=True, port=5000, host=HOST,
+                extra_files=extra_files)

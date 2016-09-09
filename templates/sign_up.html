@@ -12,8 +12,12 @@
         {% for field in form %}
         {{ render_field(field) }}
         {% endfor %}
+        <div class="g-recaptcha" data-sitekey="6Lcw0CkTAAAAAD9uXHT_7SvCx6irHZ0A1bYPCWXk"></div>
         <p>By continuing, you agree to the <a href="{{ url_for('terms') }}">terms.</a> Please read them.</p>
         <button type="submit" class="no-margin">Sign up!</button>
     </form>
 </div>
+{% endblock %}
+{% block head %}
+<script src='https://www.google.com/recaptcha/api.js'></script>
 {% endblock %}

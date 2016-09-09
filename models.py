@@ -1,7 +1,5 @@
-import os
-
+from os import environ
 from datetime import datetime
-
 from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 from peewee import *
@@ -13,11 +11,13 @@ import app
 db_proxy = Proxy()
 
 try:
-    heroku = os.environ['HEROKU']
+    heroku = environ['HEROKU']
 
     if heroku:
+        database_url = environ["DATABASE_URL"]
+
         urllib.parse.uses_netloc.append('postgres')
-        url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
+        url = urllib.parse.urlparse(database_url)
         db = PostgresqlDatabase(database=url.path[1:], user=url.username, password=url.password, host=url.hostname, port=url.port)
 except KeyError:
     db = SqliteDatabase('soshil.db')

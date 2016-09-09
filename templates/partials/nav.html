@@ -6,12 +6,13 @@
     <a href="{{ url_for('all_posts') }}">All Posts</a>
     <div class="user-options">
         <a href="javascript:void(0)" class="user-options-toggle">
-            <img src="{{ user.avatar_url }}" alt="{{ user.username }}'s Avatar">
+            <img id="user-options-logo" src="{{ user.avatar_url }}" alt="{{ user.username }}'s Avatar">
             <p>{{ user.username }}</p>
             <img src="/static/down_arrow.svg">
         </a>
         <div class="user-options-inner">
             <a href="{{ url_for('profile', username=user.username) }}">Profile</a>
+            <a href="{{ url_for('account')}} ">Account</a>
             <a href="{{ url_for('log_out')}} ">Log out</a>
         </div>
     </div>

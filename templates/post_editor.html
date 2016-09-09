@@ -23,9 +23,10 @@
     </form>
 </div>
 {% endblock %}
-{% block scripts %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+{% block head %}
 <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+{% endblock %}
+{% block scripts %}
 <script>
     var simplemde = new SimpleMDE({
         element: document.getElementById('content')

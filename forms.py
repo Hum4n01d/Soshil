@@ -1,7 +1,9 @@
-from flask_wtf import Form
-from wtforms import StringField, PasswordField, TextAreaField, BooleanField
-from wtforms.validators import (DataRequired, Regexp, ValidationError, Email, Length, EqualTo)
+from os import environ
+from flask_wtf import Form, RecaptchaField
+from wtforms import StringField, PasswordField, TextAreaField
+from wtforms.validators import (DataRequired, Regexp, ValidationError, Email, Length, EqualTo, Optional, URL)
 
+import app
 from models import User
 
 
@@ -44,6 +46,7 @@ class RegisterForm(Form):
         'Confirm Password',
         validators=[DataRequired()]
     )
+    recaptcha = RecaptchaField()
     
 class LoginForm(Form):
     username = StringField('Username', validators=[DataRequired()])
@@ -57,4 +60,15 @@ class CommentForm(Form):
     content = TextAreaField("Leave a comment", id="comment_editor", validators=[
         DataRequired(),
         Length(max=250)
+    ])
+
+class AccountForm(Form):
+    avatar_url = StringField(validators=[
+        Optional(),
+        URL()
+    ])
+    email = StringField(validators=[
+        Optional(),
+        Email(),
+        email_exists
     ])
