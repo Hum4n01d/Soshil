@@ -1,7 +1,6 @@
 import os
 import hashlib
 import re
-
 import requests
 
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
