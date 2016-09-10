@@ -144,5 +144,3 @@ def initialize():
 
 if __name__ == '__main__':
     initialize()
-
-    import fixicons
