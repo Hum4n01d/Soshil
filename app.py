@@ -505,10 +505,10 @@ def account():
         avatar_url = form.avatar_url.data
 
         if email and not email == user.email:
-            models.User.update(email=email).execute()
+            models.User.update(email=email).where(models.User.id == user.id).execute()
 
         if avatar_url and not avatar_url == user.avatar_url:
-            models.User.update(avatar_url=form.avatar_url.data).execute()
+            models.User.update(avatar_url=form.avatar_url.data).where(models.User.id == user.id).execute()
 
         flash('Your account settings were updated')
 
