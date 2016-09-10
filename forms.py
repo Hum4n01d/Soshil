@@ -1,7 +1,7 @@
 from os import environ
 from flask_wtf import Form, RecaptchaField
 from wtforms import StringField, PasswordField, TextAreaField
-from wtforms.validators import (DataRequired, Regexp, ValidationError, Email, Length, EqualTo, Optional, URL)
+from wtforms.validators import (DataRequired, Regexp, ValidationError, Email, Length, EqualTo, Optional, URL, AnyOf)
 
 import app
 from models import User
@@ -71,4 +71,9 @@ class AccountForm(Form):
         Optional(),
         Email(),
         email_exists
+    ])
+
+class DeleteForm(Form):
+    username = StringField(validators=[
+        DataRequired()
     ])

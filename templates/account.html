@@ -4,6 +4,7 @@
 {% block body %}
 <div id="account-settings">
     <h1>Account Settings</h1>
+    <h2>General:</h2>
     <div class="post-editor">
         <form method='POST' action='' id="account-form">
             {{ form.hidden_tag() }}
@@ -13,7 +14,7 @@
             <button type="submit">Save</button>
         </form>
     </div>
-    <p>Dangerous Zone:</p>
+    <h2>Dangerous Zone:</h2>
     <button class="danger">
         <a href="{{ url_for('delete_my_account') }}">Delete my account</a>
     </button>

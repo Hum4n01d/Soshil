@@ -518,52 +518,67 @@ def account():
 def terms():
     return render_template('terms.html')
 
-@app.route('/delete_my_account')
+@app.route('/delete_my_account', methods=['GET', 'POST'])
 @login_required
 def delete_my_account():
+    form = forms.DeleteForm()
     user = g.user._get_current_object()
 
-    models.User.delete().where(
-        models.User.id == user.id
-    ).execute()
+    if form.validate_on_submit():
+        if form.username.data == user.username:
+            models.User.delete().where(
+                models.User.id == user.id
+            ).execute()
 
-    models.Post.delete().where(
-        models.Post.user == user
-    ).execute()
+            models.Post.delete().where(
+                models.Post.user == user
+            ).execute()
 
-    models.Comment.delete().where(
-        models.Comment.user == user
-    ).execute()
+            models.Comment.delete().where(
+                models.Comment.user == user
+            ).execute()
 
-    flash('Your account was deleted')
+            flash('Your account was deleted')
+        else:
+            flash('You entered your username wrong', 'error')
 
-    return redirect(url_for('log_in'))
+    return render_template('confirm_delete.html', form=form, case='Account')
 
-@app.route('/delete_my_posts')
+@app.route('/delete_my_posts', methods=['GET', 'POST'])
 @login_required
 def delete_my_posts():
+    form = forms.DeleteForm()
     user = g.user._get_current_object()
 
-    models.Post.delete().where(
-        models.Post.user == user
-    ).execute()
+    if form.validate_on_submit():
+        if form.username.data == user.username:
+            models.Post.delete().where(
+                models.Post.user == user
+            ).execute()
 
-    flash('Your posts were deleted')
+            flash('Your posts were deleted')
+        else:
+            flash('You entered your username wrong', 'error')
 
-    return redirect(url_for('account'))
+    return render_template('confirm_delete.html', form=form, case='Post')
 
-@app.route('/delete_my_comments')
+@app.route('/delete_my_comments', methods=['GET', 'POST'])
 @login_required
 def delete_my_comments():
+    form = forms.DeleteForm()
     user = g.user._get_current_object()
 
-    models.Comment.delete().where(
-        models.Comment.user == user
-    ).execute()
+    if form.validate_on_submit():
+        if form.username.data == user.username:
+            models.Comment.delete().where(
+                models.Comment.user == user
+            ).execute()
 
-    flash('Your comments were deleted')
+            flash('Your comments were deleted')
+        else:
+            flash('You entered your username wrong', 'error')
 
-    return redirect(url_for('account'))
+    return render_template('confirm_delete.html', form=form, case='Comment')
 
 @app.route('/notifications')
 @login_required
