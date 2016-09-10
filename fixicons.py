@@ -1,15 +1,8 @@
 import hashlib
 import models
 
-users = models.User.select()
+models.User.update(models.User.avatar_url == 'https://avatars2.githubusercontent.com/u/8015809?v=3&s=75').where(models.User.username ** "brld").execute()
 
-for user in users:
-    email = user.email.encode('utf-8')
-    gravatar_url = 'https://www.gravatar.com/avatar/' + hashlib.md5(email).hexdigest() + '?d=retro&s=75'
+models.User.update(models.User.avatar_url == 'https://avatars3.githubusercontent.com/u/17019573?v=3&s=75').where(models.User.username ** "ianardo").execute()
 
-    models.User.update(
-        avatar_url=gravatar_url
-    ).where(
-        models.User.id == user.id
-    ).execute()
-
+models.User.update(models.User.avatar_url == 'https://avatars3.githubusercontent.com/u/17228477?v=3&s=75').where(models.User.username ** "hum4n01d").execute()
