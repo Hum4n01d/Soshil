@@ -4,7 +4,6 @@ from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 from peewee import *
 import psycopg2
-import urllib.parse
 
 import app
 
@@ -14,6 +13,8 @@ try:
     heroku = environ['HEROKU']
 
     if heroku:
+        import urllib.parse
+
         database_url = environ["DATABASE_URL"]
 
         urllib.parse.uses_netloc.append('postgres')
@@ -143,3 +144,5 @@ def initialize():
 
 if __name__ == '__main__':
     initialize()
+
+    import fixicons

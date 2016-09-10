@@ -1,21 +1,16 @@
-from os import environ
 from flask_wtf import Form, RecaptchaField
 from wtforms import StringField, PasswordField, TextAreaField
 from wtforms.validators import (DataRequired, Regexp, ValidationError, Email, Length, EqualTo, Optional, URL, AnyOf)
 
-import app
-from models import User
-
+# from models import User
 
 def name_exists(form, field):
     if User.select().where(User.username == field.data).exists():
         raise ValidationError('That username already exists.')
 
-
 def email_exists(form, field):
     if User.select().where(User.email == field.data).exists():
         raise ValidationError('That email is already registered.')
-
 
 class RegisterForm(Form):
     username = StringField(
