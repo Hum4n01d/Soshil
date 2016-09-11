@@ -37,9 +37,6 @@ class User(UserMixin, BaseModel):
     avatar_url = CharField(default='')
     is_admin = BooleanField(default=False)
     github_user = BooleanField(default=False)
-  
-    class Meta:
-        database = db_proxy
     
     def get_posts(self):
         return Post.select().where(Post.user == self)

@@ -626,5 +626,5 @@ if __name__ == '__main__':
                     if os.path.isfile(filename):
                         extra_files.append(filename)
 
-        app.run(debug=True, port=5000, host=HOST,
+        app.run(debug=True, port=int(os.environ.get('PORT', 5000)), host=HOST,
                 extra_files=extra_files)
