@@ -131,7 +131,7 @@ class Notification(BaseModel):
         cls.create(
             user=user,
             link=link,
-            title=app.parse_for_mentions(title, notification=True)
+            title=app.parse_post(title, notification=True)
         )
 
 def initialize():

@@ -2,6 +2,7 @@ import os
 import hashlib
 import re
 import requests
+import bleach
 
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -73,7 +74,7 @@ def unauthorized(error):
 def internal_server_error(error):
     return render_template('error.html', num=500), 500
 
-def parse_for_mentions(text, notification=False, page='', edit=False):
+def parse_post(text, notification=False, page='', edit=False):
     matches = re.findall(r'[^\\]@[\w]+', text)
 
     for match in matches:
@@ -101,7 +102,9 @@ def parse_for_mentions(text, notification=False, page='', edit=False):
     for backslash_match in backslash_matches:
         text = text.replace(backslash_match, backslash_match.strip('\\'))
 
-    return text
+    bleached = bleach.clean(text)
+
+    return bleached
 
 @app.route('/sign_up', methods=('GET', 'POST'))
 def sign_up():
@@ -309,7 +312,7 @@ def view_post(post_id):
     comments = models.Comment.select().where(models.Comment.post == post)
 
     if form.validate_on_submit():
-        content = parse_for_mentions(form.content.data, page=url_for('view_post', post_id=post_id))
+        content = parse_post(form.content.data, page=url_for('view_post', post_id=post_id))
 
         models.Comment.create(
             user=g.user._get_current_object(),
@@ -352,7 +355,7 @@ def edit_post(post_id):
             q = models.Post.update(
                 title=form.title.data,
                 raw_content=raw_content,
-                content=parse_for_mentions(raw_content, page=url_for('view_post', post_id=post_id), edit=True)
+                content=parse_post(raw_content, page=url_for('view_post', post_id=post_id), edit=True)
             ).where(models.Post.id == post_id)
             q.execute()
 
@@ -382,7 +385,7 @@ def new_post():
         )
 
         models.Post.update(
-            content=parse_for_mentions(raw_content, page=url_for('view_post', post_id=p.id))
+            content=parse_post(raw_content, page=url_for('view_post', post_id=p.id))
         ).where(models.Post.id == p.id).execute()
 
         flash('Message successfully posted!', 'success')
