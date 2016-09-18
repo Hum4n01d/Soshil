@@ -8,6 +8,7 @@ from flask import Flask, g, render_template, flash, redirect, url_for, request, 
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt, check_password_hash
 from flaskext.markdown import Markdown
+from flask_sslify import SSLify
 
 import forms
 import models
@@ -22,6 +23,8 @@ app.config.from_object(__name__)
 bcrypt = Bcrypt(app)
 
 markdown = Markdown(app)
+
+sslify = SSLify(app)
 
 DEBUG = True
 PORT = int(os.environ.get('PORT', 8000))
@@ -75,14 +78,22 @@ def internal_server_error(error):
     return render_template('error.html', num=500), 500
 
 def parse_post(text, notification=False, page='', edit=False):
-    matches = re.findall(r'[^\\]@[\w]+', text)
+    matches = re.findall(r'.?@[\w]+', text)
 
     for match in matches:
-        username = match.strip().strip('@')
+        if match[0] == '\\':
+            break
+
+        username = match.replace('@', '').strip()
 
         link = url_for('profile', username=username)
 
-        text = text.replace(match, '[@]({link})[{username}]({link})'.format(
+        template = '[@]({link})[{username}]({link})'
+
+        if match[0] == ' ':
+            template = ' {}'.format(template)
+
+        text = text.replace(match, template.format(
             link=link,
             username=username
         ))
@@ -554,9 +565,14 @@ def delete_my_posts():
 
     if form.validate_on_submit():
         if form.username.data == user.username:
-            models.Post.delete().where(
-                models.Post.user == user
-            ).execute()
+            posts = models.Post.select().where(models.Post.user == user)
+
+            for post in posts:
+                models.Comment.delete().where(
+                    models.Comment.post == post
+                ).execute()
+
+                post.delete_instance()
 
             flash('Your posts were deleted')
         else:
