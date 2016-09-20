@@ -51,6 +51,15 @@ def before_request():
     g.db.connect()
     g.user = current_user
 
+    print('DYNO' in os.environ)
+
+    if 'DYNO' in os.environ:
+        #On heroku
+        url = request.url.split('://')
+
+        if not url[1] == 'https':
+            redirect('https://{}'.format(url[1]))
+
 @app.after_request
 def after_request(response):
     '''Close the database connection after each request'''
