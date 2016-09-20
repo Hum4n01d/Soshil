@@ -24,8 +24,6 @@ bcrypt = Bcrypt(app)
 
 markdown = Markdown(app)
 
-sslify = SSLify(app)
-
 DEBUG = True
 PORT = int(os.environ.get('PORT', 8000))
 HOST = '0.0.0.0'
@@ -52,12 +50,6 @@ def before_request():
     g.db = models.db_proxy
     g.db.connect()
     g.user = current_user
-
-    if g.user._get_current_object().is_authenticated:
-        try:
-            g.notification_count = models.Notification.select().where(models.Notification.user == g.user._get_current_object()).count()
-        except models.DoesNotExist:
-            g.notification_count = 0
 
 @app.after_request
 def after_request(response):
@@ -610,6 +602,18 @@ def notifications():
         notification.delete_instance()
 
     return render_template('notifications.html', notifications=notifications)
+
+@app.route('/get_notifications')
+def get_notifications():
+    user = g.user._get_current_object()
+
+    if user.is_authenticated:
+        notification_count = models.Notification.select().where(models.Notification.user == user).count()
+
+    else:
+        notification_count = 0
+
+    return str(notification_count)
 
 @app.route('/google46cfa7a8f3f231ed.html')
 def google_verify():
