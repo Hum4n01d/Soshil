@@ -21,34 +21,38 @@ MEDIA QUERIES
                 &:hover
                     color border-color
 
+            nav a,
+            #notifications-link
+                padding 20px 10px
+                width auto
+                margin 0
+                border none
+
+                &:hover
+                    background-color border-color
+                    color black
+
+                &:last-child
+                    border none
+
+            #notifications-link
+                position static
+                top 0
+                padding 20px 10px
+
+                #notification-count-wrapper
+                    position relative
+
+                    #notification-count
+                        left auto
+                        top -36px
+                        right -15px
+
             nav
                 display flex !important
                 flex-direction row
                 align-items center
                 margin-left auto
-
-                #notifications-link
-                    padding 20px 10px
-
-                    #notification-count
-                        top 8px
-                        left 25px
-
-                    p
-                        display none
-
-                a
-                    padding 20px 10px
-                    width auto
-                    margin 0
-                    border none
-
-                    &:hover
-                        background-color border-color
-                        color black
-
-                    &:last-child
-                        border none
 
                 .user-options
                     position relative

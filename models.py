@@ -1,11 +1,13 @@
+import re
+import bleach
+
+from flask import url_for
 from os import environ
 from datetime import datetime
 from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 from peewee import *
 import psycopg2
-
-import app
 
 db_proxy = Proxy()
 
@@ -24,6 +26,46 @@ except KeyError:
     db = SqliteDatabase('soshil.db')
     
 db_proxy.initialize(db)
+
+def parse_post(text, notification=False, page='', edit=False):
+    matches = re.findall(r'.?@[\w]+', text)
+
+    for match in matches:
+        if match[0] == '\\':
+            break
+
+        username = match.replace('@', '').strip()
+
+        link = url_for('profile', username=username)
+
+        template = '[@]({link})[{username}]({link})'
+
+        if match[0] == ' ':
+            template = ' {}'.format(template)
+
+        text = text.replace(match, template.format(
+            link=link,
+            username=username
+        ))
+
+        if not notification and not edit:
+            try:
+                Notification.create_notification(
+                    title='@{} mentioned you!'.format(g.user._get_current_object().username),
+                    link=page,
+                    user=User.get(User.username ** username)
+                )
+            except DoesNotExist:
+                pass
+
+    backslash_matches = re.findall(r'\\@[\w]+', text)
+
+    for backslash_match in backslash_matches:
+        text = text.replace(backslash_match, backslash_match.strip('\\'))
+
+    bleached = bleach.clean(text)
+
+    return bleached
 
 class BaseModel(Model):
     class Meta:
@@ -131,7 +173,7 @@ class Notification(BaseModel):
         cls.create(
             user=user,
             link=link,
-            title=app.parse_post(title, notification=True)
+            title=parse_post(title, notification=True)
         )
 
 def initialize():

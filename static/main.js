@@ -101,16 +101,22 @@ $('button.danger a').click(function(e) {
 
 function update_notification() {
     $.ajax({url: '/get_notifications', success: function(data){
-        $('#notification-count').text(data);
+        var $el = $('#notification-count');
+        var $parent = $el.parent().parent();
+
+        $el.text(data);
+
         if (data == '0') {
-            $('#notification-count').hide();
+            $el.hide();
+            $parent.removeClass('number-showing');
         } else {
-            $('#notification-count').show();
+            $el.show();
+            $parent.addClass('number-showing');
         }
     }, dataType: "text"});
 }
 
-update_notification()
+update_notification();
 setInterval(function(){
     update_notification()
 }, 3000);

@@ -19,36 +19,38 @@ HEADER
         text-align center
         color black
 
+    #notifications-link
+        position absolute
+        top -1px
+        right 50px
+
+        padding 15px 0
+
+        &.number-showing
+            right 60px
+            top 2px
+
+        img
+            width 20px
+
+        #notification-count
+            display none
+
+            background-color red
+            border-radius 100%
+            position absolute
+            width 20px
+            height 20px
+            top 3px
+            left 15px
+
+            color white
+            text-align center
+
+            line-height 1.4em
+
     nav
         display none
-
-
-        #notifications-link
-            position relative
-            padding 10px 0
-
-            display flex
-            align-items center
-
-            > p
-                margin 0
-                margin-left 10px
-
-            #notification-count
-                display none
-
-                background-color red
-                border-radius 100%
-                position absolute
-                width 20px
-                height 20px
-                top 10px
-                left 120px
-
-                color white
-                text-align center
-
-                line-height 1.4em
 
         > a
             display block
@@ -76,6 +78,7 @@ HEADER
                     margin 0 10px
                     overflow hidden
                     text-overflow ellipsis
+                    max-width 100px
 
                 #user-options-logo
                     width 20px

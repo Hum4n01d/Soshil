@@ -1,20 +1,37 @@
 import os
 import hashlib
-import re
 import requests
-import bleach
 
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt, check_password_hash
 from flaskext.markdown import Markdown
-from flask_sslify import SSLify
+from flask_admin.contrib.peewee import ModelView
+from flask_admin import Admin, AdminIndexView, expose
 
 import forms
 import models
 
 app = Flask(__name__)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
+
+class MyAdminIndexView(AdminIndexView):
+    @expose('/')
+    def index(self):
+        user = g.user._get_current_object()
+
+        if not user.is_authenticated:
+            abort(401)
+
+        if not user.is_admin:
+            abort(401)
+
+        return super(MyAdminIndexView, self).index()
+
+admin = Admin(app, name='Soshil',  index_view=MyAdminIndexView())
+
+admin.add_view(ModelView(models.User))
+admin.add_view(ModelView(models.Post))
 
 RECAPTCHA_PUBLIC_KEY = os.environ['SOSHIL_RECAPTCHA_PUBLIC_KEY']
 RECAPTCHA_PRIVATE_KEY = os.environ['SOSHIL_RECAPTCHA_PRIVATE_KEY']
@@ -68,46 +85,6 @@ def unauthorized(error):
 @app.errorhandler(500)
 def internal_server_error(error):
     return render_template('error.html', num=500), 500
-
-def parse_post(text, notification=False, page='', edit=False):
-    matches = re.findall(r'.?@[\w]+', text)
-
-    for match in matches:
-        if match[0] == '\\':
-            break
-
-        username = match.replace('@', '').strip()
-
-        link = url_for('profile', username=username)
-
-        template = '[@]({link})[{username}]({link})'
-
-        if match[0] == ' ':
-            template = ' {}'.format(template)
-
-        text = text.replace(match, template.format(
-            link=link,
-            username=username
-        ))
-
-        if not notification and not edit:
-            try:
-                models.Notification.create_notification(
-                    title='@{} mentioned you!'.format(g.user._get_current_object().username),
-                    link=page,
-                    user=models.User.get(models.User.username ** username)
-                )
-            except models.DoesNotExist:
-                pass
-
-    backslash_matches = re.findall(r'\\@[\w]+', text)
-
-    for backslash_match in backslash_matches:
-        text = text.replace(backslash_match, backslash_match.strip('\\'))
-
-    bleached = bleach.clean(text)
-
-    return bleached
 
 @app.route('/sign_up', methods=('GET', 'POST'))
 def sign_up():
@@ -315,7 +292,7 @@ def view_post(post_id):
     comments = models.Comment.select().where(models.Comment.post == post)
 
     if form.validate_on_submit():
-        content = parse_post(form.content.data, page=url_for('view_post', post_id=post_id))
+        content = models.parse_post(form.content.data, page=url_for('view_post', post_id=post_id))
 
         models.Comment.create(
             user=g.user._get_current_object(),
@@ -358,7 +335,7 @@ def edit_post(post_id):
             q = models.Post.update(
                 title=form.title.data,
                 raw_content=raw_content,
-                content=parse_post(raw_content, page=url_for('view_post', post_id=post_id), edit=True)
+                content=models.parse_post(raw_content, page=url_for('view_post', post_id=post_id), edit=True)
             ).where(models.Post.id == post_id)
             q.execute()
 
@@ -388,7 +365,7 @@ def new_post():
         )
 
         models.Post.update(
-            content=parse_post(raw_content, page=url_for('view_post', post_id=p.id))
+            content=models.parse_post(raw_content, page=url_for('view_post', post_id=p.id))
         ).where(models.Post.id == p.id).execute()
 
         flash('Message successfully posted!', 'success')
@@ -614,6 +591,14 @@ def get_notifications():
         notification_count = 0
 
     return str(notification_count)
+
+@app.route('/admin')
+@login_required
+def admin():
+    if g.user._get_current_object().is_admin:
+        pass
+    else:
+        abort(401)
 
 @app.route('/google46cfa7a8f3f231ed.html')
 def google_verify():
