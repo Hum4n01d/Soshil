@@ -6,39 +6,12 @@ from flask import Flask, g, render_template, flash, redirect, url_for, request, 
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt, check_password_hash
 from flaskext.markdown import Markdown
-from flask_admin.contrib.peewee import ModelView
-from flask_admin import Admin, AdminIndexView, expose
 
 import forms
 import models
 
 app = Flask(__name__)
 app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89ry0f'
-
-class MyAdminIndexView(AdminIndexView):
-    @expose('/')
-    @expose('/user')
-    @expose('/post')
-    @expose('/comment')
-    @expose('/relationship')
-    def admin_view(self):
-        user = g.user._get_current_object()
-
-        if not user.is_authenticated:
-            abort(401)
-
-        if not user.is_admin:
-            abort(401)
-
-        return super(MyAdminIndexView, self).index()
-
-admin = Admin(app, name='Soshil',  index_view=MyAdminIndexView())
-
-admin.add_view(ModelView(models.User))
-admin.add_view(ModelView(models.Post))
-admin.add_view(ModelView(models.Comment))
-admin.add_view(ModelView(models.Relationship))
-admin.add_view(ModelView(models.Notification))
 
 RECAPTCHA_PUBLIC_KEY = os.environ['SOSHIL_RECAPTCHA_PUBLIC_KEY']
 RECAPTCHA_PRIVATE_KEY = os.environ['SOSHIL_RECAPTCHA_PRIVATE_KEY']
