@@ -29,6 +29,7 @@ HEADER
         &.number-showing
             right 60px
             top 2px
+            animation shake 0.75s infinite
 
         img
             width 20px
@@ -101,3 +102,13 @@ HEADER
         #notifications-link
             img[src="/static/bell.svg"]
                 height 20px
+
+@keyframes shake
+    0%
+        transform rotate(-5deg)
+        
+    50%
+        transform rotate(5deg)
+
+    100%
+        transform rotate(-5deg)

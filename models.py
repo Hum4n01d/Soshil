@@ -8,6 +8,7 @@ from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 from peewee import *
 import psycopg2
+from flask import g
 
 db_proxy = Proxy()
 
