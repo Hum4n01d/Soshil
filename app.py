@@ -17,7 +17,11 @@ app.secret_key = 'rw8efuhjeqr38efygduvbefjkqgiuwohv3k2r112qwfay98qughgiuwr23tw89
 
 class MyAdminIndexView(AdminIndexView):
     @expose('/')
-    def index(self):
+    @expose('/user')
+    @expose('/post')
+    @expose('/comment')
+    @expose('/relationship')
+    def admin_view(self):
         user = g.user._get_current_object()
 
         if not user.is_authenticated:
@@ -32,6 +36,9 @@ admin = Admin(app, name='Soshil',  index_view=MyAdminIndexView())
 
 admin.add_view(ModelView(models.User))
 admin.add_view(ModelView(models.Post))
+admin.add_view(ModelView(models.Comment))
+admin.add_view(ModelView(models.Relationship))
+admin.add_view(ModelView(models.Notification))
 
 RECAPTCHA_PUBLIC_KEY = os.environ['SOSHIL_RECAPTCHA_PUBLIC_KEY']
 RECAPTCHA_PRIVATE_KEY = os.environ['SOSHIL_RECAPTCHA_PRIVATE_KEY']
