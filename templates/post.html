@@ -22,14 +22,19 @@
                 <h3>{{ comment.user.username }}</h3>
             </a>
 
-            <div class="comment-delete">
+            <div class="comment-actions">
                 {% if comment.user == user or user.is_admin %}
+                <button><a href="{{ url_for('edit_comment', comment_id=comment.id) }}">Edit</a></button>
                 <button class="danger"><a href="{{ url_for('delete_comment', comment_id=comment.id) }}">Delete</a></button>
                 {% endif %}
             </div>
         </div>
-        <p>{{ comment.content|safe }}</p>
+        <p>{{ comment.content|markdown }}</p>
     </div>
     {% endfor %}
 </div>
+{% endblock %}
+{% block scripts %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 {% endblock %}

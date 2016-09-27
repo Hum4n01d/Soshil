@@ -316,7 +316,7 @@ def edit_comment(comment_id):
 
     form.content.data = comment.content
 
-    return render_template('post_editor.html', form=form, comment=True)
+    return render_template('post_editor.html', form=form, comment=True, edit=True)
 
 @app.route('/post/<int:post_id>/edit', methods=['GET', 'POST'])
 @login_required

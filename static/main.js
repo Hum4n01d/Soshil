@@ -120,3 +120,7 @@ update_notification();
 setInterval(function(){
     update_notification()
 }, 3000);
+
+var simplemde = new SimpleMDE({
+    element: $('editor')[0]
+});

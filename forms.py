@@ -49,13 +49,13 @@ class LoginForm(Form):
     
 class PostForm(Form):
     title = StringField('Post title', validators=[DataRequired()])
-    content = TextAreaField("What's on your mind?", id='content', validators=[
+    content = TextAreaField("What's on your mind?", id='editor', validators=[
         DataRequired(),
         Length(max=250, message='Posts must be within 250 characters')
     ])
 
 class CommentForm(Form):
-    content = TextAreaField("Leave a comment", id="comment_editor", validators=[
+    content = TextAreaField("Leave a comment", id="editor", validators=[
         DataRequired(),
         Length(max=250)
     ])
