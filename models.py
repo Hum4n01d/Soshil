@@ -188,7 +188,7 @@ class Like(BaseModel):
 
 class View(BaseModel):
     user = ForeignKeyField(User, related_name='viewer')
-    post = ForeignKeyField(User, related_name='viewed_post')
+    post = ForeignKeyField(Post, related_name='viewed_post')
 
     class Meta:
         database = db_proxy

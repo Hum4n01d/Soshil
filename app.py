@@ -295,12 +295,17 @@ def view_post(post_id):
         return redirect(url_for('view_post', post_id=post_id))
 
     if user.is_authenticated:
-        if not models.View.select().where(models.View.user == user).exists():
+        try:
+            test = models.View.get(
+                models.View.user == user,
+                models.View.post == post
+            )
+            print(test)
+        except models.DoesNotExist:
             models.View.create(
                 user=user,
                 post=post
             )
-            models.Post.update(views=post.views + 1).where(models.Post == post).execute()
 
     return render_template('post.html', post=post, comments=comments, form=form)
 
