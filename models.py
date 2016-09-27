@@ -126,8 +126,8 @@ class User(UserMixin, BaseModel):
             raise ValueError('User already exists')
 
 class Post(BaseModel):
-    title = CharField(max_length=100, null=True)
-    content = CharField(max_length=250, null=True)
+    title = CharField(max_length=100)
+    content = CharField(max_length=250)
     raw_content = CharField(default='')
 
     timestamp = DateTimeField(default=datetime.now)
