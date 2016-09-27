@@ -194,7 +194,7 @@ class View(BaseModel):
         database = db_proxy
         indexes = (
             (('user', 'post'), True),
-	)
+	    )
 
 class Notification(BaseModel):
     title = CharField(default='Notification')
