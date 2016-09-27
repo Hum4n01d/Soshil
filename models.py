@@ -217,12 +217,9 @@ def initialize():
     db_proxy.connect()
     db_proxy.create_tables([User, Relationship, Post, Comment, Notification, Like, View], safe=True)
 
-    try:
-        import migrate
+    import migrate
 
-        migrate.do_migration()
-    except OperationalError:
-        print('migrate error')
+    migrate.do_migration()
 
     db_proxy.close()
 
