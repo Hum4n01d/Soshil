@@ -28,17 +28,8 @@
                 {% endif %}
             </div>
         </div>
-        <p>{{ comment.content|markdown }}</p>
+        <p>{{ comment.content|safe }}</p>
     </div>
     {% endfor %}
 </div>
-{% endblock %}
-{% block scripts %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
-<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-<script>
-    var simplemde = new SimpleMDE({
-        element: document.getElementById('comment_editor')
-    });
-</script>
 {% endblock %}

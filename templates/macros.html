@@ -40,7 +40,7 @@
         </p>
     </div>
     <div class="post-content">
-        {{ post.content|markdown }}
+        {{ post.content|safe }}
     </div>
 </article>
 {% endmacro %}

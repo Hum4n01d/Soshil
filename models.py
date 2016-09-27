@@ -1,5 +1,6 @@
 import re
 import bleach
+import requests
 
 from flask import url_for
 from os import environ
@@ -29,6 +30,8 @@ except KeyError:
 db_proxy.initialize(db)
 
 def parse_post(text, notification=False, page='', edit=False):
+    # Parse for @mentions using regular expressions
+
     matches = re.findall(r'.?@[\w]+', text)
 
     for match in matches:
@@ -59,14 +62,26 @@ def parse_post(text, notification=False, page='', edit=False):
             except DoesNotExist:
                 pass
 
+    # Escape backslashed @mentions like "\@mention"
     backslash_matches = re.findall(r'\\@[\w]+', text)
 
     for backslash_match in backslash_matches:
         text = text.replace(backslash_match, backslash_match.strip('\\'))
 
-    bleached = bleach.clean(text)
+    # Use the bleach library to remove malicious HTML
+    text = bleach.clean(text)
 
-    return bleached
+    # Replace links with their appropriate iframe from iframe.ly
+    links = re.findall(r'http[s]?://[\w]+[\.[\w]+]?\.[\w\/?&=%;\.#:]+', text)
+
+    for link in links:
+        response = requests.get('http://iframe.ly/api/oembed?url={}&api_key=f16c6ce292fa884d584829'.format(link))
+
+        new_html = response.json()['html']
+
+        text = text.replace(link, new_html)
+
+    return text
 
 class BaseModel(Model):
     class Meta:

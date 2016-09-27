@@ -5,7 +5,7 @@
 <ul class="notifications">
     {% for notification in notifications %}
     <li class="notification">
-        <p>{{ notification.title|markdown }}</p>
+        <p>{{ notification.title }}</p>
         <span class="x-margin">-</span>
         <a href="{{ notification.link }}" target="_blank">View</a>
     </li>

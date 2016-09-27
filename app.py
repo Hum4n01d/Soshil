@@ -5,7 +5,6 @@ import requests
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt, check_password_hash
-from flaskext.markdown import Markdown
 
 import forms
 import models
@@ -18,8 +17,6 @@ RECAPTCHA_PRIVATE_KEY = os.environ['SOSHIL_RECAPTCHA_PRIVATE_KEY']
 app.config.from_object(__name__)
 
 bcrypt = Bcrypt(app)
-
-markdown = Markdown(app)
 
 DEBUG = True
 PORT = int(os.environ.get('PORT', 8000))
@@ -227,6 +224,7 @@ def profile(username):
         stream = profile_user.posts.limit(100)
 
     except models.DoesNotExist:
+        flash('That user doesn\'t exist', 'error')
         abort(404)
 
     return render_template('profile.html', profile_user=profile_user, stream=stream)
@@ -238,6 +236,7 @@ def followers(username):
         followers = profile_user.followers()
 
     except models.DoesNotExist:
+        flash('That user doesn\'t exist', 'error')
         abort(404)
 
     return render_template('followers.html', profile_user=profile_user, stream=stream, user_list=followers)
@@ -249,6 +248,7 @@ def following(username):
         following = profile_user.following()
 
     except models.DoesNotExist:
+        flash('That user doesn\'t exist', 'error')
         abort(404)
 
     return render_template('following.html', profile_user=profile_user, stream=stream, user_list=following)
@@ -267,6 +267,7 @@ def view_post(post_id):
     try:
         post = models.Post.select().where(models.Post.id == post_id).get()
     except models.DoesNotExist:
+        flash('That post doesn\'t exist', 'error')
         abort(404)
 
     comments = models.Comment.select().where(models.Comment.post == post)
@@ -289,11 +290,21 @@ def view_post(post_id):
 
         return redirect(url_for('view_post', post_id=post_id))
 
-    else:
-        if not post:
-            abort(404)
-
     return render_template('post.html', post=post, comments=comments, form=form)
+
+@app.route('/edit_comment/<int:comment_id>', methods=['GET', 'POST'])
+def edit_comment(comment_id):
+    form = forms.CommentForm()
+    comment = models.Comment.get(models.Comment.id == comment_id)
+
+    if form.validate_on_submit():
+        models.Comment.update(content=form.content.data).where(models.Comment.id == comment_id).execute()
+
+        return redirect(url_for('view_post', post_id=comment.post.id))
+
+    form.content.data = comment.content
+
+    return render_template('post_editor.html', form=form, comment=True)
 
 @app.route('/post/<int:post_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -302,6 +313,7 @@ def edit_post(post_id):
         post = models.Post.get(models.Post.id == post_id)
 
     except models.DoesNotExist:
+        flash('That post doesn\'t exist', 'error')
         abort(404)
 
     user = g.user._get_current_object()
@@ -325,6 +337,7 @@ def edit_post(post_id):
             form.title.data = post.title
             form.content.data = post.raw_content
     else:
+        flash('That post isn\'t yours', 'error')
         abort(401)
 
     return render_template('post_editor.html', form=form, edit=True)
@@ -408,13 +421,12 @@ def unfollow(username):
 
     return redirect(url_for('profile', username=to_user.username))
 
-@app.route('/delete_post')
-def delete_post():
-    post_id = request.args.get('post_id')
-
+@app.route('/delete_post/<int:post_id>')
+def delete_post(post_id):
     try:
         post = models.Post.get(models.Post.id == post_id)
     except models.DoesNotExist:
+        flash('That post doesn\'t exist', 'error')
         abort(404)
 
     user = g.user._get_current_object()
@@ -426,35 +438,31 @@ def delete_post():
         post.delete_instance()
 
     else:
+        flash('That\'s not your post', 'error')
         abort(401)
 
     flash('Post deleted!', 'sucess')
     return redirect(url_for('index'))
 
-@app.route('/delete_comment')
-def delete_comment():
-    comment_id = request.args.get('comment_id')
-
+@app.route('/delete_comment/<int:comment_id>')
+def delete_comment(comment_id):
     try:
         comment = models.Comment.get(models.Comment.id == comment_id)
     except models.DoesNotExist:
+        flash('That comment doesn\'t exist', 'error')
         abort(404)
 
+    user = g.user._get_current_object()
 
-    try:
-        user = g.user._get_current_object()
+    if comment.user == user or user.is_admin:
+        comment.delete_instance()
 
-        if comment.user == user or user.is_admin:
-            comment.delete_instance()
+    else:
+        flash('That\'s not your comment', 'error')
+        abort(401)
 
-        else:
-            abort(401)
-
-        flash('Comment deleted!', 'sucess')
-        return redirect(url_for('view_post', post_id=comment.post.id))
-
-    except models.DoesNotExist:
-        abort(404)
+    flash('Comment deleted!', 'sucess')
+    return redirect(url_for('view_post', post_id=comment.post.id))
 
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
