@@ -2,12 +2,12 @@ from playhouse.migrate import *
 
 import models
 
-migrator = SqliteMigrator(models.db)
+migrator = SqliteMigrator(models.db_proxy)
 
 raw_title = IntegerField(default=0)
 views = IntegerField(default=0)
 
-migrate(
-    migrator.add_column('post', 'raw_title', raw_title),
-    migrator.add_column('post', 'views', views),
-)
+def do_migration():
+    migrate(
+        migrator.add_column('post', 'views', views),
+    )

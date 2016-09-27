@@ -71,16 +71,6 @@ def parse_post(text, notification=False, page='', edit=False):
     # Use the bleach library to remove malicious HTML
     text = bleach.clean(text)
 
-    # Replace links with their appropriate iframe from iframe.ly
-    links = re.findall(r'http[s]?://[\w]+[\.[\w]+]?\.[\w\/?&=%;\.#:]+', text)
-
-    for link in links:
-        response = requests.get('http://iframe.ly/api/oembed?url={}&api_key=f16c6ce292fa884d584829'.format(link))
-
-        new_html = response.json()['html']
-
-        text = text.replace(link, new_html)
-
     return text
 
 class BaseModel(Model):
@@ -95,10 +85,7 @@ class User(UserMixin, BaseModel):
     avatar_url = CharField(default='')
     is_admin = BooleanField(default=False)
     github_user = BooleanField(default=False)
-    
-    def get_posts(self):
-        return Post.select().where(Post.user == self)
-    
+
     def get_stream(self):
         return Post.select().where(
             (Post.user << self.following()) |
@@ -139,8 +126,8 @@ class User(UserMixin, BaseModel):
             raise ValueError('User already exists')
 
 class Post(BaseModel):
-    title = CharField(max_length=100)
-    content = CharField(max_length=250)
+    title = CharField(max_length=100, null=True)
+    content = CharField(max_length=250, null=True)
     raw_content = CharField(default='')
 
     timestamp = DateTimeField(default=datetime.now)
@@ -149,7 +136,21 @@ class Post(BaseModel):
         related_name='posts'
     )
 
-    likes = IntegerField(default=0)
+    def get_likes(self):
+        '''The users that have liked the post'''
+        return (
+            User.select().join(
+                Like, on=Like.user
+            ).where(Like.post == self)
+        )
+
+    def get_views(self):
+        '''The users that have viewed the post'''
+        return (
+            User.select().join(
+                View, on=View.user
+            ).where(View.post == self)
+        )
 
     class Meta:
         database = db_proxy
@@ -173,6 +174,26 @@ class Relationship(BaseModel):
         database = db_proxy
         indexes = (
             (('from_user', 'to_user'), True),
+	    )
+
+class Like(BaseModel):
+    user = ForeignKeyField(User, related_name='liker')
+    post = ForeignKeyField(Post, related_name='liked_post')
+
+    class Meta:
+        database = db_proxy
+        indexes = (
+            (('user', 'post'), True),
+	    )
+
+class View(BaseModel):
+    user = ForeignKeyField(User, related_name='viewer')
+    post = ForeignKeyField(User, related_name='viewed_post')
+
+    class Meta:
+        database = db_proxy
+        indexes = (
+            (('user', 'post'), True),
 	)
 
 class Notification(BaseModel):
@@ -194,7 +215,15 @@ class Notification(BaseModel):
 
 def initialize():
     db_proxy.connect()
-    db_proxy.create_tables([User, Relationship, Post, Comment, Notification], safe=True)
+    db_proxy.create_tables([User, Relationship, Post, Comment, Notification, Like, View], safe=True)
+
+    try:
+        import migrate
+
+        migrate.do_migration()
+    except OperationalError:
+        print('migrate error')
+
     db_proxy.close()
 
 if __name__ == '__main__':

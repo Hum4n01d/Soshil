@@ -5,6 +5,7 @@ import requests
 from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt, check_password_hash
+from flaskext.markdown import Markdown
 
 import forms
 import models
@@ -17,6 +18,8 @@ RECAPTCHA_PRIVATE_KEY = os.environ['SOSHIL_RECAPTCHA_PRIVATE_KEY']
 app.config.from_object(__name__)
 
 bcrypt = Bcrypt(app)
+
+markdown = Markdown(app)
 
 DEBUG = True
 PORT = int(os.environ.get('PORT', 8000))
@@ -271,12 +274,13 @@ def view_post(post_id):
         abort(404)
 
     comments = models.Comment.select().where(models.Comment.post == post)
+    user = g.user._get_current_object()
 
     if form.validate_on_submit():
         content = models.parse_post(form.content.data, page=url_for('view_post', post_id=post_id))
 
         models.Comment.create(
-            user=g.user._get_current_object(),
+            user=user,
             post=post,
             content=content
         )
@@ -289,6 +293,14 @@ def view_post(post_id):
             )
 
         return redirect(url_for('view_post', post_id=post_id))
+
+    if user.is_authenticated:
+        if not models.View.select().where(models.View.user == user).exists():
+            models.View.create(
+                user=user,
+                post=post
+            )
+            models.Post.update(views=post.views + 1).where(models.Post == post).execute()
 
     return render_template('post.html', post=post, comments=comments, form=form)
 
@@ -353,8 +365,7 @@ def new_post():
         p = models.Post.create(
             user=g.user._get_current_object(),
             title=form.title.data.strip(),
-            raw_content=raw_content,
-            content=raw_content
+            raw_content=raw_content
         )
 
         models.Post.update(
@@ -431,18 +442,18 @@ def delete_post(post_id):
 
     user = g.user._get_current_object()
 
-    if post.user == user or user.is_admin:
-        if models.Comment.select().where(models.Comment.post == post).exists():
-            models.Comment.delete().where(models.Comment.post == post).execute()
+    if user.is_authenticated:
+        if post.user == user or user.is_admin:
+            if models.Comment.select().where(models.Comment.post == post).exists():
+                models.Comment.delete().where(models.Comment.post == post).execute()
 
-        post.delete_instance()
+            post.delete_instance()
 
-    else:
-        flash('That\'s not your post', 'error')
-        abort(401)
+            flash('Post deleted!', 'sucess')
+            return redirect(url_for('index'))
 
-    flash('Post deleted!', 'sucess')
-    return redirect(url_for('index'))
+    flash('You can\'t delete that post', 'error')
+    abort(401)
 
 @app.route('/delete_comment/<int:comment_id>')
 def delete_comment(comment_id):
@@ -454,14 +465,15 @@ def delete_comment(comment_id):
 
     user = g.user._get_current_object()
 
-    if comment.user == user or user.is_admin:
-        comment.delete_instance()
+    if user.is_authenticated:
+        if comment.user == user or user.is_admin:
+            comment.delete_instance()
 
-    else:
-        flash('That\'s not your comment', 'error')
-        abort(401)
+            flash('Comment deleted!', 'sucess')
+            return redirect(url_for('index'))
 
-    flash('Comment deleted!', 'sucess')
+    flash('You can\'t delete that comment', 'error')
+    abort(401)
     return redirect(url_for('view_post', post_id=comment.post.id))
 
 @app.route('/account', methods=['GET', 'POST'])
@@ -569,6 +581,7 @@ def notifications():
     return render_template('notifications.html', notifications=notifications)
 
 @app.route('/get_notifications')
+@login_required
 def get_notifications():
     user = g.user._get_current_object()
 
@@ -580,13 +593,29 @@ def get_notifications():
 
     return str(notification_count)
 
-@app.route('/admin')
+@app.route('/like_post/<int:post_id>')
 @login_required
-def admin():
-    if g.user._get_current_object().is_admin:
-        pass
-    else:
-        abort(401)
+def like_post(post_id):
+    try:
+        post = models.Post.get(models.Post.id == post_id)
+    except models.DoesNotExist:
+        flash('That post does\'nt exist')
+        abort(404)
+
+    user = g.user._get_current_object()
+
+    try:
+        models.Like.get(
+            models.Like.user == user,
+            models.Like.post == post
+        ).delete_instance()
+    except:
+        models.Like.create(
+            post=post,
+            user=g.user._get_current_object()
+        )
+
+    return redirect(url_for('view_post', post_id=post_id))
 
 @app.route('/google46cfa7a8f3f231ed.html')
 def google_verify():

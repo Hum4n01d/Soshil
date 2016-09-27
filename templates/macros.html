@@ -40,7 +40,19 @@
         </p>
     </div>
     <div class="post-content">
-        {{ post.content|safe }}
+        {{ post.content|markdown }}
+    </div>
+    <div class="post-stats">
+        <div>
+            <a href="{{ url_for('like_post', post_id=post.id) }}">
+                <img src="/static/{% if user in post.get_likes() %}pink_{% endif %}heart.svg">
+                <p>{{ post.get_likes().count() }}</p>
+            </a>
+        </div>
+        <div>
+            <img src="/static/eye.svg">
+            <p>{{ post.get_views().count() }}</p>
+        </div>
     </div>
 </article>
 {% endmacro %}

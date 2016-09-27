@@ -1,10 +1,7 @@
 /***************
 MEDIA QUERIES
 ***************/
-@media (min-width: 30em)
-    body
-        font-size 1em
-
+@media (min-width: 31em)
     header
         border-bottom 2px solid border-color
 
@@ -13,6 +10,7 @@ MEDIA QUERIES
                 display none
 
             display flex
+            align-items center
 
             .logo
                 font-size 2em
@@ -23,7 +21,7 @@ MEDIA QUERIES
 
             nav a,
             #notifications-link
-                padding 20px 10px
+                padding 0px 10px
                 width auto
                 margin 0
                 border none
@@ -38,7 +36,7 @@ MEDIA QUERIES
             #notifications-link
                 position static
                 top 0
-                padding 20px 10px
+                padding 15px 10px
 
                 #notification-count-wrapper
                     position relative
@@ -54,11 +52,14 @@ MEDIA QUERIES
                 align-items center
                 margin-left auto
 
+                a
+                    padding 20px 7.5px
+
                 .user-options
                     position relative
 
                     .user-options-toggle
-                        padding 10px
+                        padding 5px 10px
                         border none !important
 
                         #user-options-logo
@@ -90,6 +91,20 @@ MEDIA QUERIES
         .flashes
             width 50%
             left 25%
+
+@media (min-width: 40em)
+    .main-header
+        font-size 1.5em
+
+        #notifications-link
+            padding 20px 10px
+
+        nav
+            font-size 1rem
+
+            > a:not(.user-options-toggle)
+                padding 23.5px 10px !important
+
 
 @media (min-width: 48em)
     margin 0

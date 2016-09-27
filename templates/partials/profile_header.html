@@ -5,12 +5,12 @@
             <h1>{{ profile_user.username }}</h1>
         </div>
         {% if profile_user != user %}
-            {% if not user.is_authenticated %}
-            <button><a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a></button>
-            {% elif not profile_user in user.following() %}
-            <button><a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a></button>
-            {% else %}
-            <button><a href="{{ url_for('unfollow', username=profile_user.username) }}" class="button">Unfollow</a></button>
+            {% if user.is_authenticated %}
+                {% if not profile_user in user.following() %}
+                <button><a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a></button>
+                {% else %}
+                <button><a href="{{ url_for('unfollow', username=profile_user.username) }}" class="button">Unfollow</a></button>
+                {% endif %}
             {% endif %}
         {% endif %}
     </div>
