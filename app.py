@@ -296,11 +296,10 @@ def view_post(post_id):
 
     if user.is_authenticated:
         try:
-            test = models.View.get(
+            models.View.get(
                 models.View.user == user,
                 models.View.post == post
             )
-            print(test)
         except models.DoesNotExist:
             models.View.create(
                 user=user,
