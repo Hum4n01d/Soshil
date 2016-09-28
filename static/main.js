@@ -3,9 +3,11 @@
 //Copyright year
 document.getElementById('year').innerHTML = new Date().getFullYear();
 
+var logged_in = $('.user-options').length;
+
 // Nav user options
 $('body').click(function(e) {
-    if ($(e.target).parents('.user-options').length) {
+    if (logged_in) {
         $('.user-options-inner').slideToggle();
     } else {
         $('.user-options-inner').slideUp();
@@ -116,10 +118,12 @@ function update_notification() {
     }, dataType: "text"});
 }
 
-update_notification();
-setInterval(function(){
-    update_notification()
-}, 3000);
+if (logged_in) {
+    update_notification();
+    setInterval(function(){
+        update_notification()
+    }, 3000);
+}
 
 try {
     var simplemde = new SimpleMDE({

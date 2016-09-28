@@ -294,18 +294,6 @@ def view_post(post_id):
 
         return redirect(url_for('view_post', post_id=post_id))
 
-    # if user.is_authenticated:
-    #     try:
-    #         models.View.get(
-    #             models.View.user == user,
-    #             models.View.post == post
-    #         )
-    #     except models.DoesNotExist:
-    #         models.View.create(
-    #             user=user,
-    #             post=post
-    #         )
-
     return render_template('post.html', post=post, comments=comments, form=form)
 
 @app.route('/edit_comment/<int:comment_id>', methods=['GET', 'POST'])

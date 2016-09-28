@@ -144,13 +144,9 @@ class Post(BaseModel):
             ).where(Like.post == self)
         )
 
-    def get_views(self):
+    def get_number_of_comments(self):
         '''The users that have viewed the post'''
-        return (
-            User.select().join(
-                View, on=View.user
-            ).where(View.post == self)
-        )
+        return Comment.select().where(Comment.post == self).count()
 
     class Meta:
         database = db_proxy
@@ -179,16 +175,6 @@ class Relationship(BaseModel):
 class Like(BaseModel):
     user = ForeignKeyField(User, related_name='liker')
     post = ForeignKeyField(Post, related_name='liked_post')
-
-    class Meta:
-        database = db_proxy
-        indexes = (
-            (('user', 'post'), True),
-	    )
-
-class View(BaseModel):
-    user = ForeignKeyField(User, related_name='viewer')
-    post = ForeignKeyField(Post, related_name='viewed_post')
 
     class Meta:
         database = db_proxy
