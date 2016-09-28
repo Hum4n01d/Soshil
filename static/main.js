@@ -102,16 +102,16 @@ $('button.danger a').click(function(e) {
 function update_notification() {
     $.ajax({url: '/get_notifications', success: function(data){
         var $el = $('#notification-count');
-        var $parent = $el.parent().parent();
+        var $shakeEl = $el.parent().parents();
 
         $el.text(data);
 
         if (data == '0') {
             $el.hide();
-            $parent.removeClass('number-showing');
+            $shakeEl.removeClass('number-showing');
         } else {
             $el.show();
-            $parent.addClass('number-showing');
+            $shakeEl.addClass('number-showing');
         }
     }, dataType: "text"});
 }
@@ -121,6 +121,10 @@ setInterval(function(){
     update_notification()
 }, 3000);
 
-var simplemde = new SimpleMDE({
-    element: $('editor')[0]
-});
+try {
+    var simplemde = new SimpleMDE({
+        element: $('editor')[0]
+    });
+} catch(error) {
+    console.log('no editor');
+}

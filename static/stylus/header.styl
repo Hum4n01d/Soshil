@@ -21,18 +21,19 @@ HEADER
 
     #notifications-link
         position absolute
-        top -1px
+        top 3px
         right 50px
-
-        padding 15px 0
-
-        &.number-showing
-            right 60px
-            top 2px
-            animation shake 0.75s infinite
+        padding 10px 0
 
         img
             width 20px
+
+        &.number-showing
+            right 60px
+            top 5px
+
+            img
+                animation shake 0.3s infinite
 
         #notification-count
             display none
@@ -42,7 +43,7 @@ HEADER
             position absolute
             width 20px
             height 20px
-            top 3px
+            top -1px
             left 15px
 
             color white
@@ -56,12 +57,12 @@ HEADER
 
         > a
             display block
+            padding 10px 0
 
         > a,
         #user-options-toggle,
         .user-options-inner-showing a
             width 100%
-            padding 10px 0
             border-top 1px solid border-color
 
             &:hover
@@ -73,7 +74,6 @@ HEADER
                 display flex
                 align-items center
                 width 100%
-                padding 10px 0
 
                 p
                     margin 0 10px
@@ -98,10 +98,6 @@ HEADER
 
                 > p
                     margin 0
-
-        #notifications-link
-            img[src="/static/bell.svg"]
-                height 20px
 
 @keyframes shake
     0%

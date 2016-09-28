@@ -619,6 +619,13 @@ def like_post(post_id):
             user=g.user._get_current_object()
         )
 
+        if not post.user == user:
+            models.Notification.create_notification(
+                title='@{} liked your post!'.format(user.username),
+                user=post.user,
+                link=url_for('view_post', post_id=post_id)
+            )
+
     return redirect(url_for('view_post', post_id=post_id))
 
 @app.route('/google46cfa7a8f3f231ed.html')
