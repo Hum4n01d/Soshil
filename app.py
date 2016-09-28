@@ -439,6 +439,9 @@ def delete_post(post_id):
             if models.Comment.select().where(models.Comment.post == post).exists():
                 models.Comment.delete().where(models.Comment.post == post).execute()
 
+            if models.Like.select().where(models.Like.post == post).exists():
+                models.Like.delete().where(models.Like.post == post).execute()
+
             post.delete_instance()
 
             flash('Post deleted!', 'sucess')
