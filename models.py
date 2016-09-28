@@ -201,7 +201,7 @@ class Notification(BaseModel):
 
 def initialize():
     db_proxy.connect()
-    db_proxy.create_tables([User, Relationship, Post, Comment, Notification, Like, View], safe=True)
+    db_proxy.create_tables([User, Relationship, Post, Comment, Notification, Like], safe=True)
 
     import migrate
 
