@@ -7,10 +7,6 @@ migrator = PostgresqlMigrator(models.db_proxy)
 content = TextField(default='')
 
 def do_migration():
-    migrate(
-        migrator.add_column('post', 'new_content', content)
-    )
-    
     posts = models.Post.select()
         
     for post in posts:
