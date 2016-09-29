@@ -29,7 +29,7 @@ $('#signup-form form').validate({
         username: {
             required: true,
             regex: /^[a-zA-Z0-9_​]+$/,
-            maxLength: 15
+            maxlength: 15
         },
         email: {
             required: true,

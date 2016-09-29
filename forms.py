@@ -17,6 +17,7 @@ class RegisterForm(Form):
         'Username',
         validators=[
             DataRequired(),
+            Length(max=15, message='Usernames must be 15 characters or less'),
             Regexp(
                 r'^[a-zA-Z0-9_​]+$',
                 message=('Username can only contain letters, numbers, and underscores')
