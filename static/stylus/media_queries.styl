@@ -72,7 +72,7 @@ MEDIA QUERIES
                         background-color white
                         margin-right 10px
                         position absolute
-                        top 50px
+                        top 42px
                         border 1px solid border-color
                         border-bottom-right-radius 5px
                         border-bottom-left-radius 5px
@@ -96,8 +96,17 @@ MEDIA QUERIES
     nav
         padding 10px 0
 
-        .user-options-toggle p
-            display block !important
+        .user-options
+            .user-options-inner
+                top 50px !important
+
+            .user-options-toggle p
+                display block !important
+
+    nav > a,
+    .user-options,
+    #notifications-link
+        margin-left 20px !important
 
 @media (min-width: 48em)
     margin 0
