@@ -129,7 +129,7 @@ class Post(BaseModel):
     title = CharField(max_length=100)
     content = TextField()
     raw_content = CharField(default='')
-    #new_raw_content = TextField()
+    new_raw_content = TextField(default='')
 
     timestamp = DateTimeField(default=datetime.now)
     user = ForeignKeyField(
