@@ -4,7 +4,7 @@ import models
 
 migrator = PostgresqlMigrator(models.db_proxy)
 
-content = TextField()
+content = TextField(default='')
 
 def do_migration():
     migrate(
