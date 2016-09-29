@@ -8,10 +8,6 @@ old_raw_content = CharField(default='')
 new_raw_content = TextField(default='')
 
 def do_migration():
-    migrate(
-        migrator.add_column('post', 'new_raw_content', new_raw_content)
-    )
-    
     posts = models.Post.select()
         
     for post in posts:
