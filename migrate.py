@@ -18,7 +18,7 @@ def do_migration():
     )
         
     migrate(
-        migrator.add_column('post', 'raw_content', raw_content)
+        migrator.add_column('post', 'raw_content', new_raw_content)
     )
     
     for post in posts:
