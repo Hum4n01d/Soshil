@@ -49,7 +49,10 @@ class LoginForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
     
 class PostForm(Form):
-    title = StringField('Post title', validators=[DataRequired()])
+    title = StringField('Post title', validators=[
+        DataRequired(),
+        Length(max=100)
+    ])
     content = TextAreaField("What's on your mind?", id='editor', validators=[
         DataRequired(),
         Length(max=10000, message='Posts must be within 10000 characters')
