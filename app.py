@@ -357,7 +357,8 @@ def new_post():
         p = models.Post.create(
             user=g.user._get_current_object(),
             title=form.title.data.strip(),
-            raw_content=raw_content
+            raw_content=raw_content,
+            content=''
         )
 
         models.Post.update(
@@ -534,7 +535,7 @@ def delete_my_posts():
             for post in posts:
                 models.Comment.delete().where(
                     models.Comment.post == post
-                ).execute()
+                ).execute() 
 
                 post.delete_instance()
 
@@ -617,7 +618,7 @@ def like_post(post_id):
                 link=url_for('view_post', post_id=post_id)
             )
 
-    return redirect(url_for('view_post', post_id=post_id))
+    return redirect(request.referrer)
 
 @app.route('/google46cfa7a8f3f231ed.html')
 def google_verify():

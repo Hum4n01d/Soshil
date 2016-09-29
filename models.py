@@ -128,7 +128,8 @@ class User(UserMixin, BaseModel):
 class Post(BaseModel):
     title = CharField(max_length=100)
     content = TextField()
-    raw_content = TextField()
+    raw_content = CharField(default='')
+    #new_raw_content = TextField()
 
     timestamp = DateTimeField(default=datetime.now)
     user = ForeignKeyField(
@@ -202,10 +203,6 @@ class Notification(BaseModel):
 def initialize():
     db_proxy.connect()
     db_proxy.create_tables([User, Relationship, Post, Comment, Notification, Like], safe=True)
-
-    import migrate
-
-    migrate.do_migration()
 
     db_proxy.close()
 
