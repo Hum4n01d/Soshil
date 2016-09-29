@@ -8,6 +8,12 @@ POST
     border 1px solid border-color
     border-radius 10px
 
+    &.post-small-height
+        max-height 500px
+
+        .post-content
+            max-height 300px
+
     &.no-border
         border none
         padding 0
@@ -15,11 +21,16 @@ POST
     .post-title
         display flex
         justify-content space-between
+        align-items center
 
-        h2
-            color black
-            line-height 1.5em
-            margin 0
+        a.post-link
+            h2
+                color black
+
+            h2,
+            p
+                margin 0
+                display inline-block
 
         button,
         form
@@ -51,6 +62,22 @@ POST
                 width 20px
                 margin-right 10px
 
+    .post-content
+        position relative
+        overflow hidden
+
+        .post-overflow
+            display none
+
+            background-color rgba(200, 200, 200, 0.7)
+            padding 10px
+            -webkit-backdrop-filter blur(2px)
+
+            width 100%
+            position absolute
+            bottom -1px
+            text-align center
+
     &:last-child
         margin-top 0
 
@@ -62,7 +89,6 @@ POST
         border-radius 5px
         padding 10px
         margin-bottom 10px
-
 
         p
             margin 0
@@ -83,7 +109,7 @@ POST
                 margin 0
                 color black
 
-            .comment-actions
+            .comment-actions=
                 margin-left auto
 
                 button

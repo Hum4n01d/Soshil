@@ -3,7 +3,6 @@
 
 {% block body %}
 {{ new_post(post) }}
-
 <div class="post-comments">
     {% if user.is_authenticated %}
     <form method='POST' action=''>

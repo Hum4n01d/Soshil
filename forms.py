@@ -51,7 +51,7 @@ class PostForm(Form):
     title = StringField('Post title', validators=[DataRequired()])
     content = TextAreaField("What's on your mind?", id='editor', validators=[
         DataRequired(),
-        Length(max=250, message='Posts must be within 250 characters')
+        Length(max=10000, message='Posts must be within 10000 characters')
     ])
 
 class CommentForm(Form):

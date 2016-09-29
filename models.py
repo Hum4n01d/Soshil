@@ -78,7 +78,7 @@ class BaseModel(Model):
         database = db_proxy
 
 class User(UserMixin, BaseModel):
-    username = CharField()
+    username = CharField(max_length=15)
     email = CharField(unique=True)
     password = CharField(max_length=100)
     joined_date = DateTimeField(default=datetime.now)
@@ -127,7 +127,7 @@ class User(UserMixin, BaseModel):
 
 class Post(BaseModel):
     title = CharField(max_length=100)
-    content = CharField(max_length=250)
+    content = TextField()
     raw_content = CharField(default='')
 
     timestamp = DateTimeField(default=datetime.now)
