@@ -22,4 +22,4 @@ def do_migration():
     )
     
     for post in posts:
-        models.Post.update(raw_contnet=post.new_raw_content).execute()
+        models.Post.update(raw_content=post.new_raw_content).execute()
