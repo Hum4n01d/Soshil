@@ -127,7 +127,9 @@ class User(UserMixin, BaseModel):
 
 class Post(BaseModel):
     title = CharField(max_length=100)
-    content = TextField()
+    content = TextField(default='')
+    new_content = TextField(default='')
+    
     raw_content = TextField(default='')
 
     timestamp = DateTimeField(default=datetime.now)
