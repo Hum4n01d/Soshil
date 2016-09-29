@@ -41,10 +41,7 @@
     </div>
     <div class="post-content">
         {{ post.content|markdown }}
-        <div class="post-overflow">
-            <a href="{{ url_for('view_post', post_id=post.id) }}">Read more...</a>
-            <span class="post-overflow-blanket"></span>
-        </div>
+        <a href="{{ url_for('view_post', post_id=post.id) }}" class="post-overflow">Read more...</a>
     </div>
     <div class="post-stats">
         <div>
