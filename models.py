@@ -9,7 +9,9 @@ from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 from peewee import *
 import psycopg2
-from flask import g
+from flask import g, flash, abort
+
+import spam_checker
 
 db_proxy = Proxy()
 
@@ -31,6 +33,11 @@ db_proxy.initialize(db)
 
 def parse_post(text, notification=False, page='', edit=False):
     # Parse for @mentions using regular expressions
+    spam = spam_checker.is_spam(text, g.user._get_current_object().username)
+
+    if spam[1] > 2:
+        flash('Spam detected. Please try again')
+        abort(412)
 
     matches = re.findall(r'.?@[\w]+', text)
 
