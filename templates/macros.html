@@ -14,13 +14,13 @@
 {% macro new_post(post) %}
 <article class="post">
     <div class="post-title">
-        <a href="{{ url_for('view_post', post_id=post.id) }}" class="post-link">
+        <a href="{{ url_for('posts.view', post_id=post.id) }}" class="post-link">
             <h2>{{ post.title }}</h2>
         </a>
         <div>
             {% set user = g.user._get_current_object() %}
             {% if post.user == user or user.is_admin %}
-            <button><a href="{{ url_for('edit_post', post_id=post.id) }}">Edit</a></button>
+            <button><a href="{{ url_for('posts.edit', post_id=post.id) }}">Edit</a></button>
             <button class="danger"><a href="{{ url_for('delete_post', post_id=post.id) }}">Delete</a></button>
             {% endif %}
         </div>
@@ -35,17 +35,17 @@
             <time data-time="{{ post.timestamp }}" datetime="{{ post.timestamp.strftime('%Y-%m-%d %I:%M') }}">{{ post.timestamp.strftime('%m-%d-%Y %I:%M') }}</time>
             {% if post_list %}
             <span class="x-margin">-</span>
-            <a href="{{ url_for('view_post', post_id=post.id) }}">View</a>
+            <a href="{{ url_for('posts.view', post_id=post.id) }}">View</a>
             {% endif %}
         </p>
     </div>
     <div class="post-content">
         {{ post.content|markdown }}
-        <a href="{{ url_for('view_post', post_id=post.id) }}" class="post-overflow">Read more...</a>
+        <a href="{{ url_for('posts.view', post_id=post.id) }}" class="post-overflow">Read more...</a>
     </div>
     <div class="post-stats">
         <div>
-            <a href="{{ url_for('like_post', post_id=post.id) }}">
+            <a href="{{ url_for('posts.like', post_id=post.id) }}">
                 <img src="/static/{% if user in post.get_likes() %}pink_{% endif %}heart.svg">
                 <p>{{ post.get_likes().count() }}</p>
             </a>

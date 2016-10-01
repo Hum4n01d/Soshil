@@ -150,3 +150,9 @@ if ($('.post').length) {
         });
     }
 }
+
+//var post_id = parseInt(window.location.split()[]);
+//
+//$.ajax({url: '/like_post/' + post_id, success: function(data){
+//
+//}, dataType: "text"});
