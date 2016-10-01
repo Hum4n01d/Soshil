@@ -2,5 +2,5 @@
 
 {% block body %}
 <p>Soshil is a WIP social media website. To use it, <a href="{{ url_for('sign_up') }}">sign up</a> or <a href="{{ url_for('log_in') }}">log in</a>.</p>
-<p>To see all most recent posts, visit the <a href="{{ url_for('all_posts') }}">all posts</a> page.</p>
+<p>To see all most recent posts, visit the <a href="{{ url_for('posts.all') }}">all posts</a> page.</p>
 {% endblock %}

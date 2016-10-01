@@ -1,6 +1,7 @@
 import re
 import bleach
 import requests
+import json
 
 from flask import url_for
 from os import environ
@@ -33,11 +34,40 @@ db_proxy.initialize(db)
 
 def parse_post(text, notification=False, page='', edit=False):
     # Parse for @mentions using regular expressions
-    spam = spam_checker.is_spam(text, g.user._get_current_object().username)
+    key = environ['SOSHIL_WOT_KEY']
 
-    if spam[1] > 2:
-        flash('Spam detected. Please try again')
-        abort(412)
+    hosts = re.findall(r'[\w]+[.][\w]+', text, re.I)
+
+    def ex():
+        flash('Spam, an illegit website or profanity detected. Please try again', 'error')
+        abort(403)
+
+    def callback(wot_stuff):
+        print(wot_stuff)
+
+        for link in wot_stuff:
+            print(link)
+
+            if wot_stuff[link]['0'][1] <= 60:
+                ex()
+
+    print(hosts)
+
+    url = 'http://api.mywot.com/0.4/public_link_json?hosts={}/&key={}&callback=callback'.format('/'.join(hosts), key)
+
+    print(url)
+
+    resp = requests.get(url)
+
+    exec(resp.text)
+
+    spam = spam_checker.is_spam(text, g.user._get_current_object().username)
+    profound = spam_checker.is_profound(text)
+
+    print(spam)
+
+    if spam[0] or spam[1] > 2 or profound:
+        ex()
 
     matches = re.findall(r'.?@[\w]+', text)
 

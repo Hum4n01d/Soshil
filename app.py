@@ -65,6 +65,10 @@ def page_not_found(error):
 def unauthorized(error):
     return render_template('error.html', num=401), 401
 
+@app.errorhandler(403)
+def forbidden(error):
+    return render_template('error.html', num=403), 403
+
 @app.errorhandler(500)
 def internal_server_error(error):
     return render_template('error.html', num=500), 500

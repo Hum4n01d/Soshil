@@ -9,7 +9,6 @@ SPAM_SIMILARITY_THRESHOLD = 0.5
 
 repeat_frequency = {}
 
-
 def is_spam(text, user):
     # Check repeat frequency.
     if user not in repeat_frequency:
