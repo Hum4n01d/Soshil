@@ -1,6 +1,8 @@
 {% extends 'layout.html' %}
 {% from 'macros.html' import render_user, new_post, render_form %}
 
+{% set users = scope == 'users' %}
+
 {% block body %}
 <div class="search">
     {% if query %}
@@ -10,8 +12,8 @@
     {{ render_form(form, method='GET', action='Search', no_margin=False) }}
 
     <div class="search-options">
-        <a href="{{ url_for('search.search', query=query) }}">Posts</a>
-        <a href="{{ url_for('search.search', query=query, scope='users') }}">Users</a>
+        <a href="{{ url_for('search.search', query=query) }}" {% if not users %}class="current-page"{% endif %}>Posts</a>
+        <a href="{{ url_for('search.search', query=query, scope='users') }}" {% if users %}class="current-page"{% endif %}>Users</a>
     </div>
 
     <div class="search-results">

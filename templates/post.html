@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-{% from 'macros.html' import render_form, new_post %}
+{% from 'macros.html' import render_form, new_post, render_comment %}
 
 {% block body %}
 {{ new_post(post) }}
@@ -10,22 +10,7 @@
     </form>
     {% endif %}
     {% for comment in comments %}
-    <div class="comment">
-        <div class="comment-user">
-            <img class="avatar" src="{{ comment.user.avatar_url }}" alt="{{ comment.user.username }}'s Avatar">
-            <a href="{{ url_for('profile', username=comment.user.username) }}">
-                <h3>{{ comment.user.username }}</h3>
-            </a>
-
-            <div class="comment-actions">
-                {% if comment.user == user or user.is_admin %}
-                <button><a href="{{ url_for('comments.edit', comment_id=comment.id) }}">Edit</a></button>
-                <button class="danger"><a href="{{ url_for('delete.comment', comment_id=comment.id) }}">Delete</a></button>
-                {% endif %}
-            </div>
-        </div>
-        <p>{{ comment.content|markdown }}</p>
-    </div>
+        {{ render_comment(comment, user) }}
     {% endfor %}
 </div>
 {% endblock %}

@@ -1,29 +1,52 @@
+{% macro render_field(field) %}
+<fieldset>
+    {% if field.errors %}
+        {% for error in field.errors %}
+        <div class="notification error">
+            {{ error }}
+        </div>
+        {% endfor %}
+    {% endif %}
+    {{ field(placeholder=field.label.text) }}
+</fieldset>
+{% endmacro %}
+
 {% macro render_form(form, action='Submit', method='POST', no_margin=True) %}
 <form method='{{ method }}' action=''>
     {{ form.hidden_tag() }}
     {% for field in form %}
-        <fieldset>
-            {% if field.errors %}
-                {% for error in field.errors %}
-                <div class="notification error">
-                    {{ error }}
-                </div>
-                {% endfor %}
-            {% endif %}
-            {{ field(placeholder=field.label.text) }}
-        </fieldset>
+        {{ render_field(field) }}
     {% endfor %}
     <button type="submit" {% if no_margin %}class="no-margin"{% endif %}>{{ action }}</button>
 </form>
 {% endmacro %}
 
+{% macro render_comment(comment, user) %}
+<div class="comment">
+    <div class="comment-user">
+        <img class="avatar" src="{{ comment.user.avatar_url }}" alt="{{ comment.user.username }}'s Avatar">
+        <a href="{{ url_for('users.profile', username=comment.user.username) }}">
+            <h3>{{ comment.user.username }}</h3>
+        </a>
+
+        <div class="comment-actions">
+            {% if comment.user == user or user.is_admin %}
+            <button><a href="{{ url_for('comments.edit', comment_id=comment.id) }}">Edit</a></button>
+            <button class="danger"><a href="{{ url_for('comments.delete', comment_id=comment.id) }}">Delete</a></button>
+            {% endif %}
+        </div>
+    </div>
+    <p>{{ comment.content|markdown }}</p>
+</div>
+{% endmacro %}
+
 {% macro render_user(profile_user, user, search=False) %}
 <div class="profile {% if search %}search_profile{% endif %}">
     <div class="profile_header">
-        <div>
+        <a href="{{ url_for('users.profile', username=profile_user.username) }}">
             <img class="avatar" src="{{ profile_user.avatar_url }}" alt="{{ profile_user.username }}'s Avatar">
             <h1>{{ profile_user.username }}</h1>
-        </div>
+        </a>
         {% if profile_user != user %}
             {% if user.is_authenticated %}
                 {% if not profile_user in user.following() %}

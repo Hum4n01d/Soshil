@@ -126,16 +126,21 @@ img.http-cat
 
 .search
     .search-options
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        padding: 10px 0;
-        border: 1px solid border-color
-        border-right: none;
-        margin-bottom: 10px;
-        border-left: none;
+        width 100%
+        display flex
+        border 1px solid border-color
+        border-right none
+        margin-bottom 10px
+        border-left none
 
-        a
+        > a
+            padding 10px 0
+            flex-grow 1
+            text-align center
+
+        .current-page
+            background-color: dodgerblue;
+            color: white !important;
 
     form
         display flex

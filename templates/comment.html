@@ -1,6 +1,8 @@
 {% extends 'layout.html' %}
-{% from 'macros.html' import render_form, github_login %}
+{% from 'macros.html' import render_comment %}
 
 {% block body %}
-
+<div class="post-comments">
+    {{ render_comment(comment, user=user) }}
+</div>
 {% endblock %}

@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, flash, abort, redirect, url_for
+from flask import render_template, Blueprint, flash, abort, redirect, url_for, g
 
 import models
 import forms
@@ -25,7 +25,7 @@ def edit(comment_id):
 
     return render_template('post_editor.html', form=form, comment=True, edit=True)
 
-@comments_blueprint.route('/delete_comment/<int:comment_id>')
+@comments_blueprint.route('/<int:comment_id>/delete')
 def delete(comment_id):
     try:
         comment = models.Comment.get(models.Comment.id == comment_id)

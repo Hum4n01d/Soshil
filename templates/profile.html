@@ -1,7 +1,8 @@
 {% extends 'stream.html' %}
+{% from 'macros.html' import render_user %}
 
 {% block body %}
-{% include 'partials/profile_header.html' %}
+{{ render_user(profile_user, user) }}
 <div class="profile_posts">
     {{ super() }}
 </div>
