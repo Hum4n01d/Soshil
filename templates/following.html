@@ -1,9 +1,10 @@
 {% extends 'user_list.html' %}
+{% from 'macros.html' import render_user %}
 
 {% block title %}
 <h2>Users {{ profile_user.username }} is following:</h2>
 {% endblock %}
 {% block body %}
-{% include 'partials/profile_header.html' %}
+{{ render_user(profile_user, user) }}
 {{ super() }}
 {% endblock %}
