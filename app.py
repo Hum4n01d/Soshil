@@ -441,6 +441,8 @@ def delete_my_posts():
                 post.delete_instance()
 
             flash('Your posts were deleted')
+
+            return redirect(url_for('index'))
         else:
             flash('You entered your username wrong', 'error')
 
@@ -459,6 +461,7 @@ def delete_my_comments():
             ).execute()
 
             flash('Your comments were deleted')
+            return redirect(url_for('index'))
         else:
             flash('You entered your username wrong', 'error')
 

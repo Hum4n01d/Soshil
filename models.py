@@ -39,7 +39,7 @@ def parse_post(text, notification=False, page='', edit=False):
     hosts = re.findall(r'[\w]+[.][\w]+', text, re.I)
 
     def ex():
-        flash('Spam, an illegit website or profanity detected. Please try again', 'error')
+        flash('Spam, a sketchy website or profanity detected. Please try again', 'error')
         abort(403)
 
     def callback(wot_stuff):

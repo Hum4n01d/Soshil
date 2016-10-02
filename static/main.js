@@ -6,8 +6,15 @@ document.getElementById('year').innerHTML = new Date().getFullYear();
 var logged_in = $('.user-options').length;
 
 //Flashes
-$('.flashes').slideDown().delay(1000).slideUp();
+$('.flashes').slideDown();
 
+$('.flashes').mouseenter(function() {
+    $(this).slideUp();
+});
+
+setTimeout(function() {
+    $('.flashes').slideUp();
+}, 3000);
 
 //Forms
 $('#login-form form').validate({
