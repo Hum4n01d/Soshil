@@ -4,7 +4,7 @@ from os import environ
 import requests
 from flask import Blueprint, flash, redirect, url_for, render_template, request, g
 from flask_login import login_required, logout_user, login_user
-from flask_bcrypt import generate_password_hash, check_password_hash
+from flask_bcrypt import check_password_hash
 
 import forms
 import models

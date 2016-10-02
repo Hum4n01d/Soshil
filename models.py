@@ -1,7 +1,6 @@
 import re
 import bleach
 import requests
-import json
 import urllib.parse
 
 from flask import url_for
@@ -31,7 +30,7 @@ else:
     
 db_proxy.initialize(db)
 
-def spam_check():
+def spam_check(text):
     key = environ['SOSHIL_WOT_KEY']
 
     hosts = re.findall(r'[\w]+[.][\w]+', text, re.I)

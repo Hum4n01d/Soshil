@@ -1,5 +1,5 @@
 import difflib
-import enchant
+# import enchant
 from profanity import profanity
 
 
