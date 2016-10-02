@@ -160,9 +160,25 @@ if ($('.post').length) {
 
 
 $('.like-post').click(function() {
-    var post_id = $(this).parent('.post').child('.post_id').text();
+    var post_id = $(this).parents('.post').children('.post-id').text();
+    var $el = $(this).children('img');
+    var $p = $el.siblings('p');
 
-    $.ajax({url: '/like_post/' + post_id, success: function(data){
-        console.log('success');
+    $.ajax({url: '/posts/'+post_id+'/like', success: function(data){
+        var name;
+        var new_num = parseInt($p.text());
+
+        if ($el.attr('src') == '/static/heart.svg') {
+            // Not liked yet
+            name = 'pink_heart.svg';
+            new_num++;
+        } else {
+            name = 'heart.svg';
+            new_num--;
+        }
+
+        $el.attr('src', '/static/'+name);
+        $p.text(new_num);
+
     }, dataType: "text"});
 });
