@@ -8,6 +8,7 @@ Flask-Bcrypt==0.7.1
 Flask-Login==0.3.2
 Flask-Markdown==0.3
 Flask-WTF==0.12
+gunicorn==19.6.0
 html5lib==0.9999999
 itsdangerous==0.24
 Jinja2==2.8
