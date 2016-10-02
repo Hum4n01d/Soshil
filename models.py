@@ -2,6 +2,7 @@ import re
 import bleach
 import requests
 import json
+import urllib.parse
 
 from flask import url_for
 from os import environ
@@ -16,18 +17,16 @@ import spam_checker
 
 db_proxy = Proxy()
 
-try:
-    heroku = environ['HEROKU']
+use_heroku_postgres = environ.get('DATABASE_URL', False)
+# use_heroku_postgres = True
 
-    if heroku:
-        import urllib.parse
+if use_heroku_postgres:
+    database_url = environ["DATABASE_URL"]
 
-        database_url = environ["DATABASE_URL"]
-
-        urllib.parse.uses_netloc.append('postgres')
-        url = urllib.parse.urlparse(database_url)
-        db = PostgresqlDatabase(database=url.path[1:], user=url.username, password=url.password, host=url.hostname, port=url.port)
-except KeyError:
+    urllib.parse.uses_netloc.append('postgres')
+    url = urllib.parse.urlparse(database_url)
+    db = PostgresqlDatabase(database=url.path[1:], user=url.username, password=url.password, host=url.hostname, port=url.port)
+else:
     db = SqliteDatabase('soshil.db')
     
 db_proxy.initialize(db)
@@ -144,7 +143,7 @@ class User(UserMixin, BaseModel):
                 Relationship, on=Relationship.from_user
             ).where(Relationship.to_user == self)
         )
-    
+
     @classmethod
     def create_user(cls, username, email, password, avatar_url='', admin=False, github_user=False):
         if not password == '':
@@ -164,12 +163,8 @@ class User(UserMixin, BaseModel):
 
 class Post(BaseModel):
     title = CharField(max_length=100)
-
     content = TextField(default='')
-    new_content = TextField(default='')
-    
     raw_content = TextField(default='')
-    new_raw_content = TextField(default='')
 
     timestamp = DateTimeField(default=datetime.now)
     user = ForeignKeyField(

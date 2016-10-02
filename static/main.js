@@ -158,8 +158,11 @@ if ($('.post').length) {
     }
 }
 
-//var post_id = parseInt(window.location.split()[]);
-//
-//$.ajax({url: '/like_post/' + post_id, success: function(data){
-//
-//}, dataType: "text"});
+
+$('.like-post').click(function() {
+    var post_id = $(this).parent('.post').child('.post_id').text();
+
+    $.ajax({url: '/like_post/' + post_id, success: function(data){
+        console.log('success');
+    }, dataType: "text"});
+});

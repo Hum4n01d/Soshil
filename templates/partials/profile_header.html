@@ -7,22 +7,22 @@
         {% if profile_user != user %}
             {% if user.is_authenticated %}
                 {% if not profile_user in user.following() %}
-                <button><a href="{{ url_for('follow', username=profile_user.username) }}" class="button">Follow</a></button>
+                <button><a href="{{ url_for('users.follow', username=profile_user.username) }}" class="button">Follow</a></button>
                 {% else %}
-                <button><a href="{{ url_for('unfollow', username=profile_user.username) }}" class="button">Unfollow</a></button>
+                <button><a href="{{ url_for('users.unfollow', username=profile_user.username) }}" class="button">Unfollow</a></button>
                 {% endif %}
             {% endif %}
         {% endif %}
     </div>
     <div class="profile_stats">
         <div>
-            <a href="{{ url_for('profile', username=profile_user.username) }}"><h3>Posts: {{ profile_user.posts.count() }}</h3></a>
+            <a href="{{ url_for('users.profile', username=profile_user.username) }}"><h3>Posts: {{ profile_user.posts.count() }}</h3></a>
         </div>
         <div>
-            <a href="{{ url_for('followers', username=profile_user.username) }}"><h3>Followers: {{ profile_user.followers().count() }}</h3></a>
+            <a href="{{ url_for('users.followers', username=profile_user.username) }}"><h3>Followers: {{ profile_user.followers().count() }}</h3></a>
         </div>
         <div>
-            <a href="{{ url_for('following', username=profile_user.username) }}"><h3>Following: {{ profile_user.following().count() }}</h3></a>
+            <a href="{{ url_for('users.following', username=profile_user.username) }}"><h3>Following: {{ profile_user.following().count() }}</h3></a>
         </div>
     </div>
 </div>

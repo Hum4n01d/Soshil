@@ -1,18 +1,25 @@
-{% macro render_field(field) %}
-<fieldset>
-    {% if field.errors %}
-        {% for error in field.errors %}
-        <div class="notification error">
-            {{ error }}
-        </div>
-        {% endfor %}
-    {% endif %}
-    {{ field(placeholder=field.label.text) }}
-</fieldset>
+{% macro render_form(form, action='Submit') %}
+<form method='POST' action=''>
+    {{ form.hidden_tag() }}
+    {% for field in form %}
+        <fieldset>
+            {% if field.errors %}
+                {% for error in field.errors %}
+                <div class="notification error">
+                    {{ error }}
+                </div>
+                {% endfor %}
+            {% endif %}
+            {{ field(placeholder=field.label.text) }}
+        </fieldset>
+    {% endfor %}
+    <button type="submit" class="no-margin">{{ action }}</button>
+</form>
 {% endmacro %}
 
 {% macro new_post(post) %}
 <article class="post">
+    <span class="hidden">{{ post.id }}</span>
     <div class="post-title">
         <a href="{{ url_for('posts.view', post_id=post.id) }}" class="post-link">
             <h2>{{ post.title }}</h2>
@@ -21,13 +28,13 @@
             {% set user = g.user._get_current_object() %}
             {% if post.user == user or user.is_admin %}
             <button><a href="{{ url_for('posts.edit', post_id=post.id) }}">Edit</a></button>
-            <button class="danger"><a href="{{ url_for('delete_post', post_id=post.id) }}">Delete</a></button>
+            <button class="danger"><a href="{{ url_for('posts.delete', post_id=post.id) }}">Delete</a></button>
             {% endif %}
         </div>
     </div>
     <div class="post-info">
         <p>
-            <a href="{{ url_for('profile', username=post.user.username )}}" class="post-user">
+            <a href="{{ url_for('users.profile', username=post.user.username )}}" class="post-user">
                 <img class="avatar" src="{{ post.user.avatar_url }}" alt="{{ post.user.username }}'s Avatar">
                 {{ post.user.username }}
             </a>
@@ -45,7 +52,7 @@
     </div>
     <div class="post-stats">
         <div>
-            <a href="{{ url_for('posts.like', post_id=post.id) }}">
+            <a href="javascript:void(0)" class="like-post">
                 <img src="/static/{% if user in post.get_likes() %}pink_{% endif %}heart.svg">
                 <p>{{ post.get_likes().count() }}</p>
             </a>

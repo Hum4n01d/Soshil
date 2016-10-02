@@ -143,3 +143,29 @@ def like(post_id):
             )
 
     return redirect(request.referrer)
+
+@posts_blueprint.route('/<int:post_id>/delete')
+def delete(post_id):
+    try:
+        post = models.Post.get(models.Post.id == post_id)
+    except models.DoesNotExist:
+        flash('That post doesn\'t exist', 'error')
+        abort(404)
+
+    user = g.user._get_current_object()
+
+    if user.is_authenticated:
+        if post.user == user or user.is_admin:
+            if models.Comment.select().where(models.Comment.post == post).exists():
+                models.Comment.delete().where(models.Comment.post == post).execute()
+
+            if models.Like.select().where(models.Like.post == post).exists():
+                models.Like.delete().where(models.Like.post == post).execute()
+
+            post.delete_instance()
+
+            flash('Post deleted!', 'sucess')
+            return redirect(url_for('index'))
+
+    flash('You can\'t delete that post', 'error')
+    abort(401)
