@@ -31,42 +31,45 @@ else:
     
 db_proxy.initialize(db)
 
+def spam_check():
+    key = environ['SOSHIL_WOT_KEY']
+
+    hosts = re.findall(r'[\w]+[.][\w]+', text, re.I)
+
+    def ex():
+        flash('Spam, a sketchy website or profanity detected. Please try again', 'error')
+        abort(403)
+
+    def callback(wot_stuff):
+        print(wot_stuff)
+
+        for link in wot_stuff:
+            print(link)
+
+            if wot_stuff[link]['0'][1] <= 60:
+                ex()
+
+    print(hosts)
+
+    url = 'http://api.mywot.com/0.4/public_link_json?hosts={}/&key={}&callback=callback'.format('/'.join(hosts), key)
+
+    print(url)
+
+    resp = requests.get(url)
+
+    exec(resp.text)
+
+    spam = spam_checker.is_spam(text, g.user._get_current_object().username)
+    profound = spam_checker.is_profound(text)
+
+    print(spam)
+
+    if spam[0] or spam[1] > 2 or profound:
+        ex()
+
 def parse_post(text, notification=False, page='', edit=False):
     # Parse for @mentions using regular expressions
-    # key = environ['SOSHIL_WOT_KEY']
-    #
-    # hosts = re.findall(r'[\w]+[.][\w]+', text, re.I)
-    #
-    # def ex():
-    #     flash('Spam, a sketchy website or profanity detected. Please try again', 'error')
-    #     abort(403)
-    #
-    # def callback(wot_stuff):
-    #     print(wot_stuff)
-    #
-    #     for link in wot_stuff:
-    #         print(link)
-    #
-    #         if wot_stuff[link]['0'][1] <= 60:
-    #             ex()
-    #
-    # print(hosts)
-    #
-    # url = 'http://api.mywot.com/0.4/public_link_json?hosts={}/&key={}&callback=callback'.format('/'.join(hosts), key)
-    #
-    # print(url)
-    #
-    # resp = requests.get(url)
-    #
-    # exec(resp.text)
-    #
-    # spam = spam_checker.is_spam(text, g.user._get_current_object().username)
-    # profound = spam_checker.is_profound(text)
-    #
-    # print(spam)
-    #
-    # if spam[0] or spam[1] > 2 or profound:
-    #     ex()
+    # spam_check()
 
     matches = re.findall(r'.?@[\w]+', text)
 

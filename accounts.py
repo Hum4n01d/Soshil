@@ -4,7 +4,7 @@ from os import environ
 import requests
 from flask import Blueprint, flash, redirect, url_for, render_template, request, g
 from flask_login import login_required, logout_user, login_user
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_bcrypt import generate_password_hash, check_password_hash
 
 import forms
 import models
@@ -24,7 +24,7 @@ def sign_up():
             models.User.create_user(
                 username=form.username.data,
                 email=email,
-                password=generate_password_hash(form.password.data),
+                password=form.password.data,
                 avatar_url=gravatar_url
             )
             login_user(models.User.get(models.User.username ** form.username.data.lower()))
@@ -67,7 +67,7 @@ def log_in():
                         return redirect(url_for('index'))
 
                 else:
-                    flash('Your email or password is incorrect', 'error')
+                    flash('Your username or password is incorrect', 'error')
 
     return render_template('log_in.html', form=form)
 
