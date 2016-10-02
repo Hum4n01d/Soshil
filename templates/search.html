@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+{% from 'macros.html' import render_user, new_post, render_form %}
+
+{% block body %}
+<div class="search">
+    {% if query %}
+    <h1>Search results for "{{ query }}" in {{ scope }}</h1>
+    {% endif %}
+
+    {{ render_form(form, method='GET', action='Search', no_margin=False) }}
+
+    <div class="search-options">
+        <a href="{{ url_for('search.search', query=query) }}">Posts</a>
+        <a href="{{ url_for('search.search', query=query, scope='users') }}">Users</a>
+    </div>
+
+    <div class="search-results">
+        {% if results %}
+            {% if query %}
+                {% if users %}
+                    {% for profile_user in results %}
+                        {{ render_user(profile_user, user, search=True) }}
+                    {% endfor %}
+                {% else %}
+                    {% for post in results %}
+                        {{ new_post(post) }}
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+        {% else %}
+        <p>No results</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

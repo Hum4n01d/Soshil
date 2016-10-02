@@ -100,7 +100,7 @@ $('button.danger a').click(function(e) {
 });
 
 function update_notification() {
-    $.ajax({url: '/get_notifications', success: function(data){
+    $.ajax({url: '/notifications/get', success: function(data){
         var $el = $('#notification-count');
         var $shakeEl = $el.parent().parents();
 

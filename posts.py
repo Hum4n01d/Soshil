@@ -52,7 +52,6 @@ def view(post_id):
 
     return render_template('post.html', post=post, comments=comments, form=form)
 
-
 @posts_blueprint.route('/<int:post_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit(post_id):

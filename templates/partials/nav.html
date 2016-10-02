@@ -2,13 +2,12 @@
     {% if user.is_authenticated %}
     <a href="{{ url_for('posts.new')}} ">New Post</a>
     <a href="{{ url_for('posts.stream') }}">Stream</a>
-    <!--<a href="{{ url_for('explore') }}">Explore</a>-->
     <a href="{{ url_for('posts.all') }}">All Posts</a>
     <div class="user-options">
         <a href="javascript:void(0)" class="user-options-toggle">
             <img id="user-options-logo" src="{{ user.avatar_url }}" alt="{{ user.username }}'s Avatar">
             <p>{{ user.username }}</p>
-            <img src="/static/down_arrow.svg">
+            <img src="/static/down_arrow.svg" alt="Open user options">
         </a>
         <div class="user-options-inner">
             <a href="{{ url_for('users.profile', username=user.username) }}">Profile</a>
@@ -21,12 +20,16 @@
     <a href="{{ url_for('accounts.log_in') }}">Log in</a>
     <a href="{{ url_for('accounts.sign_up') }}">Sign up</a>
     {% endif %}
+    {% if user.is_authenticated %}
+    <a href="{{ url_for('notifications.view') }}" id="notifications-link">
+        <img src="/static/bell.svg" alt="Notification Bell">
+        <div id="notification-count-wrapper">
+            <span id="notification-count">{{ g.notification_count }}</span>
+        </div>
+    </a>
+    {% endif %}
+    <a href="{{ url_for('search.search') }}" id="search-link">
+        <img src="/static/search.svg">
+        <p>Search</p>
+    </a>
 </nav>
-{% if user.is_authenticated %}
-<a href="{{ url_for('notifications.view') }}" id="notifications-link">
-    <img src="/static/bell.svg" alt="Notification Bell">
-    <div id="notification-count-wrapper">
-        <span id="notification-count">{{ g.notification_count }}</span>
-    </div>
-</a>
-{% endif %}

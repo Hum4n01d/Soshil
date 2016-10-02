@@ -71,12 +71,12 @@ def log_in():
 
     return render_template('log_in.html', form=form)
 
-@accounts_blueprint.route('/login/github')
+@accounts_blueprint.route('/log_in/github')
 def github_oauth():
     CLIENT_ID = environ['CLIENT_ID']
     return redirect('https://github.com/login/oauth/authorize?scope=user:email&client_id=' + CLIENT_ID)
 
-@accounts_blueprint.route('/login/github/callback')
+@accounts_blueprint.route('/log_in/github/callback')
 def github_oauth_callback():
     code = request.args.get('code')
     response = requests.post('https://github.com/login/oauth/access_token', {
@@ -113,7 +113,8 @@ def github_oauth_callback():
             github_user=True
         )
 
-    login_user(user)
+        login_user(user)
+
     flash("You've been logged in!", "success")
 
     return redirect(url_for('index'))
@@ -123,7 +124,7 @@ def github_oauth_callback():
 def log_out():
     logout_user()
     flash('You\'ve been logged out.', 'success')
-    return redirect(url_for('log_in'))
+    return redirect(url_for('accounts.log_in'))
 
 @accounts_blueprint.route('/settings', methods=['GET', 'POST'])
 @login_required
@@ -145,10 +146,9 @@ def settings():
 
     return render_template('account.html', form=form)
 
-
-@accounts_blueprint.route('/my_account', methods=['GET', 'POST'])
+@accounts_blueprint.route('/delete_my_account', methods=['GET', 'POST'])
 @login_required
-def my_account():
+def delete_my_account():
     form = forms.DeleteForm()
     user = g.user._get_current_object()
 
@@ -172,9 +172,9 @@ def my_account():
 
     return render_template('confirm_delete.html', form=form, case='Account')
 
-@accounts_blueprint.route('/my_posts', methods=['GET', 'POST'])
+@accounts_blueprint.route('/delete_my_posts', methods=['GET', 'POST'])
 @login_required
-def my_posts():
+def delete_my_posts():
     form = forms.DeleteForm()
     user = g.user._get_current_object()
 
@@ -197,9 +197,9 @@ def my_posts():
 
     return render_template('confirm_delete.html', form=form, case='Post')
 
-@accounts_blueprint.route('/my_comments', methods=['GET', 'POST'])
+@accounts_blueprint.route('/delete_my_comments', methods=['GET', 'POST'])
 @login_required
-def my_comments():
+def delete_my_comments():
     form = forms.DeleteForm()
     user = g.user._get_current_object()
 

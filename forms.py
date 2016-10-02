@@ -79,3 +79,9 @@ class DeleteForm(Form):
     username = StringField(validators=[
         DataRequired()
     ])
+
+class SearchForm(Form):
+    query = StringField("Search Query", validators=[
+        DataRequired(),
+        Length(max=250)
+    ])

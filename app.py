@@ -1,10 +1,7 @@
 import os
-import hashlib
-import requests
 
-from flask import Flask, g, render_template, flash, redirect, url_for, request, abort
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from flask_bcrypt import Bcrypt, check_password_hash
+from flask import Flask, g, render_template, redirect, url_for
+from flask_login import LoginManager, login_required, current_user
 from flaskext.markdown import Markdown
 
 from posts import posts_blueprint
@@ -12,6 +9,7 @@ from accounts import accounts_blueprint
 from users import users_blueprint
 from comments import comments_blueprint
 from notifications import notifications_blueprint
+from search import search_blueprint
 
 import models
 
@@ -23,12 +21,11 @@ app.register_blueprint(accounts_blueprint)
 app.register_blueprint(users_blueprint)
 app.register_blueprint(comments_blueprint)
 app.register_blueprint(notifications_blueprint)
+app.register_blueprint(search_blueprint)
 
 RECAPTCHA_PUBLIC_KEY = os.environ['SOSHIL_RECAPTCHA_PUBLIC_KEY']
 RECAPTCHA_PRIVATE_KEY = os.environ['SOSHIL_RECAPTCHA_PRIVATE_KEY']
 app.config.from_object(__name__)
-
-bcrypt = Bcrypt(app)
 
 markdown = Markdown(app)
 
@@ -43,7 +40,7 @@ def inject_user():
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.session_protection = 'strong'
-login_manager.login_view = 'log_in'
+login_manager.login_view = 'accounts.log_in'
 
 @login_manager.user_loader
 def load_user(userid):
@@ -92,26 +89,6 @@ def index():
 @login_required
 def welcome():
     return render_template('welcome.html')
-
-@app.route('/explore')
-@login_required
-def explore():
-    try:
-        users_following = g.user._get_current_object().following()
-
-        users_following_users_following = []
-
-        for user in users_following:
-            users_following_users_following.append(user.following())
-
-        stream = models.Post.select().where(
-            models.Post.user << users_following_users_following,
-            models.Post.user != g.user._get_current_object()
-        ).limit(100)
-
-    except models.DoesNotExist:
-        stream = None
-    return render_template('stream.html', stream=stream, explore=True)
 
 @app.route('/terms')
 def terms():

@@ -7,22 +7,19 @@
     <h2>General:</h2>
     <div class="post-editor">
         <form method='POST' action='' id="account-form">
-            {{ form.hidden_tag() }}
-            {% for field in form %}
-            {{ render_field(field) }}
-            {% endfor %}
+            {{ render_form(form) }}
             <button type="submit">Save</button>
         </form>
     </div>
     <h2>Dangerous Zone:</h2>
     <button class="danger">
-        <a href="{{ url_for('delete.my_account') }}">Delete my account</a>
+        <a href="{{ url_for('accounts.delete_my_account') }}">Delete my account</a>
     </button>
     <button class="danger">
-        <a href="{{ url_for('delete.my_posts') }}">Delete all of my posts</a>
+        <a href="{{ url_for('accounts.delete_my_posts') }}">Delete all of my posts</a>
     </button>
     <button class="danger">
-        <a href="{{ url_for('delete.my_comments') }}">Delete all of my comments</a>
+        <a href="{{ url_for('accounts.delete_my_comments') }}">Delete all of my comments</a>
     </button>
 </div>
 {% endblock %}

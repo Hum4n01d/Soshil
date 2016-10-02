@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-{% from 'macros.html' import render_field, github_login %}
+{% from 'macros.html' import render_form, github_login %}
 
 {% block body %}
 <div class="login-title">
@@ -11,5 +11,5 @@
         {{ render_form(form, 'Log in!') }}
     </form>
 </div>
-<p>Don't have an account? <a href="{{ url_for('sign_up') }}">Sign up!</a></p>
+<p>Don't have an account? <a href="{{ url_for('accounts.sign_up') }}">Sign up!</a></p>
 {% endblock %}
