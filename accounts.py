@@ -108,7 +108,9 @@ def github_oauth_callback():
         if user.github_user:
             login_user(user)
         else:
-#            flash('That username is taken D:', 'error')
+            flash('That username is taken D:', 'error')
+
+            return redirect(url_for('log_in'))
         
     except models.DoesNotExist:
         user = models.User.create_user(
