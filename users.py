@@ -69,7 +69,7 @@ def follow(username):
                 )
                 flash("You're now following {}".format(to_user.username), 'success')
 
-        return redirect(url_for('profile', username=to_user.username))
+        return redirect(url_for('users.profile', username=to_user.username))
 
 @users_blueprint.route('/<username>/unfollow')
 @login_required
@@ -94,4 +94,4 @@ def unfollow(username):
         else:
             flash("You've unfollowed {}".format(to_user.username), 'success')
 
-    return redirect(url_for('profile', username=to_user.username))
+    return redirect(url_for('users.profile', username=to_user.username))
