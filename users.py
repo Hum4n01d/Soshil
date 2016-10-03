@@ -46,7 +46,8 @@ def following(username):
 def follow(username):
     if username.lower() == g.user._get_current_object().username.lower():
         flash("You can't follow yourself! Nice try though")
-        return redirect(url_for('profile', username=g.user._get_current_object().username))
+        return redirect(url_for('users.profile', username=g.user._get_current_object().username))
+
     else:
         try:
             to_user = models.User.get(models.User.username ** username)

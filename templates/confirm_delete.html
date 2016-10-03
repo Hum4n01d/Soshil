@@ -10,7 +10,5 @@ your account
 all of your {{ case|lower }}s
 {% endif %}
 </p>
-<form method='POST' action='' id="account-form">
-    {{ render_form(form, 'Confirm') }}
-</form>
+{{ render_form(form, 'Confirm') }}
 {% endblock %}
