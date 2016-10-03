@@ -64,7 +64,7 @@ def follow(username):
                 username = g.user._get_current_object().username
                 models.Notification.create_notification(
                     title='@{} is now following you!'.format(username),
-                    link=url_for('profile', username=username),
+                    link=url_for('users.profile', username=username),
                     user=to_user
                 )
                 flash("You're now following {}".format(to_user.username), 'success')
@@ -83,7 +83,7 @@ def unfollow(username):
 
         if to_user == user:
             flash('Why are you unfollowing yourself? Nice try.')
-            return redirect(url_for('profile', username=user.username))
+            return redirect(url_for('users.profile', username=user.username))
         try:
             models.Relationship.get(
                 from_user=g.user._get_current_object(),
