@@ -1,16 +1,12 @@
 {% extends 'layout.html' %}
-{% from 'macros.html' import render_field %}
+{% from 'macros.html' import render_field, render_form %}
 
 {% block body %}
 <div id="account-settings">
     <h1>Account Settings</h1>
     <h2>General:</h2>
-    <div class="post-editor">
-        <form method='POST' action='' id="account-form">
-            {{ render_form(form) }}
-            <button type="submit">Save</button>
-        </form>
-    </div>
+    {{ render_form(form) }}
+    
     <h2>Dangerous Zone:</h2>
     <button class="danger">
         <a href="{{ url_for('accounts.delete_my_account') }}">Delete my account</a>
