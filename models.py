@@ -78,7 +78,7 @@ def parse_post(text, notification=False, page='', edit=False):
 
         username = match.replace('@', '').strip()
 
-        link = url_for('profile', username=username)
+        link = url_for('users.profile', username=username)
 
         template = '[@]({link})[{username}]({link})'
 
