@@ -1,4 +1,4 @@
-from flask_wtf import Form, RecaptchaField
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, TextAreaField
 from wtforms.validators import (DataRequired, Regexp, ValidationError, Email, Length, EqualTo, Optional, URL, AnyOf)
 
@@ -12,7 +12,7 @@ def email_exists(form, field):
     if User.select().where(User.email == field.data).exists():
         raise ValidationError('That email is already registered.')
 
-class RegisterForm(Form):
+class RegisterForm(FlaskForm):
     username = StringField(
         'Username',
         validators=[
@@ -44,11 +44,11 @@ class RegisterForm(Form):
     )
     recaptcha = RecaptchaField()
     
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     
-class PostForm(Form):
+class PostForm(FlaskForm):
     title = StringField('Post title', validators=[
         DataRequired(),
         Length(max=100)
@@ -58,13 +58,13 @@ class PostForm(Form):
         Length(max=10000, message='Posts must be within 10000 characters')
     ])
 
-class CommentForm(Form):
+class CommentForm(FlaskForm):
     content = TextAreaField("Leave a comment", id="editor", validators=[
         DataRequired(),
         Length(max=250)
     ])
 
-class AccountForm(Form):
+class AccountForm(FlaskForm):
     avatar_url = StringField(validators=[
         Optional(),
         URL()
@@ -75,12 +75,12 @@ class AccountForm(Form):
         email_exists
     ])
 
-class DeleteForm(Form):
+class DeleteForm(FlaskForm):
     username = StringField(validators=[
         DataRequired()
     ])
 
-class SearchForm(Form):
+class SearchForm(FlaskForm):
     query = StringField("Search Query", validators=[
         DataRequired(),
         Length(max=250)
